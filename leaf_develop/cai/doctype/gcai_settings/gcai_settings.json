@@ -1,0 +1,49 @@
+{
+ "creation": "2019-08-22 11:47:30.186610",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "expired_days",
+  "expired_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "expired_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Number of days to notify the expiration of the cai",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expired_amount",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": " Amount of remaining invoices to which you will begin to notify",
+   "reqd": 1
+  }
+ ],
+ "modified": "2019-09-02 16:17:35.238982",
+ "modified_by": "Administrator",
+ "module": "CAI",
+ "name": "GCai Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

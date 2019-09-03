@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include leaf_develop *.css
+recursive-include leaf_develop *.csv
+recursive-include leaf_develop *.html
+recursive-include leaf_develop *.ico
+recursive-include leaf_develop *.js
+recursive-include leaf_develop *.json
+recursive-include leaf_develop *.md
+recursive-include leaf_develop *.png
+recursive-include leaf_develop *.py
+recursive-include leaf_develop *.svg
+recursive-include leaf_develop *.txt
+recursive-exclude leaf_develop *.pyc

@@ -1,0 +1,121 @@
+{
+ "autoname": "Prompt",
+ "creation": "2019-08-28 11:55:37.692112",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name_declaration",
+  "no_declaration",
+  "sucursal",
+  "cai",
+  "pos_name",
+  "type_document",
+  "initial_range",
+  "final_range",
+  "number",
+  "due_date",
+  "current_numbering",
+  "state"
+ ],
+ "fields": [
+  {
+   "fieldname": "name_declaration",
+   "fieldtype": "Link",
+   "label": "Name declaration",
+   "options": "GNumber Declaration",
+   "reqd": 1
+  },
+  {
+   "fieldname": "no_declaration",
+   "fieldtype": "Read Only",
+   "label": "No.Declaration"
+  },
+  {
+   "fieldname": "sucursal",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "GSucursal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cai",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "CAI",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pos_name",
+   "fieldtype": "Link",
+   "label": "Pos Name",
+   "options": "GPos",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type_document",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Type of document",
+   "options": "GType Document",
+   "reqd": 1
+  },
+  {
+   "fieldname": "initial_range",
+   "fieldtype": "Int",
+   "label": "Initial Range",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_range",
+   "fieldtype": "Int",
+   "label": "Final Range",
+   "reqd": 1
+  },
+  {
+   "fieldname": "number",
+   "fieldtype": "Read Only",
+   "in_list_view": 1,
+   "label": "Number"
+  },
+  {
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_numbering",
+   "fieldtype": "Int",
+   "label": "current numbering"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Read Only",
+   "label": "State"
+  }
+ ],
+ "modified": "2019-09-02 16:17:12.593100",
+ "modified_by": "Administrator",
+ "module": "CAI",
+ "name": "GCAI",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
