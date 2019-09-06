@@ -5,9 +5,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "no_declaration",
-  "due_date",
-  "state"
+  "due_date"
  ],
  "fields": [
   {
@@ -24,12 +24,14 @@
    "reqd": 1
   },
   {
-   "fieldname": "state",
-   "fieldtype": "Read Only",
-   "label": "State"
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
- "modified": "2019-09-02 16:17:46.282377",
+ "modified": "2019-09-05 10:37:28.707624",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GNumber Declaration",

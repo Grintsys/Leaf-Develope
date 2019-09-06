@@ -11,7 +11,6 @@ from frappe.model.document import Document
 class GCAI(Document):
 		
     def validate(self):
-        #self.pos()
         self.validate_range()
         self.validate_dates()
         self.validate_mask()
@@ -65,9 +64,15 @@ class GCAI(Document):
             if str(self.due_date) >= str(cai.due_date) and self.name != cai.name and self.final_range <= cai.initial_range:
                 frappe.throw(_("The date cannot be greater than the date of the next CAI."))
 
-    def validate_pos(self, sucursal):
+    def validate_pos_and_sucursal(self, sucursal, sucursal_company, declaration_company):
+        if sucursal_company != self.company:
+            frappe.throw(_("This branch does not belong to this company"))
+        
+        if declaration_company != self.company:
+            frappe.throw(_("This declaration does not belong to this company"))
+
         if sucursal != self.sucursal:
-            frappe.throw(_("This POS does not belong to this sucursal"))
+            frappe.throw(_("This pos does not belong to this branch"))
     
     def initial_number(self, num):
 
@@ -103,11 +108,11 @@ class GCAI(Document):
         state = self.asing_state()
 
         document = frappe.get_all("GType Document",["number"],filters = {"name": self.type_document})
-        sucursal= frappe.get_all("GSucursal",["code"], filters = {"name": self.sucursal})
+        sucursal= frappe.get_all("GSucursal",["code", "company"], filters = {"name": self.sucursal})
         pos = frappe.get_all("GPos",["code", "sucursal"], filters = {"name": self.pos_name})
-        declaration = frappe.get_all("GNumber Declaration", ["no_declaration"], filters = {"name": self.name_declaration})
+        declaration = frappe.get_all("GNumber Declaration", ["no_declaration", "company"], filters = {"name": self.name_declaration})
 
-        self.validate_pos(pos[0].sucursal)
+        self.validate_pos_and_sucursal(pos[0].sucursal, sucursal[0].company, declaration[0].company)
 
         number = self.initial_number(self.initial_range)
 

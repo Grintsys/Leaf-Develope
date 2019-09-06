@@ -4,6 +4,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "user",
   "branch",
   "pos"
@@ -32,9 +33,16 @@
    "label": "Pos",
    "options": "GPos",
    "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
- "modified": "2019-09-03 10:18:17.374392",
+ "modified": "2019-09-05 10:27:51.970158",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GCAI Allocation",
