@@ -5,6 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "name_declaration",
   "no_declaration",
   "sucursal",
@@ -93,9 +94,16 @@
    "fieldname": "state",
    "fieldtype": "Read Only",
    "label": "State"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
- "modified": "2019-09-02 16:17:12.593100",
+ "modified": "2019-09-05 16:15:01.233843",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GCAI",

@@ -5,6 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "company",
   "code",
   "sucursal"
  ],
@@ -23,9 +24,16 @@
    "label": "Branch",
    "options": "GSucursal",
    "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
- "modified": "2019-09-02 16:17:58.275647",
+ "modified": "2019-09-05 10:27:20.125038",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GPos",

@@ -6,6 +6,12 @@ frappe.ui.form.on('GCAI Allocation', {
 
 	// }
 	onload: function(frm) {
+		cur_frm.fields_dict['branch'].get_query = function(doc, cdt, cdn) {
+			return {
+				filters:{'company': doc.company}
+			}
+		}
+		
 		cur_frm.fields_dict['pos'].get_query = function(doc, cdt, cdn) {
 			return {
 				filters:{'sucursal': doc.branch}

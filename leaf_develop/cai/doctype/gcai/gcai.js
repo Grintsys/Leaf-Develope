@@ -33,9 +33,15 @@ frappe.ui.form.on('GCAI', {
 	onload: function(frm) {
 		var date = new Date;
 
+		cur_frm.fields_dict['sucursal'].get_query = function(doc, cdt, cdn) {
+			return {
+				filters:{'company': doc.company}
+			}
+		}
+
 		cur_frm.fields_dict['name_declaration'].get_query = function(doc, cdt, cdn) {
 			return {
-				filters:{'due_date': [">=",date]}
+				filters:{'due_date': [">=",date], 'company': doc.company}
 			}
 		}
 
