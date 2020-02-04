@@ -17,5 +17,12 @@ def get_data():
 			"icon": "octicon octicon-book",
 			"type": "module",
 			"label": _("CAI")
+		},
+		{
+			"module_name": "Account status",
+			"color": "#589494",
+			"icon": "octicon octicon-diff",
+			"type": "module",
+			"label": _("Account status")
 		}
 	]

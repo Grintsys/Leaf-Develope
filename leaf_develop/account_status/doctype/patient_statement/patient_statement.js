@@ -1,7 +1,7 @@
-// Copyright (c) 2019, Frappe and contributors
+// Copyright (c) 2020, Frappe and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('GNumber Declaration', {
+frappe.ui.form.on('Patient statement', {
 	// refresh: function(frm) {
 
 	// }
