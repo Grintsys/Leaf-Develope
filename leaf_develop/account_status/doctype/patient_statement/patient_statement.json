@@ -8,6 +8,9 @@
  "field_order": [
   "date",
   "client",
+  "cumulative_total",
+  "total_advance",
+  "outstanding_balance",
   "state"
  ],
  "fields": [
@@ -32,10 +35,25 @@
    "in_list_view": 1,
    "label": "State",
    "reqd": 1
+  },
+  {
+   "fieldname": "cumulative_total",
+   "fieldtype": "Currency",
+   "label": "Cumulative Total"
+  },
+  {
+   "fieldname": "total_advance",
+   "fieldtype": "Currency",
+   "label": "Total Advance"
+  },
+  {
+   "fieldname": "outstanding_balance",
+   "fieldtype": "Currency",
+   "label": "Outstanding Balance"
   }
  ],
  "links": [],
- "modified": "2020-02-04 12:16:05.920903",
+ "modified": "2020-02-05 14:34:17.420260",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",

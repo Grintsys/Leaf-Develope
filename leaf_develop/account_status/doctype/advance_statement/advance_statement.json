@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "autoname": "Prompt",
+ "creation": "2020-02-05 13:21:28.417153",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "date_create",
+  "patient_statement",
+  "amount",
+  "way_to_pay",
+  "state"
+ ],
+ "fields": [
+  {
+   "fieldname": "date_create",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date Create",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Data",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "way_to_pay",
+   "fieldtype": "Select",
+   "label": "Way to pay",
+   "options": "Cash\nCard\nTransfer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Select",
+   "label": "State",
+   "options": "Open\nClosed\nCancelled"
+  },
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "label": "Patient statement",
+   "options": "Patient statement"
+  }
+ ],
+ "links": [],
+ "modified": "2020-02-05 14:28:25.885972",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Advance Statement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
