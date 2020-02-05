@@ -10,6 +10,18 @@ def get_data():
 					"type": "doctype",
 					"name": "Patient statement",
 					"onboard": 1,
+				},
+				{
+					"type": "doctype",
+					"name": "Advance Statement",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
+					"name": "Inventory Requisition",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
 				}
 			]
 		}
