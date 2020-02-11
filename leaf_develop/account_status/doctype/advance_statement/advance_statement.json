@@ -10,7 +10,8 @@
   "patient_statement",
   "amount",
   "way_to_pay",
-  "state"
+  "state",
+  "amended_from"
  ],
  "fields": [
   {
@@ -22,7 +23,7 @@
   },
   {
    "fieldname": "amount",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Amount",
    "reqd": 1
   },
@@ -44,10 +45,20 @@
    "fieldtype": "Link",
    "label": "Patient statement",
    "options": "Patient statement"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Advance Statement",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2020-02-05 14:28:25.885972",
+ "modified": "2020-02-06 10:02:11.193074",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",

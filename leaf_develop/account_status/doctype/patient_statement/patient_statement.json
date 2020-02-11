@@ -11,7 +11,8 @@
   "cumulative_total",
   "total_advance",
   "outstanding_balance",
-  "state"
+  "state",
+  "amended_from"
  ],
  "fields": [
   {
@@ -50,10 +51,20 @@
    "fieldname": "outstanding_balance",
    "fieldtype": "Currency",
    "label": "Outstanding Balance"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Patient statement",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2020-02-05 14:34:17.420260",
+ "modified": "2020-02-07 10:40:45.696441",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",
