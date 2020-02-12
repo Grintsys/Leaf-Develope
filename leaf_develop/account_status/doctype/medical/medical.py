@@ -3,8 +3,11 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
-# import frappe
+import frappe
+from frappe import msgprint, _
 from frappe.model.document import Document
 
-class Patientstatement(Document):
-	pass
+class Medical(Document):
+	def validate(self):
+		name = self.first_name + " " + self.last_name
+		self.full_name = name

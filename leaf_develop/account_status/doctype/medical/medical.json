@@ -1,0 +1,128 @@
+{
+ "actions": [],
+ "autoname": "AS-MA.-.#####",
+ "creation": "2020-02-06 13:39:12.866672",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "first_name",
+  "last_name",
+  "full_name",
+  "column_break1",
+  "identification_card",
+  "rtn",
+  "rank",
+  "contact_section",
+  "phone",
+  "email",
+  "column_break2",
+  "current_address",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "identification_card",
+   "fieldtype": "Data",
+   "label": "Identification Card",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rtn",
+   "fieldtype": "Data",
+   "label": "RTN",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contact_section",
+   "fieldtype": "Section Break",
+   "label": "Address And Contact"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "column_break2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "Current Address"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Medical",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "rank",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Rank",
+   "options": "Medical Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "read_only": 1,
+   "unique": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2020-02-10 13:31:45.455322",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Medical",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "full_name",
+ "track_changes": 1
+}

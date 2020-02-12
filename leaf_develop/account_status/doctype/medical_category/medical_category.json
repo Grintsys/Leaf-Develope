@@ -1,44 +1,28 @@
 {
  "actions": [],
- "autoname": "Prompt",
- "creation": "2020-02-04 12:16:05.920903",
+ "autoname": "field:rank",
+ "creation": "2020-02-06 14:02:32.325157",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "date",
-  "client",
-  "state"
+  "rank"
  ],
  "fields": [
   {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date of create",
-   "reqd": 1
-  },
-  {
-   "fieldname": "client",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Client",
-   "options": "Customer",
-   "reqd": 1
-  },
-  {
-   "fieldname": "state",
+   "fieldname": "rank",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "State",
-   "reqd": 1
+   "label": "Rank",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "links": [],
- "modified": "2020-02-04 12:16:05.920903",
+ "modified": "2020-02-06 14:04:41.909885",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Patient statement",
+ "name": "Medical Category",
  "owner": "Administrator",
  "permissions": [
   {

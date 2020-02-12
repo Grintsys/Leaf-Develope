@@ -1,0 +1,166 @@
+{
+ "actions": [],
+ "autoname": "AS-MH-.YYYY.-.#####",
+ "creation": "2020-02-05 14:10:07.469083",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "company",
+  "colum_break1",
+  "date",
+  "medical_section",
+  "medical",
+  "rank",
+  "colum_break2",
+  "name_medical",
+  "rtn",
+  "total_section",
+  "total",
+  "honorarium_payment",
+  "detail_section",
+  "total_payment",
+  "colum_break3",
+  "total_remaining",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total"
+  },
+  {
+   "fieldname": "total_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "medical.full_name",
+   "fieldname": "name_medical",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Open\nPaid Out",
+   "print_hide": 1,
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "medical.rtn",
+   "fieldname": "rtn",
+   "fieldtype": "Data",
+   "label": "RTN",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colum_break1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "medical_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "colum_break2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "medical",
+   "fieldtype": "Link",
+   "label": "Medical",
+   "options": "Medical",
+   "reqd": 1
+  },
+  {
+   "fieldname": "honorarium_payment",
+   "fieldtype": "Table",
+   "label": "Honorarium Payment",
+   "options": "Honorarium Payment Detail",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_payment",
+   "fieldtype": "Currency",
+   "label": "Total Payment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colum_break3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "detail_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_remaining",
+   "fieldtype": "Currency",
+   "label": "Total Remaining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Medical Honorarium",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "medical.rank",
+   "fieldname": "rank",
+   "fieldtype": "Data",
+   "label": "Rank",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2020-02-11 15:43:01.432008",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Medical Honorarium",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
