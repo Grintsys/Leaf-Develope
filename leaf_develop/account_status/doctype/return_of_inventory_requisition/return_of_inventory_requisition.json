@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "Prompt",
- "creation": "2020-02-05 14:11:27.515378",
+ "creation": "2020-02-12 13:45:51.807708",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -31,7 +31,7 @@
    "fieldname": "products",
    "fieldtype": "Table",
    "label": "Products",
-   "options": "Inventory Item",
+   "options": "Inventory Item Return",
    "reqd": 1
   },
   {
@@ -45,17 +45,17 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Inventory Requisition",
+   "options": "Return of inventory requisition",
    "print_hide": 1,
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-12 13:44:44.079221",
+ "modified": "2020-02-12 15:02:09.761444",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Inventory Requisition",
+ "name": "Return of inventory requisition",
  "owner": "Administrator",
  "permissions": [
   {
