@@ -22,6 +22,12 @@ def get_data():
 					"name": "Inventory Requisition",
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
+					"name": "Return of inventory requisition",
+					"onboard": 1,
+					"dependencies": ["Inventory Requisition"]
 				}
 			]
 		}

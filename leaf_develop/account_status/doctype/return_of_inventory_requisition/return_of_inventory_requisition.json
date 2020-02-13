@@ -1,19 +1,26 @@
 {
  "actions": [],
  "autoname": "Prompt",
- "creation": "2020-02-05 13:21:28.417153",
+ "creation": "2020-02-12 13:45:51.807708",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "date_create",
   "patient_statement",
-  "amount",
-  "way_to_pay",
+  "date_create",
+  "products",
   "state",
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient Statement",
+   "options": "Patient statement",
+   "reqd": 1
+  },
   {
    "fieldname": "date_create",
    "fieldtype": "Datetime",
@@ -22,49 +29,34 @@
    "reqd": 1
   },
   {
-   "fieldname": "amount",
-   "fieldtype": "Currency",
-   "label": "Amount",
-   "reqd": 1
-  },
-  {
-   "fieldname": "way_to_pay",
-   "fieldtype": "Select",
-   "label": "Way to pay",
-   "options": "Cash\nCard\nTransfer",
+   "fieldname": "products",
+   "fieldtype": "Table",
+   "label": "Products",
+   "options": "Inventory Item Return",
    "reqd": 1
   },
   {
    "fieldname": "state",
    "fieldtype": "Select",
    "label": "State",
-   "options": "Open\nClosed\nCancelled",
-   "read_only": 1
-  },
-  {
-   "fieldname": "patient_statement",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Patient statement",
-   "options": "Patient statement",
-   "reqd": 1
+   "options": "Open\nClosed\nCanceled"
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Advance Statement",
+   "options": "Return of inventory requisition",
    "print_hide": 1,
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-13 16:40:46.462751",
+ "modified": "2020-02-13 16:41:23.534592",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Advance Statement",
+ "name": "Return of inventory requisition",
  "owner": "Administrator",
  "permissions": [
   {

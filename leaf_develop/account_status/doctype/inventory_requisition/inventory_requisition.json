@@ -9,14 +9,17 @@
   "patient_statement",
   "date_create",
   "products",
-  "state"
+  "state",
+  "amended_from"
  ],
  "fields": [
   {
    "fieldname": "patient_statement",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Patient Statement",
-   "options": "Patient statement"
+   "options": "Patient statement",
+   "reqd": 1
   },
   {
    "fieldname": "date_create",
@@ -37,10 +40,20 @@
    "fieldtype": "Select",
    "label": "State",
    "options": "Open\nClosed\nCanceled"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Inventory Requisition",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2020-02-05 16:31:32.309099",
+ "modified": "2020-02-13 16:41:52.209598",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",
