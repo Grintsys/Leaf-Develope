@@ -24,32 +24,6 @@ def create_requisitions():
 		"state": 'Open'
     }).insert()
 
-    doc = frappe.get_doc({
-        "doctype": "Inventory Requisition",
-		"name": "Test2",
-        "patient_statement": 'Prueba',
-		"date_create":'10-02-2020 16:34:04',
-		"products": [{
-			"item": 'CLI-SER-0003',
-			"product_name": 'Colchon de agua',
-			"quantity": 2
-		}],
-		"state": 'Open'
-    }).insert()
-
-    doc = frappe.get_doc({
-        "doctype": "Inventory Requisition",
-		"name": "Test3",
-        "patient_statement": 'Prueba',
-		"date_create":'10-02-2020 17:34:04',
-		"products": [{
-			"item": 'CLI-SER-0003',
-			"product_name": 'Colchon de agua',
-			"quantity": 2
-		}],
-		"state": 'Open'
-    }).insert()
-
     frappe.flags.test_events_created = True
 
 class TestInventoryRequisition(unittest.TestCase):

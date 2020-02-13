@@ -38,13 +38,16 @@
    "fieldname": "state",
    "fieldtype": "Select",
    "label": "State",
-   "options": "Open\nClosed\nCancelled"
+   "options": "Open\nClosed\nCancelled",
+   "read_only": 1
   },
   {
    "fieldname": "patient_statement",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Patient statement",
-   "options": "Patient statement"
+   "options": "Patient statement",
+   "reqd": 1
   },
   {
    "fieldname": "amended_from",
@@ -58,7 +61,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-06 10:02:11.193074",
+ "modified": "2020-02-13 16:40:46.462751",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",

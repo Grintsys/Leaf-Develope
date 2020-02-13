@@ -16,6 +16,7 @@
   {
    "fieldname": "patient_statement",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Patient Statement",
    "options": "Patient statement",
    "reqd": 1
@@ -52,7 +53,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-12 13:44:44.079221",
+ "modified": "2020-02-13 16:41:52.209598",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",

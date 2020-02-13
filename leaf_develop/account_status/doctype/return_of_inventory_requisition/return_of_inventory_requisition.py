@@ -18,6 +18,7 @@ class Returnofinventoryrequisition(Document):
 	
 	def on_cancel(self):
 		self.apply_changes("+")
+		self.state = "Cancelled"
 
 	def apply_changes(self, signo):
 		total_price = 0
@@ -36,7 +37,9 @@ class Returnofinventoryrequisition(Document):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		if signo == "+":
 			doc.cumulative_total += total_price
+			doc.outstanding_balance += total_price
 		
 		if signo == "-":
 			doc.cumulative_total -= total_price
+			doc.outstanding_balance -= total_price
 		doc.save()

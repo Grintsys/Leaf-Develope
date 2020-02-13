@@ -5,11 +5,11 @@ def get_data():
 	return {
 		'heatmap': True,
 		'heatmap_message': _('This is based on the Time Sheets created against this project'),
-		'fieldname': 'name',
+		'fieldname': 'patient_statement',
 		'transactions': [
 			{
 				'label': _('History'),
-				'items': ['Inventory Requisition', 'Advance Statement']
+				'items': ['Inventory Requisition', 'Return of inventory requisition', 'Advance Statement']
 			},
         ]
 	}
