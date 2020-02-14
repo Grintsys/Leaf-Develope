@@ -10,31 +10,6 @@ def get_data():
 					"type": "doctype",
 					"name": "Patient statement",
 					"onboard": 1,
-				},
-				{
-					"type": "doctype",
-					"name": "Medical Honorarium",
-					"onboard": 1,
-				}
-			]
-		},
-		{
-			"label": _("Doctors"),
-			"items": [
-				{
-					"type": "doctype",
-					"name": "Medical",
-					"onboard": 1,
-				},
-				{
-					"type": "doctype",
-					"name": "Medical Category",
-					"onboard": 1,
-				},
-				{
-					"type": "doctype",
-					"name": "Honorarium Payment",
-					"onboard": 1,
 				}
 			]
 		}
