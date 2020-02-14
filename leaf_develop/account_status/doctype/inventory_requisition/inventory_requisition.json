@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "autoname": "Prompt",
+ "creation": "2020-02-05 14:11:27.515378",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "patient_statement",
+  "date_create",
+  "products",
+  "state",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient Statement",
+   "options": "Patient statement",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date_create",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date Create",
+   "reqd": 1
+  },
+  {
+   "fieldname": "products",
+   "fieldtype": "Table",
+   "label": "Products",
+   "options": "Inventory Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Select",
+   "label": "State",
+   "options": "Open\nClosed\nCanceled"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Inventory Requisition",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2020-02-13 16:41:52.209598",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Inventory Requisition",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

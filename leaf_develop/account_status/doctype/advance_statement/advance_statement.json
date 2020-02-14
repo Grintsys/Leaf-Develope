@@ -1,77 +1,70 @@
 {
  "actions": [],
  "autoname": "Prompt",
- "creation": "2020-02-04 12:16:05.920903",
+ "creation": "2020-02-05 13:21:28.417153",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "date",
-  "client",
-  "cumulative_total",
-  "total_advance",
-  "outstanding_balance",
+  "date_create",
+  "patient_statement",
+  "amount",
+  "way_to_pay",
   "state",
   "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "date",
-   "fieldtype": "Date",
+   "fieldname": "date_create",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Date of create",
+   "label": "Date Create",
    "reqd": 1
   },
   {
-   "fieldname": "client",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Client",
-   "options": "Customer",
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "fieldname": "way_to_pay",
+   "fieldtype": "Select",
+   "label": "Way to pay",
+   "options": "Cash\nCard\nTransfer",
    "reqd": 1
   },
   {
    "fieldname": "state",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "State",
-   "options": "Open\nClose\nCancelled",
+   "options": "Open\nClosed\nCancelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient statement",
+   "options": "Patient statement",
    "reqd": 1
-  },
-  {
-   "fieldname": "cumulative_total",
-   "fieldtype": "Currency",
-   "label": "Cumulative Total",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_advance",
-   "fieldtype": "Currency",
-   "label": "Total Advance",
-   "read_only": 1
-  },
-  {
-   "fieldname": "outstanding_balance",
-   "fieldtype": "Currency",
-   "label": "Outstanding Balance",
-   "read_only": 1
   },
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Patient statement",
+   "options": "Advance Statement",
    "print_hide": 1,
    "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-13 15:22:13.280504",
+ "modified": "2020-02-13 16:40:46.462751",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Patient statement",
+ "name": "Advance Statement",
  "owner": "Administrator",
  "permissions": [
   {
