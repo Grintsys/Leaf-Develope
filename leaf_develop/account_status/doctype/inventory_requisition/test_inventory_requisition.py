@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 
 import frappe
+import frappe.defaults
 import unittest
 
 def create_requisitions():
@@ -17,8 +18,8 @@ def create_requisitions():
         "patient_statement": 'Prueba',
 		"date_create":'10-02-2020 15:34:04',
 		"products": [{
-			"item": 'CLI-SER-0003',
-			"product_name": 'Colchon de agua',
+			"item": 'CLI-MVA-0008',
+			"product_name": 'Alergil Jarabe',
 			"quantity": 2
 		}],
 		"state": 'Open'
@@ -29,11 +30,8 @@ def create_requisitions():
 class TestInventoryRequisition(unittest.TestCase):
 	def setUp(self):
 		create_requisitions()
-	
-	def tearDown(self):
-		frappe.set_user("Administrator")
 
 	def get_register(self):
 		frappe.set_user("test1@example.com")
 		doc = frappe.get_doc("Inventory Requisition", frappe.db.get_value("Inventory Requisition",{"name":"Test1"}))
-		self.assertTrue(doc.name)
+		self.assertEquals(len(doc), 1)
