@@ -9,16 +9,19 @@ from frappe.model.document import Document
 
 class HonorariumPayment(Document):
 	def validate(self):
+		if(self.total > self.honorarium_amount):
+			frappe.throw(_("The amount cannot be greater than the total honorarium"))
+
+		self.verificate()
 		remaining = self.honorarium_amount - self.total
 		self.total_remaining = remaining
 		if self.docstatus == 1:
 			self.calculate_honorarium()
 	
 	def calculate_honorarium(self):
-		self.verificate()
 		if(self.total == self.honorarium_amount):
 			doc = frappe.get_doc("Medical Honorarium", self.honorarium)
-			if(doc.total_remaining > 0):
+			if(self.total_remaining == 0):
 				doc.status = "Paid Out"
 				doc.total_payment += self.total
 				doc.total_remaining -= self.total
@@ -26,12 +29,13 @@ class HonorariumPayment(Document):
 		else:
 			if(self.total < self.honorarium_amount):
 				doc = frappe.get_doc("Medical Honorarium", self.honorarium)
-				if(doc.total_remaining > 0):
+				if(self.total_remaining > 0):
+					doc.status = "Open"
 					doc.total_payment += self.total
 					doc.total_remaining -= self.total
 					doc.save()
-			else:
-				frappe.throw(_("The amount cannot be greater than the total honorarium"))
+			# else:
+			# 	frappe.throw(_("The amount cannot be greater than the total honorarium"))
 
 		self.data_table()
 	
@@ -42,7 +46,7 @@ class HonorariumPayment(Document):
 		if(self.total == self.honorarium_amount and self.type_payment == "Advancement"):
 			frappe.throw(_("The type of payment cannot be an advance"))
 		if(self.total < self.honorarium_amount and self.type_payment == "Payment"):
-			frappe.throw(_("The type of payment cannot be an advance"))
+			frappe.throw(_("The type of payment must be an advance"))
 
 	def status(self):
 		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
@@ -60,6 +64,7 @@ class HonorariumPayment(Document):
 			'series': self.name,
 			'full_name': self.full_name,
 			'total': self.total,
-			'type_payment': self.type_payment
+			'type_payment': self.type_payment,
+			'transaction_payment': self.transaction_payment
 			})
 		doc.save()

@@ -42,13 +42,15 @@
    "fieldname": "identification_card",
    "fieldtype": "Data",
    "label": "Identification Card",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "rtn",
    "fieldtype": "Data",
    "label": "RTN",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "contact_section",
@@ -102,7 +104,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-10 13:31:45.455322",
+ "modified": "2020-02-13 14:52:59.658877",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",

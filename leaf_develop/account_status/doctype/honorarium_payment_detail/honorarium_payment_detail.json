@@ -8,6 +8,7 @@
   "series",
   "full_name",
   "type_payment",
+  "transaction_payment",
   "total"
  ],
  "fields": [
@@ -34,16 +35,21 @@
   },
   {
    "fieldname": "series",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Series",
-   "options": "Honorarium Payment",
    "read_only": 1
+  },
+  {
+   "fieldname": "transaction_payment",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Transaction Payment"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-02-11 15:35:35.298934",
+ "modified": "2020-02-14 10:32:07.172847",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment Detail",

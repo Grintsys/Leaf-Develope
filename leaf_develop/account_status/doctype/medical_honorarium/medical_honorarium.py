@@ -4,7 +4,7 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe import _
+from frappe import msgprint, _
 from frappe.model.document import Document
 
 form_grid_templates = {
@@ -20,3 +20,4 @@ class MedicalHonorarium(Document):
 			if not self.total_payment:
 				if(self.total > 0 and self.total_payment != 0):
 					self.total_remaining = self.total
+	

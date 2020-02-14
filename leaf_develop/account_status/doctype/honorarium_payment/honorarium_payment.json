@@ -17,6 +17,7 @@
   "total_remaining",
   "colum_break2",
   "type_payment",
+  "transaction_payment",
   "amended_from"
  ],
  "fields": [
@@ -74,7 +75,9 @@
   },
   {
    "fieldname": "payment_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Details of the transaction",
+   "read_only": 1
   },
   {
    "fieldname": "colum_break2",
@@ -94,11 +97,18 @@
    "options": "Honorarium Payment",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "transaction_payment",
+   "fieldtype": "Select",
+   "label": "Transaction Payment",
+   "options": "Cash\nWire Transfer",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-11 11:42:05.645353",
+ "modified": "2020-02-14 10:29:11.585336",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment",
