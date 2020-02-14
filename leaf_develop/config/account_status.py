@@ -28,7 +28,32 @@ def get_data():
 					"name": "Return of inventory requisition",
 					"onboard": 1,
 					"dependencies": ["Inventory Requisition"]
-				}
+				},
+                {
+                    "type": "doctype",
+                    "name": "Medical Honorarium",
+                    "onboard": 1,
+                }
 			]
-		}
+		},
+        {
+            "label": _("Doctors"),
+            "items": [
+                {
+                    "type": "doctype",
+                    "name": "Medical",
+                    "onboard": 1,
+                },
+                {
+                    "type": "doctype",
+                    "name": "Medical Category",
+                    "onboard": 1,
+                },
+                {
+                    "type": "doctype",
+                    "name": "Honorarium Payment",
+                    "onboard": 1,
+                }
+            ]
+        }
     ]
