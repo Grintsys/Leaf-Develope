@@ -148,12 +148,12 @@
    "fieldname": "patient_statement",
    "fieldtype": "Link",
    "label": "Patient Statement",
-   "options": "Patient statement",
-   "reqd": 1
+   "options": "Patient statement"
   }
  ],
+ "is_submittable": 1,
  "links": [],
- "modified": "2020-02-14 10:55:14.629129",
+ "modified": "2020-02-17 10:25:52.458896",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",

@@ -9,6 +9,7 @@ from frappe.model.document import Document
 
 class HonorariumPayment(Document):
 	def validate(self):
+		self.verificate_status_honorarium()
 		if(self.total > self.honorarium_amount):
 			frappe.throw(_("The amount cannot be greater than the total honorarium"))
 
@@ -52,6 +53,9 @@ class HonorariumPayment(Document):
 		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
 		doc.total_payment -= self.total
 		doc.total_remaining += self.total
+		if(doc.status == "Paid Out"):
+			doc.status = "Open"
+
 		doc.save()
 		honorarium = frappe.get_all("Honorarium Payment Detail", ["name"], filters={"series": self.name})
 		for item in honorarium:
@@ -68,3 +72,8 @@ class HonorariumPayment(Document):
 			'transaction_payment': self.transaction_payment
 			})
 		doc.save()
+
+	def verificate_status_honorarium(self):
+		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
+		if(doc.status == "Paid Out"):
+			frappe.throw(_("There is no remaining balance for the honorarium {}".format(self.honorarium)))

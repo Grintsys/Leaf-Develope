@@ -20,4 +20,3 @@ class MedicalHonorarium(Document):
 			if not self.total_payment:
 				if(self.total > 0 and self.total_payment != 0):
 					self.total_remaining = self.total
-	
