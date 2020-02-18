@@ -15,8 +15,30 @@ class MedicalHonorarium(Document):
 	def validate(self):
 		self.remaining()
 
+		if self.docstatus == 0:
+			self.patient_statement_acomulative_total("+")
+	
+	def on_cancel(self):
+		self.patient_statement_acomulative_total("-")
+	
+	def on_trash(self):
+		self.patient_statement_acomulative_total("-")
+
 	def remaining(self):
 		if not self.total_remaining:
 			if not self.total_payment:
 				if(self.total > 0 and self.total_payment != 0):
 					self.total_remaining = self.total
+	
+	def patient_statement_acomulative_total(self, value):
+		doc = frappe.get_doc("Patient statement", self.patient_statement)
+
+		if value == "+":
+			doc.outstanding_balance += self.total
+			doc.cumulative_total += self.total
+		
+		if value == "-":
+			doc.outstanding_balance -= self.total
+			doc.cumulative_total -= self.total
+
+		doc.save()
