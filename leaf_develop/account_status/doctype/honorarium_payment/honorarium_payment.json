@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "autoname": "AS-HP-.YYYY.-.#####",
+ "creation": "2020-02-07 09:21:33.416442",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "honorarium",
+  "full_name",
+  "colum_break1",
+  "date",
+  "honorarium_amount",
+  "payment_section",
+  "transaction_date",
+  "total",
+  "total_remaining",
+  "colum_break2",
+  "type_payment",
+  "transaction_payment",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "honorarium",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Honorarium",
+   "options": "Medical Honorarium",
+   "reqd": 1
+  },
+  {
+   "fieldname": "transaction_date",
+   "fieldtype": "Date",
+   "label": "Transaction Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "type_payment",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type Payment",
+   "options": "Payment\nAdvancement",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "honorarium.name_medical",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "colum_break1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "honorarium.date",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fetch_from": "honorarium.total_remaining",
+   "fieldname": "honorarium_amount",
+   "fieldtype": "Currency",
+   "label": "Honorarium Amount"
+  },
+  {
+   "fieldname": "payment_section",
+   "fieldtype": "Section Break",
+   "label": "Details of the transaction",
+   "read_only": 1
+  },
+  {
+   "fieldname": "colum_break2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_remaining",
+   "fieldtype": "Currency",
+   "label": "Total Remaining",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Honorarium Payment",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "transaction_payment",
+   "fieldtype": "Select",
+   "label": "Transaction Payment",
+   "options": "Cash\nWire Transfer",
+   "reqd": 1
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2020-02-14 10:29:11.585336",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Honorarium Payment",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

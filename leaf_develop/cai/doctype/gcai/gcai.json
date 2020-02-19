@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "autoname": "Prompt",
  "creation": "2019-08-28 11:55:37.692112",
  "doctype": "DocType",
@@ -17,7 +18,10 @@
   "number",
   "due_date",
   "current_numbering",
-  "state"
+  "state",
+  "codedocument",
+  "codebranch",
+  "codepos"
  ],
  "fields": [
   {
@@ -25,7 +29,8 @@
    "fieldtype": "Link",
    "label": "Name declaration",
    "options": "GNumber Declaration",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "no_declaration",
@@ -92,8 +97,10 @@
   },
   {
    "fieldname": "state",
-   "fieldtype": "Read Only",
-   "label": "State"
+   "fieldtype": "Select",
+   "label": "State",
+   "options": "Valid\nExpired",
+   "read_only": 1
   },
   {
    "fieldname": "company",
@@ -101,9 +108,34 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fetch_from": "type_document.number",
+   "fieldname": "codedocument",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "codededocument",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "sucursal.code",
+   "fieldname": "codebranch",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "codebranch",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "pos_name.code",
+   "fieldname": "codepos",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "codepos",
+   "read_only": 1
   }
  ],
- "modified": "2019-09-05 16:15:01.233843",
+ "links": [],
+ "modified": "2020-02-19 13:59:13.839249",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GCAI",

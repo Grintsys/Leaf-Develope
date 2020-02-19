@@ -52,6 +52,7 @@
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Amended From",
    "no_copy": 1,
    "options": "Advance Statement",
@@ -61,7 +62,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-13 16:40:46.462751",
+ "modified": "2020-02-14 13:53:33.262559",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",
