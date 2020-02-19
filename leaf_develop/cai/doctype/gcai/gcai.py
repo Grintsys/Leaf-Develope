@@ -117,11 +117,10 @@ class GCAI(Document):
 
         self.number = "{}-{}-{}-{}".format(sucursal[0].code, pos[0].code, document[0].number, number)
 
-        self.no_declaration = "{}".format(declaration[0].no_declaration)
-        
-        self.state = "{}".format("Valid")
-        
+        self.no_declaration = "{}".format(declaration[0].no_declaration)     
+                
         if self.current_numbering is None:
             self.current_numbering = self.initial_range
+            self.state = "{}".format("Valid")
         
         return True

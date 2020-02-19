@@ -9,7 +9,7 @@ def get_data():
 		'transactions': [
 			{
 				'label': _('History'),
-				'items': ['Inventory Requisition', 'Return of inventory requisition', 'Advance Statement', 'Medical Honorarium']
+				'items': ['Inventory Requisition', 'Return of inventory requisition', 'Advance Statement', 'Medical Honorarium', 'Sales Invoice']
 			},
         ]
 	}
