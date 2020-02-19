@@ -10,6 +10,7 @@
   "first_name",
   "last_name",
   "full_name",
+  "service",
   "column_break1",
   "identification_card",
   "rtn",
@@ -100,11 +101,18 @@
    "label": "Full Name",
    "read_only": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "service",
+   "fieldtype": "Link",
+   "label": "Service",
+   "options": "Item",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-13 14:52:59.658877",
+ "modified": "2020-02-17 13:58:14.176829",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",
