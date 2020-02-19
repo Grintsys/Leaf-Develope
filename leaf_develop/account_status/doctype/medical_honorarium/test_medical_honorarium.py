@@ -12,18 +12,25 @@ model = "Medical Honorarium"
 
 def default_data():
 	return {
-		"date": "14-02-2020",
-		"medical": "Izuku Midoriya",
+		"doctype":"Medical Honorarium",
+		"status": "Open",
+		"company": "Servicios Medicos Multiples - Clínica",
+		"date": "17-02-2020",
+		"medical": "AS-MA-00001",
 		"total": 20000
 	}
 
 def create_events():
 	if frappe.flags.test_events_created:
 		return
+
 	honorarium = default_data()
 	frappe.set_user("Administrator")
 	doc = frappe.get_doc({
 		"doctype": honorarium["doctype"],
+		"status": honorarium["status"],
+		"company": honorarium["company"],
+		"date": honorarium["date"],
 		"medical": honorarium["medical"],
 		"total": honorarium["total"]
     }).insert()
@@ -32,11 +39,11 @@ def create_events():
 
 class TestMedicalHonorarium(unittest.TestCase):
 	def setUp(self):
-		create_default_data()
+		create_events()
 
 	def test_create_new_honorarium(self):
 		honorarium = default_data()
 		frappe.set_user("Administrator")
-		doc = frappe.get_doc("Medical Honorarium", frappe.db.get_value(model, filters=[["name_medical", "like", honorarium["medical"]]]))
-		self.assertEqual(doc.name_medical, honorarium["medical"])
+		doc = frappe.get_doc("Medical Honorarium", frappe.db.get_value(model, {"medical": honorarium["medical"]}))
+		self.assertEqual(doc.medical, honorarium["medical"])
 
