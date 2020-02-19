@@ -39,7 +39,8 @@
    "fieldname": "state",
    "fieldtype": "Select",
    "label": "State",
-   "options": "Open\nClosed\nCanceled"
+   "options": "Open\nClosed\nCanceled",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -53,7 +54,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-13 16:41:52.209598",
+ "modified": "2020-02-14 13:44:59.649948",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",

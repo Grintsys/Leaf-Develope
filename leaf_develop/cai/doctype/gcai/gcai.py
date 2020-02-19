@@ -105,7 +105,6 @@ class GCAI(Document):
 
     def generate_number(self):
         self.validate_cai()
-        state = self.asing_state()
 
         document = frappe.get_all("GType Document",["number"],filters = {"name": self.type_document})
         sucursal= frappe.get_all("GSucursal",["code", "company"], filters = {"name": self.sucursal})
@@ -118,14 +117,10 @@ class GCAI(Document):
 
         self.number = "{}-{}-{}-{}".format(sucursal[0].code, pos[0].code, document[0].number, number)
 
-        self.no_declaration = "{}".format(declaration[0].no_declaration)
-        
-        if state == True :
-            self.state = "{}".format("Invalid")
-        else:
-            self.state = "{}".format("Valid")
-        
+        self.no_declaration = "{}".format(declaration[0].no_declaration)     
+                
         if self.current_numbering is None:
             self.current_numbering = self.initial_range
+            self.state = "{}".format("Valid")
         
         return True

@@ -25,8 +25,8 @@ class GCAIAllocation(Document):
 		
 
 	def validate_user(self):
-		user = frappe.get_all("GCAI Allocation", ["name"], filters = {"user": self.user, "company": self.company})
+		user = frappe.get_all("GCAI Allocation", ["name"], filters = {"user": self.user, "company": self.company, "type_document": self.type_document})
 		
 		if len(user) != 0:
 			if user[0].name != self.name:
-				frappe.throw(_("This user has already been assigned a cai for this company"))
+				frappe.throw(_("This user has already been assigned a cai for this type component in the company."))
