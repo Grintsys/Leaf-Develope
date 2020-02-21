@@ -40,13 +40,15 @@
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date",
-   "reqd": 1
+   "reqd": 1,
+   "set_only_once": 1
   },
   {
    "fieldname": "total",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Total"
+   "label": "Total",
+   "set_only_once": 1
   },
   {
    "fetch_from": "medical.full_name",
@@ -90,6 +92,7 @@
   {
    "fieldname": "medical",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Medical",
    "options": "Medical",
    "reqd": 1,
@@ -150,12 +153,12 @@
    "in_standard_filter": 1,
    "label": "Patient Statement",
    "options": "Patient statement",
-   "reqd": 1
+   "reqd": 1,
+   "set_only_once": 1
   }
  ],
- "is_submittable": 1,
  "links": [],
- "modified": "2020-02-17 11:26:35.945853",
+ "modified": "2020-02-21 11:30:19.372128",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",
