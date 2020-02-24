@@ -14,7 +14,7 @@
   "patient_statement",
   "medical_section",
   "medical",
-  "rank",
+  "specialty",
   "colum_break2",
   "name_medical",
   "rtn",
@@ -37,6 +37,7 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
    "label": "Date",
@@ -136,13 +137,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "medical.rank",
-   "fieldname": "rank",
-   "fieldtype": "Data",
-   "label": "Rank",
-   "read_only": 1
-  },
-  {
    "fieldname": "payment_section",
    "fieldtype": "Section Break",
    "label": "Payment Details"
@@ -155,10 +149,17 @@
    "options": "Patient statement",
    "reqd": 1,
    "set_only_once": 1
+  },
+  {
+   "fetch_from": "medical.specialty",
+   "fieldname": "specialty",
+   "fieldtype": "Data",
+   "label": "Specialty",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-02-21 11:30:19.372128",
+ "modified": "2020-02-24 10:05:56.069555",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",

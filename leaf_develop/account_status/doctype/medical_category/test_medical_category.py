@@ -13,7 +13,7 @@ model = "Medical Category"
 def default_data():
 	return {
 		'doctype': 'Medical Category',
-		'rank': 'Médico General'
+		'specialty': 'Médico General'
 	}
 def create_events():
 	if frappe.flags.test_events_created:
@@ -24,7 +24,7 @@ def create_events():
 
 	doc = frappe.get_doc({
 		"doctype": specialty["doctype"],
-		"rank": specialty["rank"]
+		"specialty": specialty["specialty"]
     }).insert()
 
 	frappe.flags.test_events_created = True
@@ -36,11 +36,11 @@ class TestMedicalCategory(unittest.TestCase):
 	def test_create_new_medical_category(self):
 		specialty = default_data()
 		frappe.set_user("Administrator")
-		doc = frappe.get_doc("Medical Category", frappe.db.get_value("Medical Category",{"rank": specialty["rank"]}))
-		self.assertEqual(doc.rank, specialty["rank"])
+		doc = frappe.get_doc("Medical Category", frappe.db.get_value("Medical Category",{"specialty": specialty["specialty"]}))
+		self.assertEqual(doc.specialty, specialty["specialty"])
 
 	def test_verificate_if_the_medical_category_is_non_recurring(self):
 		specialty = default_data()
-		rank = specialty["rank"]
-		specialties = frappe.get_list(model, filters=[["Medical Category", "rank", "like", rank]], fields=["rank"])
+		specialty = specialty["specialty"]
+		specialties = frappe.get_list(model, filters=[["Medical Category", "specialty", "like", specialty]], fields=["specialty"])
 		self.assertEquals(len(specialties),1)
