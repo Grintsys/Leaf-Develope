@@ -52,7 +52,7 @@
   }
  ],
  "links": [],
- "modified": "2020-02-19 11:55:22.472636",
+ "modified": "2020-02-24 13:28:51.471142",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GCAI Allocation",
@@ -71,7 +71,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
