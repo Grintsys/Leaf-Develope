@@ -30,6 +30,7 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "transaction_date",
    "fieldtype": "Date",
    "label": "Transaction Date",
@@ -55,7 +56,8 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Full Name"
+   "label": "Full Name",
+   "read_only": 1
   },
   {
    "fieldname": "colum_break1",
@@ -65,13 +67,15 @@
    "fetch_from": "honorarium.date",
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "label": "Date",
+   "read_only": 1
   },
   {
    "fetch_from": "honorarium.total_remaining",
    "fieldname": "honorarium_amount",
    "fieldtype": "Currency",
-   "label": "Honorarium Amount"
+   "label": "Honorarium Amount",
+   "read_only": 1
   },
   {
    "fieldname": "payment_section",
@@ -108,7 +112,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-14 10:29:11.585336",
+ "modified": "2020-02-24 09:44:00.938893",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment",

@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import frappe
 import frappe.defaults
+from leaf_develop.account_status.doctype.medical_honorarium.medical_honorarium import validate
 import unittest
 
 test_records = frappe.get_test_records('Medical Honorarium')
@@ -33,7 +34,7 @@ def create_events():
 		"date": honorarium["date"],
 		"medical": honorarium["medical"],
 		"total": honorarium["total"]
-    }).insert()
+    }).insert(ignore_permissions=True)
 
 	frappe.flags.test_events_created = True
 
@@ -46,4 +47,3 @@ class TestMedicalHonorarium(unittest.TestCase):
 		frappe.set_user("Administrator")
 		doc = frappe.get_doc("Medical Honorarium", frappe.db.get_value(model, {"medical": honorarium["medical"]}))
 		self.assertEqual(doc.medical, honorarium["medical"])
-
