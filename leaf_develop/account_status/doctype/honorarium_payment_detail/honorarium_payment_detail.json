@@ -44,12 +44,13 @@
    "fieldname": "transaction_payment",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Transaction Payment"
+   "label": "Transaction Payment",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2020-02-14 10:32:07.172847",
+ "modified": "2020-02-25 09:45:24.137143",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment Detail",
