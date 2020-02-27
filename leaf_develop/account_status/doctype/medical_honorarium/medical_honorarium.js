@@ -6,7 +6,7 @@ frappe.ui.form.on('Medical Honorarium', {
         frm.set_query("medical", function() {
             return{
                 "filters": {
-                    "docstatus": 1
+                    "status": "Active"
                 }
             }
         });

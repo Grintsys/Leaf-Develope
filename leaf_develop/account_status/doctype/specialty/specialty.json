@@ -19,10 +19,10 @@
   }
  ],
  "links": [],
- "modified": "2020-02-24 09:02:41.800581",
+ "modified": "2020-02-27 14:50:22.004520",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Medical Category",
+ "name": "Specialty",
  "owner": "Administrator",
  "permissions": [
   {
