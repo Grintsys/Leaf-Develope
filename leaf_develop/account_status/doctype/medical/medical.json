@@ -13,6 +13,7 @@
   "full_name",
   "service",
   "column_break1",
+  "status",
   "identification_card",
   "rtn",
   "specialty",
@@ -116,13 +117,20 @@
    "hidden": 1,
    "label": "Image",
    "options": "image"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nInactive"
   }
  ],
  "image_field": "image",
- "is_submittable": 1,
  "links": [],
  "max_attachments": 1,
- "modified": "2020-02-24 10:29:10.315879",
+ "modified": "2020-02-25 15:24:00.194582",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",
