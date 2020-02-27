@@ -46,7 +46,7 @@ def get_data():
                 },
                 {
                     "type": "doctype",
-                    "name": "Medical Category",
+                    "name": "Specialty",
                     "onboard": 1,
                 },
                 {

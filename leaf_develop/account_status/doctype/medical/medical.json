@@ -108,7 +108,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Specialty",
-   "options": "Medical Category",
+   "options": "Specialty",
    "reqd": 1
   },
   {
@@ -130,7 +130,7 @@
  "image_field": "image",
  "links": [],
  "max_attachments": 1,
- "modified": "2020-02-25 15:24:00.194582",
+ "modified": "2020-02-27 14:45:37.815804",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",
