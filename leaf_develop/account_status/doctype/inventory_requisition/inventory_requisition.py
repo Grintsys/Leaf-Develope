@@ -13,40 +13,21 @@ class InventoryRequisition(Document):
 
 	def status(self):
 		if self.docstatus == 1:
-			self.apply_changes("+")
 			self.add_products_account_status_payment()
 			self.state = "Closed"
 	
 	def on_cancel(self):
-		self.apply_changes("-")
 		self.delete_products_account_status_payment()
 		self.state = "Cancelled"
 
-	def apply_changes(self, signo):
-		total_price = 0
-		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
-
-		for item in products:		
-			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})				
-
-			if product_price:
-				for product in product_price:				
-					price = product.price_list_rate * item.quantity		
-					total_price += price
-			else:
-				frappe.throw(_("{} does not have a defined price.".format(item.product_name)))	
-
+	def apply_changes(self, total_price):		
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
-		if signo == "+":
-			doc.cumulative_total += total_price
-			doc.outstanding_balance += total_price
-		
-		if signo == "-":
-			doc.cumulative_total -= total_price
-			doc.outstanding_balance -= total_price
+		doc.cumulative_total += total_price
+		doc.outstanding_balance += total_price
 		doc.save()
 	
 	def add_products_account_status_payment(self):
+		total_price = 0
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
@@ -55,26 +36,68 @@ class InventoryRequisition(Document):
 			frappe.throw(_("There is no invoice assigned to this statement."))
 
 		for item in products:
-			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})	
+			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})			
+
+			if len(product_price) == 0:
+				frappe.throw(_("{} does not have a defined price.".format(item.product_name)))
 
 			for product in product_price:
-				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 				price = item.quantity * product.price_list_rate
 				isv = price * (15/100)
-				row = doc.append("products_table", {})
-				row.item = item.item
-				row.item_name = item.product_name
-				row.quantity = item.quantity
-				row.price = product.price_list_rate
-				row.net_pay = price
-				row.reference = self.name
-				doc.total += price
-				doc.isv15 += isv
-				doc.net_total += price + isv
-				doc.save()
+				total_price += price
+				product_verified = frappe.get_all("Account Statement Payment Item", ["name"], filters = {"item": item.item, "parent": account_payment[0].name})
+
+				if len(product_verified) > 0:
+					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
+					doc_product.quantity += item.quantity
+					doc_product.net_pay += price					
+					doc_product.save()
+
+					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
+					doc.total += price
+					doc.isv15 += isv
+					doc.net_total += price + isv
+					doc.save()
+				else:
+					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
+					row = doc.append("products_table", {})
+					row.item = item.item
+					row.item_name = item.product_name
+					row.quantity = item.quantity
+					row.price = product.price_list_rate
+					row.net_pay = price
+					row.reference = self.name
+					doc.total += price
+					doc.isv15 += isv
+					doc.net_total += price + isv
+					doc.save()
+			
+		self.apply_changes(total_price)
 	
 	def delete_products_account_status_payment(self):
-		accounts_payments = frappe.get_all("Account Statement Payment", ["name"], filters = {"reference": self.name})
+		total_price = 0
+		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
-		for account in accounts_payments:
-			frappe.delete_doc("Account Statement Payment", account.name)
+		for item in products:
+			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "quantity", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
+			
+			for product in product_verified:
+				price = item.quantity * product.price
+				isv = price * (15/100)
+				total_price -= price
+				if item.quantity == product.quantity:
+					frappe.delete_doc("Account Statement Payment Item", product_verified[0].name)
+				else:					
+					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
+					doc_product.quantity -= item.quantity
+					doc_product.net_pay -= price					
+					doc_product.save()
+
+				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
+				doc.total -= price
+				doc.isv15 -= isv
+				doc.net_total -= price + isv
+				doc.save()
+		
+		self.apply_changes(total_price)
