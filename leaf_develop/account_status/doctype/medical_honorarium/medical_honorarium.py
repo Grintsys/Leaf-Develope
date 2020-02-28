@@ -15,7 +15,7 @@ class MedicalHonorarium(Document):
 	def validate(self):
 		self.remaining()
 
-		if self.docstatus == 0:
+		if self.total_payment is None:
 			self.patient_statement_acomulative_total("+")
 	
 	def on_cancel(self):
