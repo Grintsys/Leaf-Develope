@@ -86,6 +86,10 @@ class InventoryRequisition(Document):
 				price = item.quantity * product.price
 				isv = price * (15/100)
 				total_price -= price
+
+				if item.quantity > product.quantity:
+					frappe.throw(_("The statement {} only one order an amount of {} for the product {}.".format(self.patient_statement, product.quantity, product.item_name)))
+
 				if item.quantity == product.quantity:
 					frappe.delete_doc("Account Statement Payment Item", product_verified[0].name)
 				else:					
