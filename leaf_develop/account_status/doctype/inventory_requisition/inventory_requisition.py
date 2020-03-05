@@ -45,9 +45,12 @@ class InventoryRequisition(Document):
 				price = item.quantity * product.price_list_rate
 				isv = price * (15/100)
 				total_price += price
-				product_verified = frappe.get_all("Account Statement Payment Item", ["name"], filters = {"item": item.item, "parent": account_payment[0].name})
+				product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
 
 				if len(product_verified) > 0:
+					price = item.quantity * product_verified[0].price
+					isv = price * (15/100)
+					total_price += price
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
 					doc_product.net_pay += price					
