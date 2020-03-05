@@ -10,7 +10,10 @@ from datetime import datetime, timedelta, date
 
 class Patientstatement(Document):
 	def on_update(self):
-		self.new_account_statement_payment()
+		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
+
+		if len(payment) == 0:
+			self.new_account_statement_payment()
 	
 	def new_account_statement_payment(self):
 		doc = frappe.new_doc('Account Statement Payment')
@@ -25,5 +28,6 @@ class Patientstatement(Document):
 	def delete_account_statement_payment(self):
 		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
 
-		for item in payment:
-			doc = frappe.delete_doc("Account Statement Payment", item.name)
+		if len(payment) > 0:
+			for item in payment:
+				doc = frappe.delete_doc("Account Statement Payment", item.name)
