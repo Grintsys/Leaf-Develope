@@ -7,14 +7,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "image",
   "first_name",
   "last_name",
   "full_name",
   "service",
   "column_break1",
+  "status",
   "identification_card",
   "rtn",
-  "rank",
+  "specialty",
   "contact_section",
   "phone",
   "email",
@@ -87,14 +89,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "rank",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Rank",
-   "options": "Medical Category",
-   "reqd": 1
-  },
-  {
    "fieldname": "full_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -108,11 +102,35 @@
    "label": "Service",
    "options": "Item",
    "reqd": 1
+  },
+  {
+   "fieldname": "specialty",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Specialty",
+   "options": "Specialty",
+   "reqd": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "hidden": 1,
+   "label": "Image",
+   "options": "image"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nInactive"
   }
  ],
- "is_submittable": 1,
+ "image_field": "image",
  "links": [],
- "modified": "2020-02-17 13:58:14.176829",
+ "max_attachments": 1,
+ "modified": "2020-02-27 14:45:37.815804",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",

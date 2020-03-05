@@ -1,28 +1,28 @@
 {
  "actions": [],
- "autoname": "field:rank",
+ "autoname": "field:specialty",
  "creation": "2020-02-06 14:02:32.325157",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "rank"
+  "specialty"
  ],
  "fields": [
   {
-   "fieldname": "rank",
+   "fieldname": "specialty",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Rank",
+   "label": "Specialty",
    "reqd": 1,
    "unique": 1
   }
  ],
  "links": [],
- "modified": "2020-02-06 14:04:41.909885",
+ "modified": "2020-02-27 14:50:22.004520",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Medical Category",
+ "name": "Specialty",
  "owner": "Administrator",
  "permissions": [
   {

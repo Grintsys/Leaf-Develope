@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "Prompt",
+ "autoname": "ADV-STA-.YYYY.-.#####",
  "creation": "2020-02-05 13:21:28.417153",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -62,7 +62,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-14 13:53:33.262559",
+ "modified": "2020-02-24 13:34:49.006955",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",
@@ -81,7 +81,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1

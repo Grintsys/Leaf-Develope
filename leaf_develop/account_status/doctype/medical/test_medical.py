@@ -17,7 +17,7 @@ def default_data():
 		"last_name": "Midoriya",
 		"identification_card": "0501-0000-01768",
 		"rtn": "0456-00H00",
-		"rank": "Pediatra"
+		"specialty": "Pediatra"
 	}
 
 def create_events():
@@ -33,7 +33,7 @@ def create_events():
 		"last_name": doctor["last_name"],
 		"identification_card": doctor["identification_card"],
 		"rtn": doctor["rtn"],
-		"rank": doctor["rank"]
+		"specialty": doctor["specialty"]
     }).insert()
 
 	frappe.flags.test_events_created = True

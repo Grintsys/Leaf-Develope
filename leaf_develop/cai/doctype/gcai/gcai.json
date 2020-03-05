@@ -135,7 +135,7 @@
   }
  ],
  "links": [],
- "modified": "2020-02-19 13:59:13.839249",
+ "modified": "2020-02-24 13:28:25.769246",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "GCAI",
@@ -154,7 +154,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
