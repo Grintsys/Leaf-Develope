@@ -15,6 +15,7 @@ def default_data():
 	    "doctype":"Medical",
 		"first_name": "Izuku",
 		"last_name": "Midoriya",
+		"service": "CLI-SER-0016",
 		"identification_card": "0501-0000-01768",
 		"rtn": "0456-00H00",
 		"specialty": "Pediatra"
@@ -31,6 +32,7 @@ def create_events():
 		"doctype": doctor["doctype"],
 		"first_name": doctor["first_name"],
 		"last_name": doctor["last_name"],
+		"service": doctor["service"],
 		"identification_card": doctor["identification_card"],
 		"rtn": doctor["rtn"],
 		"specialty": doctor["specialty"]

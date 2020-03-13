@@ -17,6 +17,8 @@
   "identification_card",
   "rtn",
   "specialty",
+  "especialties_section",
+  "specialties",
   "contact_section",
   "phone",
   "email",
@@ -125,12 +127,23 @@
    "in_list_view": 1,
    "label": "Status",
    "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "especialties_section",
+   "fieldtype": "Section Break",
+   "label": "Professional profile"
+  },
+  {
+   "fieldname": "specialties",
+   "fieldtype": "Table",
+   "label": "Specialties",
+   "options": "Specialties"
   }
  ],
  "image_field": "image",
  "links": [],
  "max_attachments": 1,
- "modified": "2020-02-27 14:45:37.815804",
+ "modified": "2020-03-13 11:34:59.956821",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical",
