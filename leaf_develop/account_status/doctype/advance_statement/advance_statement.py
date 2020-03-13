@@ -22,13 +22,13 @@ class AdvanceStatement(Document):
 
 	def apply_changes(self, signo):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
-		if doc.cumulative_total > 0:
-			if signo == "+":
-				doc.total_advance += self.amount
-				doc.outstanding_balance -= self.amount
 		
-			if signo == "-":
-				doc.total_advance -= self.amount
-				doc.outstanding_balance += self.amount
+		if signo == "+":
+			doc.total_advance += self.amount
+			doc.outstanding_balance -= self.amount
+		
+		if signo == "-":
+			doc.total_advance -= self.amount
+			doc.outstanding_balance += self.amount
 
 		doc.save()
