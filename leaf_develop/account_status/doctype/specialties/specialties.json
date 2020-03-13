@@ -1,0 +1,31 @@
+{
+ "actions": [],
+ "creation": "2020-03-13 11:21:56.437149",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "specialty"
+ ],
+ "fields": [
+  {
+   "fieldname": "specialty",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Specialty",
+   "options": "Specialty"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2020-03-13 11:32:24.807231",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Specialties",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

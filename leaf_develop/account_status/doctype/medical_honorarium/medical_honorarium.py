@@ -14,6 +14,7 @@ form_grid_templates = {
 class MedicalHonorarium(Document):
 	def validate(self):
 		self.remaining()
+		self.verificate_changes()
 
 		if self.total_payment is None:
 			self.add_medical_honorarium_payment()
@@ -35,6 +36,22 @@ class MedicalHonorarium(Document):
 		doc.outstanding_balance += total
 		doc.cumulative_total += total
 		doc.save()
+
+	def verificate_changes(self):
+		now = frappe.get_all("Medical Honorarium", filters={'name': self.name}, fields={"total", "medical", "date", "patient_statement"})
+		for item in now:
+			if item.total != self.total:
+				self.total_remaining = self.total
+				self.condition_for_changes()
+			elif item.medical != self.medical:
+				self.condition_for_changes()
+			elif item.patient_statement != self.patient_statement:
+				self.condition_for_changes()
+
+	def condition_for_changes(self):
+		honorarium_payment = frappe.get_all("Honorarium Payment", filters={'honorarium': self.name})
+		if len(honorarium_payment) > 0:
+			frappe.throw(_("The fee cannot be edited because you already have a payment made"))
 
 	def add_medical_honorarium_payment(self):
 		total_price = 0
