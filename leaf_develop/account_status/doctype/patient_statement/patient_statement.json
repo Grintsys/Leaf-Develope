@@ -35,7 +35,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "State",
-   "options": "Open\nClose\nCancelled",
+   "options": "Open\nClosed\nCancelled",
    "read_only": 1
   },
   {
@@ -68,7 +68,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-24 13:29:13.389397",
+ "modified": "2020-03-13 10:50:22.001472",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",

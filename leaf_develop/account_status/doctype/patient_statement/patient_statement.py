@@ -9,11 +9,24 @@ from frappe.model.document import Document
 from datetime import datetime, timedelta, date
 
 class Patientstatement(Document):
+	def validate(self):
+		self.status()
+
 	def on_update(self):
 		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
-
+		
 		if len(payment) == 0:
 			self.new_account_statement_payment()
+	
+	def status(self):
+		if self.docstatus == 0:
+			self.state = "Open"
+
+		if self.docstatus == 1:
+			self.state = "Closed"
+		
+		if self.docstatus == 2:
+			self.state = "Cancelled"
 	
 	def new_account_statement_payment(self):
 		doc = frappe.new_doc('Account Statement Payment')
