@@ -20,23 +20,19 @@ class HonorariumPayment(Document):
 			self.calculate_honorarium()
 	
 	def calculate_honorarium(self):
+		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
 		if(self.total == self.honorarium_amount):
-			doc = frappe.get_doc("Medical Honorarium", self.honorarium)
 			if(self.total_remaining == 0):
 				doc.status = "Paid Out"
 				doc.total_payment += self.total
 				doc.total_remaining -= self.total
-				doc.save()
 		else:
 			if(self.total < self.honorarium_amount):
-				doc = frappe.get_doc("Medical Honorarium", self.honorarium)
 				if(self.total_remaining > 0):
 					doc.status = "Open"
 					doc.total_payment += self.total
 					doc.total_remaining -= self.total
-					doc.save()
-			# else:
-			# 	frappe.throw(_("The amount cannot be greater than the total honorarium"))
+		doc.save()
 
 		self.data_table()
 	
