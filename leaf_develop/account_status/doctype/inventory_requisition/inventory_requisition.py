@@ -27,7 +27,6 @@ class InventoryRequisition(Document):
 	# 	doc.save()
 	
 	def add_products_account_status_payment(self):
-		total_price = 0
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
@@ -43,14 +42,10 @@ class InventoryRequisition(Document):
 
 			for product in product_price:
 				price = item.quantity * product.price_list_rate
-				isv = price * (15/100)
-				total_price += price
 				product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
 
 				if len(product_verified) > 0:
 					price = item.quantity * product_verified[0].price
-					isv = price * (15/100)
-					total_price += price
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
 					doc_product.net_pay += price					
@@ -67,12 +62,11 @@ class InventoryRequisition(Document):
 					row.price = product.price_list_rate
 					row.net_pay = price
 					row.reference = self.name
-					doc.save()
+					doc.save()	
 			
 		# self.apply_changes(total_price)
 	
 	def delete_products_account_status_payment(self):
-		total_price = 0
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
@@ -81,8 +75,6 @@ class InventoryRequisition(Document):
 			
 			for product in product_verified:
 				price = item.quantity * product.price
-				isv = price * (15/100)
-				total_price -= price
 
 				if item.quantity > product.quantity:
 					frappe.throw(_("The statement {} only one order an amount of {} for the product {}.".format(self.patient_statement, product.quantity, product.item_name)))
