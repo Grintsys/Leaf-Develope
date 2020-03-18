@@ -18,6 +18,7 @@ class Patientstatement(Document):
 		if len(payment) == 0:
 			self.new_account_statement_payment()
 			
+		self.sum_acumulative_total()
 		self.sum_advance_statement()
 
 		self.outstanding_balance = self.cumulative_total - self.total_advance
@@ -26,14 +27,15 @@ class Patientstatement(Document):
 		data = frappe.get_all("Account Statement Payment", ["total"], filters = {"patient_statement": self.name})
 		
 		for item in data:
+			self.cumulative_total = 0
 			self.cumulative_total += item.total
 
 	def sum_advance_statement(self):
 		data = frappe.get_all("Advance Statement", ["amount"], filters = {"patient_statement": self.name})
 
 		for item in data:
+			self.total_advance = 0
 			self.total_advance += item.amount
-
 	
 	def status(self):
 		if self.docstatus == 0:
