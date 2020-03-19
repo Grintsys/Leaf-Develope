@@ -20,13 +20,14 @@ class InventoryRequisition(Document):
 		self.delete_products_account_status_payment()
 		self.state = "Cancelled"
 
-	# def apply_changes(self, total_price):		
-	# 	doc = frappe.get_doc("Patient statement", self.patient_statement)
-	# 	doc.cumulative_total += total_price
-	# 	doc.outstanding_balance += total_price
-	# 	doc.save()
+	def apply_changes(self, total_price):		
+		doc = frappe.get_doc("Patient statement", self.patient_statement)
+		doc.cumulative_total += total_price
+		doc.outstanding_balance += total_price
+		doc.save()
 	
 	def add_products_account_status_payment(self):
+		total_price = 0
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
@@ -46,14 +47,17 @@ class InventoryRequisition(Document):
 
 				if len(product_verified) > 0:
 					price = item.quantity * product_verified[0].price
+					total_price += price
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
 					doc_product.net_pay += price					
 					doc_product.save()
 
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
+					doc.total += price
 					doc.save()
 				else:
+					total_price += price
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
 					row = doc.append("products_table", {})
 					row.item = item.item
@@ -62,11 +66,13 @@ class InventoryRequisition(Document):
 					row.price = product.price_list_rate
 					row.net_pay = price
 					row.reference = self.name
-					doc.save()	
+					doc.total += price
+					doc.save()
 			
-		# self.apply_changes(total_price)
+		self.apply_changes(total_price)
 	
 	def delete_products_account_status_payment(self):
+		total_price = 0
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
@@ -88,6 +94,7 @@ class InventoryRequisition(Document):
 					doc_product.save()
 
 				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
+				doc.total -= price
 				doc.save()
 		
-		# self.apply_changes(total_price)
+		self.apply_changes(total_price)
