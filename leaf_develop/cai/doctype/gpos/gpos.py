@@ -11,7 +11,18 @@ class GPos(Document):
 
 	def validate(self):
 		self.validate_branch()
-	 
+
+	def on_update(self):
+		self.create_POS_perfil()
+	
+	def create_POS_perfil(self):
+		doc = frappe.new_doc('POS Profile')
+		doc.name = self.name
+		doc.insert()
+	
+	def delete_POS_perfil(self):
+		frappe.delete_doc('POS Profile', self.name)
+
 	def validate_branch(self):
 		sucursal = frappe.get_all("GSucursal", ["name"], filters = {"name": self.sucursal, "company": self.company})
 
@@ -19,6 +30,7 @@ class GPos(Document):
 			frappe.throw(_("This branch does not belong to this company"))
 
 	def on_trash(self):
+		self.delete_POS_perfil()
 		self.validate_delete()
 
 	def validate_delete(self):
