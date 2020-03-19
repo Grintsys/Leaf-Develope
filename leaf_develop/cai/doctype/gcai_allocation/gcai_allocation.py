@@ -13,6 +13,25 @@ class GCAIAllocation(Document):
 		self.validate_pos_and_sucursal()
 		self.validate_user()
 	
+	def on_update(self):
+		self.create_user_POS_profile()
+	
+	def on_trash(self):
+		self.delete_user_POS_profile()
+	
+	def delete_user_POS_profile(self):
+		perfil = frappe.get_all("POS Profile User", ['name'], filters = {'user': self.user, 'parent': self.pos})
+
+		for item in perfil:
+			frappe.delete_doc('POS Profile User', item.name)
+	
+	def create_user_POS_profile(self):
+		doc = frappe.get_doc('POS Profile', self.pos)
+		row = doc.append("applicable_for_users", {})
+		row.default = 1
+		row.user = self.user
+		doc.save()
+	
 	def validate_pos_and_sucursal(self):
 		pos = frappe.get_all("GPos", ["name"], filters = {"name": self.pos, "sucursal": self.branch})
 		sucursal = frappe.get_all("GSucursal", ["name"], filters = {"name": self.branch, "company": self.company})
