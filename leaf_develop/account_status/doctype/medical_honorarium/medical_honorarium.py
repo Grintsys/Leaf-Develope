@@ -64,7 +64,6 @@ class MedicalHonorarium(Document):
 
 		for item in medico:
 			price = self.total
-			isv = price * (15/100)
 			total_price += price
 			
 			products = frappe.get_all("Item", ["item_name"], filters = {'name': item.service})			
@@ -79,8 +78,6 @@ class MedicalHonorarium(Document):
 				row.net_pay = price
 				row.reference = self.name
 				doc.total += price
-				doc.isv15 += isv
-				doc.net_total += price + isv
 				doc.save()
 			
 		self.apply_changes(total_price)
@@ -92,7 +89,7 @@ class MedicalHonorarium(Document):
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 
 		if len(account_payment) == 0:
-			frappe.throw(_("There is no invoice assigned to this statement."))
+			return
 
 		for item in medico:				
 
@@ -100,15 +97,11 @@ class MedicalHonorarium(Document):
 
 			for product in product_verified:
 				price = product.price
-				isv = price * (15/100)
-				total_price -= price
 
 				frappe.delete_doc("Account Statement Payment Item", product.name)
 
 				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 				doc.total -= price
-				doc.isv15 -= isv
-				doc.net_total -= price + isv
 				doc.save()	
 
 		self.apply_changes(total_price)
