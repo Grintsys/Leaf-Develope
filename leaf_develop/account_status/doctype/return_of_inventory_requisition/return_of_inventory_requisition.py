@@ -31,6 +31,9 @@ class Returnofinventoryrequisition(Document):
 		total_price = 0
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		products = frappe.get_all("Inventory Item Return", ["item", "product_name", "quantity"], filters = {"parent": self.name})
+		
+		if len(account_payment) == 0:
+			frappe.throw(_("There is no invoice assigned to this statement."))
 
 		for item in products:
 			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "item_name", "quantity", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
@@ -66,7 +69,7 @@ class Returnofinventoryrequisition(Document):
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		
 		if len(account_payment) == 0:
-			frappe.throw(_("There is no invoice assigned to this statement."))
+			return
 
 		for item in products:
 			product_price = product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})			

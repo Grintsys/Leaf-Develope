@@ -89,7 +89,7 @@ class MedicalHonorarium(Document):
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 
 		if len(account_payment) == 0:
-			frappe.throw(_("There is no invoice assigned to this statement."))
+			return
 
 		for item in medico:				
 

@@ -76,6 +76,9 @@ class InventoryRequisition(Document):
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
+		if len(account_payment) == 0:
+			return
+
 		for item in products:
 			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "quantity", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
 			
