@@ -15,8 +15,24 @@ class GCAI(Document):
         self.validate_dates()
         self.validate_mask()
         self.generate_number()
+    
+    def on_update(self):
+        self.assign_CAI_POS_profile()
+    
+    def assign_CAI_POS_profile(self):
+        doc = frappe.get_doc('POS Profile', self.pos_name)
+        doc.cai = self.name
+        doc.number = self.number
+        doc.save()
+    
+    def delete_CAI_POS_profile(self):
+        doc = frappe.get_doc('POS Profile', self.pos_name)
+        doc.cai = ""
+        doc.number = ""
+        doc.save()
 
     def on_trash(self):
+        self.delete_CAI_POS_profile()
         self.validate_delete()
 
     def validate_delete(self):

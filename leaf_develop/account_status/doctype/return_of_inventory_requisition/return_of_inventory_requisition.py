@@ -31,6 +31,9 @@ class Returnofinventoryrequisition(Document):
 		total_price = 0
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		products = frappe.get_all("Inventory Item Return", ["item", "product_name", "quantity"], filters = {"parent": self.name})
+		
+		if len(account_payment) == 0:
+			frappe.throw(_("There is no invoice assigned to this statement."))
 
 		for item in products:
 			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "item_name", "quantity", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
@@ -40,7 +43,6 @@ class Returnofinventoryrequisition(Document):
 
 			for product in product_verified:
 				price = item.quantity * product.price
-				isv = price * (15/100)
 				total_price -= price
 
 				if item.quantity > product.quantity:
@@ -56,8 +58,6 @@ class Returnofinventoryrequisition(Document):
 
 				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 				doc.total -= price
-				doc.isv15 -= isv
-				doc.net_total -= price + isv
 				doc.save()
 		
 		self.apply_changes(total_price)
@@ -69,7 +69,7 @@ class Returnofinventoryrequisition(Document):
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		
 		if len(account_payment) == 0:
-			frappe.throw(_("There is no invoice assigned to this statement."))
+			return
 
 		for item in products:
 			product_price = product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})			
@@ -79,13 +79,10 @@ class Returnofinventoryrequisition(Document):
 
 			for product in product_price:
 				price = item.quantity * product.price_list_rate
-				isv = price * (15/100)
-				total_price += price
 				product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
 
 				if len(product_verified) > 0:
 					price = item.quantity * product_verified[0].price
-					isv = price * (15/100)
 					total_price += price
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
@@ -94,10 +91,9 @@ class Returnofinventoryrequisition(Document):
 
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 					doc.total += price
-					doc.isv15 += isv
-					doc.net_total += price + isv
 					doc.save()
 				else:
+					total_price += price
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
 					row = doc.append("products_table", {})
 					row.item = item.item
@@ -107,8 +103,6 @@ class Returnofinventoryrequisition(Document):
 					row.net_pay = price
 					row.reference = self.name
 					doc.total += price
-					doc.isv15 += isv
-					doc.net_total += price + isv
 					doc.save()
 			
 		self.apply_changes(total_price)
