@@ -97,6 +97,7 @@ class MedicalHonorarium(Document):
 
 			for product in product_verified:
 				price = product.price
+				total_price += price
 
 				frappe.delete_doc("Account Statement Payment Item", product.name)
 

@@ -39,7 +39,8 @@
    "fieldname": "state",
    "fieldtype": "Select",
    "label": "State",
-   "options": "Open\nClosed\nCanceled"
+   "options": "Open\nClosed\nCanceled",
+   "read_only": 1
   },
   {
    "fieldname": "amended_from",
@@ -53,7 +54,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-02-24 13:34:29.640402",
+ "modified": "2020-03-23 22:04:57.343287",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Return of inventory requisition",
