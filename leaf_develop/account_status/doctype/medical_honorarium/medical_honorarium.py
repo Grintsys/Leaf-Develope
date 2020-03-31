@@ -81,7 +81,6 @@ class MedicalHonorarium(Document):
 				doc_acc.total += total_price
 				doc_acc.save()
 				
-				frappe.msgprint("price_ver: {}, price: {}, total_price: {}".format(price_ver, price, total_price))
 				self.apply_changes(total_price)
 				total_price = 0
 				break
