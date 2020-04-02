@@ -24,7 +24,7 @@
   },
   {
    "fieldname": "date_create",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date Create",
    "reqd": 1
@@ -62,7 +62,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-03-23 22:01:16.525899",
+ "modified": "2020-04-01 22:06:05.135152",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",
