@@ -23,7 +23,7 @@
   },
   {
    "fieldname": "date_create",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date Create",
    "reqd": 1
@@ -54,7 +54,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-03-23 22:04:57.343287",
+ "modified": "2020-04-01 22:17:19.089808",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Return of inventory requisition",
