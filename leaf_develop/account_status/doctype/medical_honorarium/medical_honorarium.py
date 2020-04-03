@@ -16,8 +16,7 @@ class MedicalHonorarium(Document):
 		self.remaining()
 		self.verificate_changes()
 
-		if self.total_payment is None:
-			self.add_medical_honorarium_payment()
+		self.add_medical_honorarium_payment()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()
@@ -66,9 +65,27 @@ class MedicalHonorarium(Document):
 			price = self.total
 			total_price += price
 			
-			products = frappe.get_all("Item", ["item_name"], filters = {'name': item.service})			
+			products = frappe.get_all("Item", ["item_name"], filters = {'name': item.service})	
 
-			for product in products:				
+			ver_product = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.service, "reference": self.name})	
+
+			if len(ver_product) > 0:
+				price_ver = ver_product[0].price
+				doc = frappe.get_doc("Account Statement Payment Item", ver_product[0].name)				
+				doc.price = price
+				doc.save()
+
+				total_price = price - price_ver
+
+				doc_acc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
+				doc_acc.total += total_price
+				doc_acc.save()
+				
+				self.apply_changes(total_price)
+				total_price = 0
+				break
+
+			for product in products:							
 				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
 				row = doc.append("products_table", {})
 				row.item = item.service
