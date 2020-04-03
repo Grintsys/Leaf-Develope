@@ -41,7 +41,7 @@ def execute(filters=None):
 	
 	req_data = [{'indent': 0.0, "movement_type": "Requisiciones"}]
 
-	requisitions = frappe.get_all("Inventory Requisition", ["name", "date_create"], filters = conditions)
+	requisitions = frappe.get_all("Inventory Requisition", ["name", "date_create"], filters = conditions, order_by = "date_create asc")
 
 	for requisition in requisitions:
 		if str(requisition.date_create) >= str(filters.get("from_date")) and str(requisition.date_create) <= str(filters.get("to_date")):
@@ -57,7 +57,7 @@ def execute(filters=None):
 
 	req_data += [{'indent': 0.0, "movement_type": "Retorno de Requisiciones"}]
 
-	return_requisitions = frappe.get_all("Return of inventory requisition", ["name", "date_create"], filters = conditions)
+	return_requisitions = frappe.get_all("Return of inventory requisition", ["name", "date_create"], filters = conditions, order_by = "date_create asc")
 
 	for return_requisition in return_requisitions:
 		if str(return_requisition.date_create) >= str(filters.get("from_date")) and str(return_requisition.date_create) <= str(filters.get("to_date")):
@@ -75,7 +75,7 @@ def execute(filters=None):
 
 	condition_honorarium = get_conditions_honorarium(filters)
 
-	honorariums = frappe.get_all("Medical Honorarium", ["name", "date", "medical"], filters = condition_honorarium)
+	honorariums = frappe.get_all("Medical Honorarium", ["name", "date", "medical"], filters = condition_honorarium, order_by = "date asc")
 
 	for honorarium in honorariums:
 		if str(honorarium.date) >= str(filters.get("from_date")) and str(honorarium.date) <= str(filters.get("to_date")):
@@ -92,39 +92,40 @@ def execute(filters=None):
 
 	message = None
 
-	labels = []
+	# labels = []
 
-	labels = get_labels(labels, arr_requisition)
-	labels = get_labels(labels, arr_return)
-	labels = get_labels(labels, arr_honorarium)	
+	# labels = get_labels(labels, arr_requisition)
+	# labels = get_labels(labels, arr_return)
+	# labels = get_labels(labels, arr_honorarium)	
 
-	values_data = []
+	# values_data = []
 
-	values_data_requisition = get_data_values(arr_requisition)	
-	values_data_return = get_data_values(arr_return)	
-	values_data_honorarium = get_data_values(arr_honorarium)
+	# values_data_requisition = get_data_values(arr_requisition)	
+	# values_data_return = get_data_values(arr_return)	
+	# values_data_honorarium = get_data_values(arr_honorarium)
 
-	if len(values_data_requisition) > len(values_data_return) and len(values_data_requisition) > len(values_data_honorarium):
-		values_data_return = add_values(values_data_requisition, values_data_return)
-		values_data_honorarium = add_values(values_data_requisition, values_data_honorarium)
+	# if len(values_data_requisition) > len(values_data_return) and len(values_data_requisition) > len(values_data_honorarium):
+	# 	values_data_return = add_values(values_data_requisition, values_data_return)
+	# 	values_data_honorarium = add_values(values_data_requisition, values_data_honorarium)
 	
-	if len(values_data_return) > len(values_data_requisition) and len(values_data_return) > len(values_data_honorarium):
-		values_data_requisition = add_values(values_data_return, values_data_requisition)
-		values_data_honorarium = add_values(values_data_return, values_data_honorarium)
+	# if len(values_data_return) > len(values_data_requisition) and len(values_data_return) > len(values_data_honorarium):
+	# 	values_data_requisition = add_values(values_data_return, values_data_requisition)
+	# 	values_data_honorarium = add_values(values_data_return, values_data_honorarium)
 	
-	if len(values_data_honorarium) > len(values_data_requisition) and len(values_data_honorarium) > len(values_data_return):
-		values_data_requisition = add_values(values_data_honorarium, values_data_requisition)
-		values_data_return = add_values(values_data_honorarium, values_data_return)
+	# if len(values_data_honorarium) > len(values_data_requisition) and len(values_data_honorarium) > len(values_data_return):
+	# 	values_data_requisition = add_values(values_data_honorarium, values_data_requisition)
+	# 	values_data_return = add_values(values_data_honorarium, values_data_return)
 
+	# datasets = []
+	
+	# datasets = get_dataset(datasets, values_data_requisition, "Requisiciones")
+	# datasets = get_dataset(datasets, values_data_return, "Retorno de requisiciones")
+	# datasets = get_dataset(datasets, values_data_honorarium, "Honorarios Medicos")
+
+	labels = ["Requisiciones", "Retorno de requisiciones", "Honorarios Medicos"]
 	datasets = []
-	
-	datasets = get_dataset(datasets, values_data_requisition, "Requisiciones")
-	datasets = get_dataset(datasets, values_data_return, "Retorno de requisiciones")
-	datasets = get_dataset(datasets, values_data_honorarium, "Honorarios Medicos")
 
-	frappe.msgprint("values_data_requisition{}".format(values_data_requisition))
-	frappe.msgprint("values_data_return{}".format(values_data_return))
-	frappe.msgprint("values_data_honorarium{}".format(values_data_honorarium))
+	datasets += [{'values': [len(arr_requisition), len(arr_return), len(arr_honorarium)]}]
 
 	chart= {
 		'data': 
@@ -132,7 +133,7 @@ def execute(filters=None):
 			'labels': labels, 
 			'datasets': datasets
 		}, 
-		'type': 'line'
+		'type': 'bar'
 	}
 
 	return columns, data, message, chart
@@ -141,7 +142,7 @@ def get_conditions(filters):
 	conditions = ''
 
 	conditions += "{"
-	if filters.get("from_date") and filters.get("to_date"): conditions += '"date_create": [">=", "{}", "<=", "{}"]'.format(filters.get("from_date"), filters.get("to_date"))
+	if filters.get("from_date") and filters.get("to_date"): conditions += '"date_create": [">=", "{}", "<=", "{}"], "docstatus": 1'.format(filters.get("from_date"), filters.get("to_date"))
 	conditions += "}"
 
 	return conditions
@@ -155,75 +156,75 @@ def get_conditions_honorarium(filters):
 
 	return conditions
 
-def get_labels(labels, array):
+# def get_labels(labels, array):
 
-	for arr in array:
+# 	for arr in array:
 
-		if len(labels) > 0:
-			cont = 0
-			for l in labels:
-				cont += 1
+# 		if len(labels) > 0:
+# 			cont = 0
+# 			for l in labels:
+# 				cont += 1
 
-				if l == arr:
-					break
+# 				if l == arr:
+# 					break
 
-				if len(labels) == cont:
-					labels.append(arr)
-		else:
-			labels.append(arr)
+# 				if len(labels) == cont:
+# 					labels.append(arr)
+# 		else:
+# 			labels.append(arr)
 	
-	return labels
+# 	return labels
 
-def get_data_values(array):
-	values_data = []
+# def get_data_values(array):
+# 	values_data = []
 
-	for arr in array:
+# 	for arr in array:
 
-		if len(values_data) > 0:
-			cont = 0
-			for value in values_data:
-				cont += 1 
+# 		if len(values_data) > 0:
+# 			cont = 0
+# 			for value in values_data:
+# 				cont += 1 
 
-				if arr == value[1]:
-					value[0] += 1
-					break
+# 				if arr == value[1]:
+# 					value[0] += 1
+# 					break
 				
-				if len(values_data) == cont:
-					values_data.append([1, arr])
-					break
-		else:
-			values_data.append([1, arr])
+# 				if len(values_data) == cont:
+# 					values_data.append([1, arr])
+# 					break
+# 		else:
+# 			values_data.append([1, arr])
 	
-	return values_data
+# 	return values_data
 
-def get_dataset(datasets, array, name):
-	values = []
+# def get_dataset(datasets, array, name):
+# 	values = []
 	
-	for arr in array:
-		values.append(arr[0])
+# 	for arr in array:
+# 		values.append(arr[0])
 	
-	datasets += [{'values': values, 'name': name}]
+# 	datasets += [{'values': values, 'name': name}]
 
-	return datasets
+# 	return datasets
 
-def add_values(arr_max, arr_min):
+# def add_values(arr_max, arr_min):
 
-	arr_return = []
+# 	arr_return = []
 
-	for arr in arr_max:
-		cont = 0
-		if len(arr_min) > 0:
-			for arr_mi in arr_min:
-				cont += 1
-				if arr[1] == arr_mi[1]:
-					arr_return.append([arr_mi[0], arr_mi[1]])
-					break
+# 	for arr in arr_max:
+# 		cont = 0
+# 		if len(arr_min) > 0:
+# 			for arr_mi in arr_min:
+# 				cont += 1
+# 				if arr[1] == arr_mi[1]:
+# 					arr_return.append([arr_mi[0], arr_mi[1]])
+# 					break
 
-				if cont == len(arr_min):
-					arr_return.append([0, arr[1]])
-					break
-		else:
-			arr_return.append([0, arr[1]])
-			break
+# 				if cont == len(arr_min):
+# 					arr_return.append([0, arr[1]])
+# 					break
+# 		else:
+# 			arr_return.append([0, arr[1]])
+# 			break
 	
-	return arr_return
+# 	return arr_return

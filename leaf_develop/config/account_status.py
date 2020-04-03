@@ -72,6 +72,20 @@ def get_data():
 					"name": "Patient Medical Fees",
 					"doctype": "Patient Medical Fees",
                     "dependencies": ["Medical Honorarium"]
+				},
+                {
+					"type": "report",
+					"is_query_report": True,
+					"name": "History Account Status",
+					"doctype": "History Account Status",
+                    "dependencies": ["Medical Honorarium", "Return of inventory requisition", "Inventory Requisition"]
+				},
+                {
+					"type": "report",
+					"is_query_report": True,
+					"name": "General report of hospital accounts",
+					"doctype": "General report of hospital accounts",
+                    "dependencies": ["Patient statement"]
 				}
             ]
         }
