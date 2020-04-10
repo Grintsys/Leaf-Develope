@@ -1,7 +1,7 @@
 {
  "actions": [],
- "autoname": "ADV-STA-.YYYY.-.#####",
- "creation": "2020-02-05 13:21:28.417153",
+ "autoname": "RET-ADV-STA-.YYYY.-.#####",
+ "creation": "2020-04-06 22:23:49.474990",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -11,6 +11,7 @@
   "amount",
   "way_to_pay",
   "state",
+  "amended_from",
   "amended_from"
  ],
  "fields": [
@@ -19,6 +20,14 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date Create",
+   "reqd": 1
+  },
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient statement",
+   "options": "Patient statement",
    "reqd": 1
   },
   {
@@ -42,14 +51,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "patient_statement",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Patient statement",
-   "options": "Patient statement",
-   "reqd": 1
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "hidden": 1,
@@ -58,14 +59,23 @@
    "options": "Advance Statement",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Return Advance Statement",
+   "print_hide": 1,
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2020-04-06 21:56:16.318372",
+ "modified": "2020-04-06 22:23:49.474990",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Advance Statement",
+ "name": "Return Advance Statement",
  "owner": "Administrator",
  "permissions": [
   {

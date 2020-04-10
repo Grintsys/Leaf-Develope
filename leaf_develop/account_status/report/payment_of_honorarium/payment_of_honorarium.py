@@ -29,7 +29,7 @@ def return_filters(filters):
 	conditions = ''
 
 	conditions += "{"
-	if filters.get("from_date") and filters.get("to_date"): conditions += '"date": [">=", "{}", "<=", "{}"], '.format(filters.get("from_date"), filters.get("to_date"))
+	if filters.get("from_date") and filters.get("to_date"): conditions += '"date": [">=", "{}"], "date": ["<=", "{}"], '.format(filters.get("from_date"), filters.get("to_date"))
 	if filters.get("medical"): conditions += '"medical": "{}"'.format(filters.get("medical"))
 	if filters.get("patient_statement"): conditions += ', "patient_statement": "{}"'.format(filters.get("patient_statement"))
 	if filters.get("status") != "All":

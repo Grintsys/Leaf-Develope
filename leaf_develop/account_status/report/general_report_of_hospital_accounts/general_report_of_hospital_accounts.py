@@ -32,6 +32,7 @@ def execute(filters=None):
 	return_requisition = []
 	honorarium = []
 	advance = []
+	return_advance = []
 
 	arr_values = []
 	condition = get_conditions(filters)
@@ -43,6 +44,7 @@ def execute(filters=None):
 		total_requisition_return = 0
 		total_honorarium = 0
 		total_advance = 0
+		total_return_advance = 0
 
 		patientarr += [{'indent': 0.0, "movement": patient.name}]
 
@@ -100,11 +102,20 @@ def execute(filters=None):
 		advance += [{'indent': 1.0, "movement": "Avances", "quantity": len(advances),"total": total_advance}]
 		arr_values.append([len(advances), total_advance])
 
+		return_advances = frappe.get_all("Return Advance Statement", ["amount"], filters = {"patient_statement": patient.name, "docstatus": 1})
+
+		for radv in return_advances:
+			total_return_advance += radv.amount
+		
+		return_advance += [{'indent': 1.0, "movement": "Retorno de avances", "quantity": len(return_advances),"total": total_return_advance}]
+		arr_values.append([len(return_advances), total_return_advance])
+
 	data.extend(patientarr or [])
 	data.extend(requisition or [])
 	data.extend(return_requisition or [])
 	data.extend(honorarium or [])
 	data.extend(advance or [])
+	data.extend(return_advance or [])
 
 	message = "Grafico por total"
 
@@ -113,7 +124,7 @@ def execute(filters=None):
 	for val in arr_values:
 		totales.append(val[1])
 
-	labels = ["Requisiciones", "Retorno de requisciones", "Honorarios Medicos", "Avances"]
+	labels = ["Requisiciones", "Retorno de requisciones", "Honorarios Medicos", "Avances", "Retorno de avances"]
 	datasets = [{'values': totales}]
 
 	chart= {
@@ -125,7 +136,7 @@ def execute(filters=None):
 		'type': 'pie'
 	}
 
-	total_pen = totales[0] - totales[1] + totales[2] - totales[3]
+	total_pen = totales[0] - totales[1] + totales[2] - totales[3] + totales[4]
 
 	endtotal = [{'indent': 0.0, "movement": "Saldo Pendiente", "total": total_pen}]
 
