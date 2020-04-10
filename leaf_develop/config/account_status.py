@@ -19,6 +19,12 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Return Advance Statement",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
 					"name": "Inventory Requisition",
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
@@ -85,6 +91,13 @@ def get_data():
 					"is_query_report": True,
 					"name": "General report of hospital accounts",
 					"doctype": "General report of hospital accounts",
+                    "dependencies": ["Patient statement"]
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Detailed general report of hospital accounts",
+					"doctype": "Detailed general report of hospital accountss",
                     "dependencies": ["Patient statement"]
 				}
             ]
