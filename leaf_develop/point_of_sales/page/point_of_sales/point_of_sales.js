@@ -31,6 +31,8 @@ erpnext.PointOfSales = class PointOfSales {
 			() => {
 				this.prepare_dom();
 				this.prepare_menu();
+				this.item_list();
+				this.detail();
 			},
 			() => this.page.set_title(__('Point of Sale'))
 		]);
@@ -43,7 +45,6 @@ erpnext.PointOfSales = class PointOfSales {
 
 				</section>
 				<section class="item-container">
-
 				</section>
 			</div>
 		`);
@@ -77,6 +78,38 @@ erpnext.PointOfSales = class PointOfSales {
 		this.page.add_action_icon(__("fa fa-history text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
 		});
+	}
+
+	item_list(){
+		this.wrapper.find('.cart-container').append(`
+		<div class="pos-cart">
+				<div class="customer-field">
+				</div>
+				<div class="cart-wrapper">
+					<div class="list-item-table">
+						<div class="list-item list-item--head">
+							<div class="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</div>
+							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
+							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
+							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
+							<div class="list-item__content text-muted text-right">${__('Total')}</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		`)
+	}
+
+	detail(){
+		this.wrapper.find('.item-container').append(`
+		<div class="pos-cart">
+			<div class="cart-wrapper">
+				<div class="list-item list-item--head">
+					<h5 class="text-muted">Detalle de factura</h5>
+				</div>
+			</div>
+		</div>
+		`)
 	}
 
 }
