@@ -18,7 +18,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 		const assets = [
 			'assets/erpnext/js/pos/clusterize.js',
-			'assets/erpnext/css/pos.css'
+			'assets/erpnext/css/point_of_sales.css'
 		];
 
 		frappe.require(assets, () => {
@@ -31,6 +31,7 @@ erpnext.PointOfSales = class PointOfSales {
 			() => {
 				this.prepare_dom();
 				this.prepare_menu();
+				this.add_p()
 			},
 			() => this.page.set_title(__('Point of Sale'))
 		]);
@@ -40,10 +41,10 @@ erpnext.PointOfSales = class PointOfSales {
 		this.wrapper.append(`
 			<div class="pos">
 				<section class="cart-container">
-
+					
 				</section>
 				<section class="item-container">
-
+					
 				</section>
 			</div>
 		`);
@@ -77,6 +78,11 @@ erpnext.PointOfSales = class PointOfSales {
 		this.page.add_action_icon(__("fa fa-history text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
 		});
+	}
+
+	add_p(){
+		this.wrapper.find(".cart-container").append(`<p>Hello bitches</p>`)
+		this.wrapper.find(".item-container").append(`<p>Hello bitches</p>`)
 	}
 
 }
