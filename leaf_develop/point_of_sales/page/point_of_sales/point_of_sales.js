@@ -18,7 +18,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 		const assets = [
 			'assets/erpnext/js/pos/clusterize.js',
-			'assets/erpnext/css/pos.css'
+			'assets/erpnext/css/point_of_sales.css'
 		];
 
 		frappe.require(assets, () => {
@@ -33,6 +33,9 @@ erpnext.PointOfSales = class PointOfSales {
 				this.prepare_menu();
 				this.item_list();
 				this.detail();
+				this.make_buttons();
+				this.make_fields();
+				this.make_fields_detail_sale();
 			},
 			() => this.page.set_title(__('Point of Sale'))
 		]);
@@ -42,9 +45,10 @@ erpnext.PointOfSales = class PointOfSales {
 		this.wrapper.append(`
 			<div class="pos">
 				<section class="cart-container">
-
+					
 				</section>
 				<section class="item-container">
+
 				</section>
 			</div>
 		`);
@@ -82,8 +86,14 @@ erpnext.PointOfSales = class PointOfSales {
 
 	item_list(){
 		this.wrapper.find('.cart-container').append(`
-		<div class="pos-cart">
-				<div class="customer-field">
+			<div class="pos-cart">
+				<div class="fields">
+					<div class="item-group-field">
+					</div>
+					<div class="search-field">
+					</div>
+					<div class="items-wrapper">
+					</div>
 				</div>
 				<div class="cart-wrapper">
 					<div class="list-item-table">
@@ -96,6 +106,8 @@ erpnext.PointOfSales = class PointOfSales {
 						</div>
 					</div>
 				</div>
+				<div class="cart-items">
+				</div>
 		</div>
 		`)
 	}
@@ -104,12 +116,117 @@ erpnext.PointOfSales = class PointOfSales {
 		this.wrapper.find('.item-container').append(`
 		<div class="pos-cart">
 			<div class="cart-wrapper">
-				<div class="list-item list-item--head">
-					<h5 class="text-muted">Detalle de factura</h5>
+				<div class="list-item-table list-item list-item--head">
+					<h5 class="text-muted">Detail of sale</h5>
 				</div>
 			</div>
+			<div class="detail-items">
+				<div class="detail">
+				</div>
+			<div>
+		</div>
+		</div>
+		<div class="buttons flex">
 		</div>
 		`)
+	}
+
+
+	make_fields() {
+		// Search field
+		const me = this;
+		this.search_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Search Item'),
+				options: 'Item',
+				placeholder: __('Search item by name, code and barcode')
+			},
+			parent: this.wrapper.find('.search-field'),
+			render_input: true,
+		});
+
+		this.item_group_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: 'Item Group',
+				options: 'Item Group',
+				default: me.parent_item_group,
+			},
+			parent: this.wrapper.find('.item-group-field'),
+			render_input: true
+		});
+	}
+
+	make_buttons() {
+		this.wrapper.find('.buttons').append(`<div class="pause-btn" data-button-value="pause">Pause</div>`);
+		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
+	}
+
+	make_fields_detail_sale(){
+		const me = this;
+		this.customer_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Customer'),
+				fieldname: 'customer',
+				options: 'Customer',
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.numeration_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Data',
+				label: __('Numeration'),
+				fieldname: 'numeration',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.exonerated_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Check',
+				label: __('Exonerated Sale'),
+				fieldname: 'exonerated'
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.reason_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Discount reason'),
+				fieldname: 'discount_reason',
+				options: 'Reason For Discount'
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.amount_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Amount for discount'),
+				fieldname: 'amount'
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.return_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Return'),
+				fieldname: 'return'
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
 	}
 
 }
