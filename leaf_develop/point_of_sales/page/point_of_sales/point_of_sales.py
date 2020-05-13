@@ -11,6 +11,6 @@ from six import string_types
 
 @frappe.whitelist()
 def item():
-	frappe.throw("Hola")
+	return "Hola"
 def get_items(start, page_length, price_list, item_group, search_value="", pos_profile=None):
 	pass

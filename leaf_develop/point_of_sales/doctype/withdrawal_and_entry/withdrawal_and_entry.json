@@ -11,7 +11,8 @@
   "type_movement",
   "amount",
   "title",
-  "detail"
+  "detail",
+  "date"
  ],
  "fields": [
   {
@@ -56,10 +57,16 @@
    "fieldtype": "Data",
    "label": "Detail",
    "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date",
+   "reqd": 1
   }
  ],
  "links": [],
- "modified": "2020-05-12 11:00:38.163809",
+ "modified": "2020-05-12 14:39:19.471059",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
  "name": "Withdrawal and Entry",

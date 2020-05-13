@@ -36,8 +36,10 @@ erpnext.PointOfSales = class PointOfSales {
 				this.make_buttons();
 				this.make_fields();
 				this.make_fields_detail_sale();
+				this.add_item()
+				// this.make_table_items();
 			},
-			() => this.page.set_title(__('Point of Sale'))
+			() => this.page.set_title(__('Point of Sales'))
 		]);
 	}
 
@@ -60,7 +62,9 @@ erpnext.PointOfSales = class PointOfSales {
 				method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.item",
 				args: {},
 				callback: function (r) {
-
+					if (!r.exc){
+						this.add_item()
+					}			
 				}
 			})
 		});
@@ -71,17 +75,32 @@ erpnext.PointOfSales = class PointOfSales {
 			frappe.msgprint("Message");
 		});
 		this.page.add_action_icon(__("fa fa-exchange text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Withdrawal and Entry")
 		});
 		this.page.add_action_icon(__("fa fa-cut text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Point of sale Cut")
 		});
 		this.page.add_action_icon(__("fa fa-lock text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Close Pos")
 		});
 		this.page.add_action_icon(__("fa fa-history text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
 		});
+	}
+
+	add_item(){
+		this.wrapper.find('.tbody-items').append(`
+			<tr>
+			<th scope="row">Panadol antigripal</th>
+			<td><input type="number" value="50"></td>
+			<td><input type="currency" value="15"></td>
+			<td>5.00</td>
+			<td>235.00</td>
+			</tr>
+		`)
 	}
 
 	item_list(){
@@ -96,17 +115,22 @@ erpnext.PointOfSales = class PointOfSales {
 					</div>
 				</div>
 				<div class="cart-wrapper">
-					<div class="list-item-table">
-						<div class="list-item list-item--head">
-							<div class="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</div>
-							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
-							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
-							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
-							<div class="list-item__content text-muted text-right">${__('Total')}</div>
-						</div>
-					</div>
+					
 				</div>
 				<div class="cart-items">
+				<table class="table">
+				<thead>
+				  <tr>
+					<th scope="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</th>
+					<th scope="list-item__content text-muted text-right">${__('Quantity')}</th>
+					<th scope="list-item__content text-muted text-right">${__('Discount')}</th>
+					<th scope="list-item__content text-muted text-right">${__('Rate')}</th>
+					<th scope="list-item__content text-muted text-right">${__('Total')}</th>
+				  </tr>
+				</thead>
+				<tbody class = "tbody-items">
+				</tbody>
+			  </table>
 				</div>
 		</div>
 		`)
@@ -161,6 +185,19 @@ erpnext.PointOfSales = class PointOfSales {
 	make_buttons() {
 		this.wrapper.find('.buttons').append(`<div class="pause-btn" data-button-value="pause">Pause</div>`);
 		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
+	}
+
+	make_table_items(){
+		this.table_items = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Table',
+				label: __(''),
+				fieldname: 'pos_table_item',
+				options: 'Pos Table Item',
+			},
+			parent: this.wrapper.find('.cart-items'),
+			render_input: true,
+		});
 	}
 
 	make_fields_detail_sale(){
