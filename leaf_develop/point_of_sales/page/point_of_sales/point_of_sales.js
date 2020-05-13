@@ -111,6 +111,8 @@ erpnext.PointOfSales = class PointOfSales {
 					</div>
 					<div class="search-field">
 					</div>
+					<div class="btn-add">
+					</div>
 					<div class="items-wrapper">
 					</div>
 				</div>
@@ -132,26 +134,28 @@ erpnext.PointOfSales = class PointOfSales {
 				</tbody>
 			  </table>
 				</div>
-		</div>
+			</div>
 		`)
 	}
 
 	detail(){
 		this.wrapper.find('.item-container').append(`
-		<div class="pos-cart">
-			<div class="cart-wrapper">
-				<div class="list-item-table list-item list-item--head">
-					<h5 class="text-muted">Detail of sale</h5>
+			<div class="pos-cart">
+				<div class="cart-wrapper">
+					<div class="list-item-table list-item list-item--head">
+						<h5 class="text-muted">Detail of sale</h5>
+					</div>
 				</div>
+				<div class="detail-items">
+					<div class="detail">
+					</div>
+					<div class="totals">
+					</div>
+				<div>
 			</div>
-			<div class="detail-items">
-				<div class="detail">
-				</div>
-			<div>
-		</div>
-		</div>
-		<div class="buttons flex">
-		</div>
+			</div>
+			<div class="buttons flex">
+			</div>
 		`)
 	}
 
@@ -170,12 +174,13 @@ erpnext.PointOfSales = class PointOfSales {
 			render_input: true,
 		});
 
+		this.wrapper.find('.btn-add').append(`<button class="btn btn-default btn-xs add" data-fieldtype="Button">Agregar</button>`);
+
 		this.item_group_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Link',
 				label: 'Item Group',
 				options: 'Item Group',
-				default: me.parent_item_group,
 			},
 			parent: this.wrapper.find('.item-group-field'),
 			render_input: true
@@ -208,6 +213,7 @@ erpnext.PointOfSales = class PointOfSales {
 				label: __('Customer'),
 				fieldname: 'customer',
 				options: 'Customer',
+				reqd: 1
 			},
 			parent: this.wrapper.find('.detail'),
 			render_input: true,
@@ -224,34 +230,70 @@ erpnext.PointOfSales = class PointOfSales {
 			render_input: true,
 		});
 
+		this.wrapper.find('.detail').append(`
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+		  			<div class="card-header" id="headingOne">
+						<h2 class="mb-0">
+			  				<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			  					<a>
+									<i class="octicon octicon-chevron-down"></i>
+			  							${__('Detail of discount')}
+		  						</a>
+			  				</button>
+						</h2>
+		  			</div>
+		  			<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="card-body discount-detail">
+						</div>
+		  			</div>
+				</div>
+			</div>
+		`);
+		
+		this.wrapper.find('.detail').append(`
+			<div class="card">
+				<div class="card-header" id="headingTwo">
+		  			<h2 class="mb-0">
+						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							<a>
+			  					<i class="octicon octicon-chevron-down"></i>
+			  						${__('Detail of payment')}
+		  					</a>
+						</button>
+		  			</h2>
+				</div>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+		  			<div class="card-body detail-payment">
+		  			</div>
+				</div>
+	  		</div>
+	  	`);
+
+		this.make_field_detail_discount();
+		this.make_fields_total_detail();
+		this.make_totals();
+	}
+
+	make_fields_total_detail(){
+		this.reason_for_sale_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Reason for sale'),
+				fieldname: 'reason_for_sale',
+				options: 'Reason for sale'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+
 		this.exonerated_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Check',
 				label: __('Exonerated Sale'),
 				fieldname: 'exonerated'
 			},
-			parent: this.wrapper.find('.detail'),
-			render_input: true,
-		});
-
-		this.reason_for_discount_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Link',
-				label: __('Discount reason'),
-				fieldname: 'discount_reason',
-				options: 'Reason For Discount'
-			},
-			parent: this.wrapper.find('.detail'),
-			render_input: true,
-		});
-
-		this.amount_for_discount_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Amount for discount'),
-				fieldname: 'amount'
-			},
-			parent: this.wrapper.find('.detail'),
+			parent: this.wrapper.find('.detail-payment'),
 			render_input: true,
 		});
 
@@ -261,9 +303,65 @@ erpnext.PointOfSales = class PointOfSales {
 				label: __('Return'),
 				fieldname: 'return'
 			},
-			parent: this.wrapper.find('.detail'),
+			parent: this.wrapper.find('.detail-payment'),
 			render_input: true,
 		});
+	}
+
+	make_field_detail_discount(){
+		this.reason_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Discount reason'),
+				fieldname: 'discount_reason',
+				options: 'Reason For Discount'
+			},
+			parent: this.wrapper.find('.discount-detail'),
+			render_input: true,
+		});
+
+		this.percentage_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Int',
+				label: __('Percentage for discount'),
+				fieldname: 'percentage'
+			},
+			parent: this.wrapper.find('.discount-detail'),
+			render_input: true,
+		});
+
+		this.amount_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Amount for discount'),
+				fieldname: 'amount'
+			},
+			parent: this.wrapper.find('.discount-detail'),
+			render_input: true,
+		});
+	}
+
+	make_totals(){
+		this.wrapper.find('.totals').append(`
+			<div class="border border-grey fixed-bottom">
+				<div class="total-discount flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
+					<div class="flex flex-col">
+						<div class="text-md text-dark-grey text-bold">Discount</div>
+					</div>
+					<div class="flex flex-col text-right">
+						<div class="text-md text-dark-grey text-bold">0.00</div>
+					</div>
+				</div>
+				<div class="grand-total flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
+					<div class="flex flex-col">
+						<div class="text-md text-dark-grey text-bold">Grand Total</div>
+					</div>
+					<div class="flex flex-col text-right">
+						<div class="text-md text-dark-grey text-bold">0.00</div>
+					</div>
+				</div>
+			</div>
+		`);
 	}
 
 }
