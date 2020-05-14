@@ -36,7 +36,7 @@ erpnext.PointOfSales = class PointOfSales {
 				this.make_buttons();
 				this.make_fields();
 				this.make_fields_detail_sale();
-				this.add_item()
+				this.click_add();
 				// this.make_table_items();
 			},
 			() => this.page.set_title(__('Point of Sales'))
@@ -58,15 +58,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 	prepare_menu() {
 		this.page.add_action_icon(__("fa fa-trash text-secondary fa-2x btn"), function () {
-			frappe.call({
-				method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.item",
-				args: {},
-				callback: function (r) {
-					if (!r.exc){
-						this.add_item()
-					}			
-				}
-			})
+			
 		});
 		this.page.add_action_icon(__("fa fa-print text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
@@ -91,14 +83,35 @@ erpnext.PointOfSales = class PointOfSales {
 		});
 	}
 
-	add_item(){
+	click_add(){		
+		this.wrapper.find('.add').on('click', () => {			
+			this.add_item();
+		})
+	}
+
+	add_item(){	
+		
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.item",
+			args: {
+				item: this.search_field.get_value()
+			},
+			callback: function (r) {
+				localStorage.setItem("r", Object.values(r))		
+			}
+		})
+
+		var data = localStorage.getItem("r");
+
+		var arr = data.split(",");
+
 		this.wrapper.find('.tbody-items').append(`
 			<tr>
-			<th scope="row">Panadol antigripal</th>
-			<td><input type="number" value="50"></td>
-			<td><input type="currency" value="15"></td>
-			<td>5.00</td>
-			<td>235.00</td>
+			<th scope="row">` + arr[0] + `</th>
+			<td><input type="number" value="1"></td>
+			<td><input type="currency" value="0"></td>
+			<td>` + arr[1] + `</td>
+			<td>` + arr[2] + `</td>
 			</tr>
 		`)
 	}
@@ -120,19 +133,7 @@ erpnext.PointOfSales = class PointOfSales {
 					
 				</div>
 				<div class="cart-items">
-				<table class="table">
-				<thead>
-				  <tr>
-					<th scope="list-item__content list-item__content--flex-1.5 text-muted">${__('Item Name')}</th>
-					<th scope="list-item__content text-muted text-right">${__('Quantity')}</th>
-					<th scope="list-item__content text-muted text-right">${__('Discount')}</th>
-					<th scope="list-item__content text-muted text-right">${__('Rate')}</th>
-					<th scope="list-item__content text-muted text-right">${__('Total')}</th>
-				  </tr>
-				</thead>
-				<tbody class = "tbody-items">
-				</tbody>
-			  </table>
+				
 				</div>
 			</div>
 		`)
@@ -167,6 +168,7 @@ erpnext.PointOfSales = class PointOfSales {
 			df: {
 				fieldtype: 'Link',
 				label: __('Search Item'),
+				fieldname: 'search_item',
 				options: 'Item',
 				placeholder: __('Search item by name, code and barcode')
 			},
