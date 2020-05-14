@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "autoname": "Clo-Pos-.YYYY.-.#####",
+ "creation": "2020-05-12 10:49:52.545984",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "pos",
+  "sucursal",
+  "user",
+  "date",
+  "method_payment",
+  "total"
+ ],
+ "fields": [
+  {
+   "fieldname": "pos",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Pos",
+   "options": "GPos",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sucursal",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Sucursal",
+   "options": "GSucursal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "method_payment",
+   "fieldtype": "Table",
+   "label": "Method Payment",
+   "options": "Payment Method Table",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total",
+   "fieldtype": "Currency",
+   "label": "Total",
+   "reqd": 1
+  }
+ ],
+ "links": [],
+ "modified": "2020-05-12 11:08:34.035315",
+ "modified_by": "Administrator",
+ "module": "Point Of Sales",
+ "name": "Close Pos",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

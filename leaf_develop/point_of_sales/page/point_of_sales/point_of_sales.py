@@ -10,7 +10,12 @@ from erpnext.accounts.doctype.pos_profile.pos_profile import get_item_groups
 from six import string_types
 
 @frappe.whitelist()
-def item():
-	frappe.throw("Hola")
-def get_items(start, page_length, price_list, item_group, search_value="", pos_profile=None):
-	pass
+def item(item):
+	data = ""
+	items = frappe.get_all("Item", ["item_name"], filters = {"name": item})
+	item_prices = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item})
+
+	if len(items) > 0 and len(item_prices) > 0:
+		data = items[0].item_name + "," + str(item_prices[0].price_list_rate) + "," + str(item_prices[0].price_list_rate)
+
+	return data

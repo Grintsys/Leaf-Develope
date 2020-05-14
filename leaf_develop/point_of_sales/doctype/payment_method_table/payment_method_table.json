@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "creation": "2020-05-12 10:44:47.217619",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "payment_method",
+  "import"
+ ],
+ "fields": [
+  {
+   "fieldname": "payment_method",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Payment Method",
+   "options": "Mode of Payment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "import",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Import",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2020-05-12 14:35:34.699511",
+ "modified_by": "Administrator",
+ "module": "Point Of Sales",
+ "name": "Payment Method Table",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

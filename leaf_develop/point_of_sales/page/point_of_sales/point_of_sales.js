@@ -36,9 +36,12 @@ erpnext.PointOfSales = class PointOfSales {
 				this.make_buttons();
 				this.make_fields();
 				this.make_fields_detail_sale();
+				this.click_add();
+				// this.make_table_items();
+
 				this.make_register_item();
 			},
-			() => this.page.set_title(__('Point of Sale'))
+			() => this.page.set_title(__('Point of Sales'))
 		]);
 	}
 
@@ -57,13 +60,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 	prepare_menu() {
 		this.page.add_action_icon(__("fa fa-trash text-secondary fa-2x btn"), function () {
-			frappe.call({
-				method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.item",
-				args: {},
-				callback: function (r) {
-
-				}
-			})
+			
 		});
 		this.page.add_action_icon(__("fa fa-print text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
@@ -72,17 +69,82 @@ erpnext.PointOfSales = class PointOfSales {
 			frappe.msgprint("Message");
 		});
 		this.page.add_action_icon(__("fa fa-exchange text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Withdrawal and Entry")
 		});
 		this.page.add_action_icon(__("fa fa-cut text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Point of sale Cut")
 		});
 		this.page.add_action_icon(__("fa fa-lock text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+			frappe.new_doc("Close Pos")
 		});
 		this.page.add_action_icon(__("fa fa-history text-secondary fa-2x btn"), function () {
 			frappe.msgprint("Message");
 		});
+	}
+
+	click_add(){		
+		this.wrapper.find('.add').on('click', () => {			
+			this.add_item();
+		})
+	}
+
+	add_item(){	
+		
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.item",
+			args: {
+				item: this.search_field.get_value()
+			},
+			callback: function (r) {
+				localStorage.setItem("r", Object.values(r))		
+			}
+		})
+
+		var data = localStorage.getItem("r");
+
+		var arr = data.split(",");
+
+		this.wrapper.find('.cart-items').append(`
+			<div class="list-item indicator green register">
+				<div class="item-name list-item__content list-item__content--flex-1.5">
+				` + arr[0] + `
+				</div>
+				<div class="quantity list-item__content text-muted text-right">
+					${get_quantity_html()}
+				</div>
+				<div class="discount-percentage list-item__content text-muted text-right">
+					${get_discount_html()}
+				</div>
+				<div class="rate list-item__content text-muted text-right">
+				` + arr[1] + `
+				</div>
+				<div class="total list-item__content text-muted text-right">
+				` + arr[2] + `
+				</div>
+				<div class="remove-icon list-item__content text-muted text-right">
+					<i class="fa fa-trash red fa-lg btn trash-register"></i>
+				</div>
+			</div>
+	`	);
+
+	function get_quantity_html() {
+		return `
+			<div class="input-group input-group-xs input-number">
+				<input class="form-control" type="number" value="1">
+			</div>
+		`;
+	}
+
+	function get_discount_html() {
+		return `
+			<div class="input-group input-group-xs input-number">
+				<input class="form-control" type="number" value="0">
+			</div>
+		`;
+	}
 	}
 
 	item_list(){
@@ -109,6 +171,7 @@ erpnext.PointOfSales = class PointOfSales {
 					</div>
 				</div>
 				<div class="cart-items">
+				
 				</div>
 			</div>
 		`)
@@ -143,6 +206,7 @@ erpnext.PointOfSales = class PointOfSales {
 			df: {
 				fieldtype: 'Link',
 				label: __('Search Item'),
+				fieldname: 'search_item',
 				options: 'Item',
 				placeholder: __('Search item by name, code and barcode')
 			},
@@ -166,6 +230,19 @@ erpnext.PointOfSales = class PointOfSales {
 	make_buttons() {
 		this.wrapper.find('.buttons').append(`<div class="pause-btn" data-button-value="pause">Pause</div>`);
 		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
+	}
+
+	make_table_items(){
+		this.table_items = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Table',
+				label: __(''),
+				fieldname: 'pos_table_item',
+				options: 'Pos Table Item',
+			},
+			parent: this.wrapper.find('.cart-items'),
+			render_input: true,
+		});
 	}
 
 	make_fields_detail_sale(){
@@ -347,46 +424,27 @@ erpnext.PointOfSales = class PointOfSales {
 		`);
 	}
 
-	make_register_item(){
-		this.wrapper.find('.cart-items').append(`
-			<div class="list-item indicator green register">
-				<div class="item-name list-item__content list-item__content--flex-1.5">
-					Panadol Antigripal 500mg
-				</div>
-				<div class="quantity list-item__content text-muted text-right">
-					${get_quantity_html()}
-				</div>
-				<div class="discount-percentage list-item__content text-muted text-right">
-					${get_discount_html()}
-				</div>
-				<div class="rate list-item__content text-muted text-right">
-					5000
-				</div>
-				<div class="total list-item__content text-muted text-right">
-					5000
-				</div>
-				<div class="remove-icon list-item__content text-muted text-right">
-					<i class="fa fa-trash red fa-lg btn trash-register"></i>
-				</div>
-			</div>
-	`	);
-
-	function get_quantity_html() {
-		return `
-			<div class="input-group input-group-xs input-number">
-				<input class="form-control" type="number" value="0">
-			</div>
-		`;
-	}
-
-	function get_discount_html() {
-		return `
-			<div class="input-group input-group-xs input-number">
-				<input class="form-control" type="number" value="0">
-			</div>
-		`;
-	}
-
-	}
-
+	// make_register_item(){
+	// 	this.wrapper.find('.cart-items').append(`
+	// 		<div class="list-item indicator green register">
+	// 			<div class="item-name list-item__content list-item__content--flex-1.5">
+	// 				Panadol Antigripal 500mg
+	// 			</div>
+	// 			<div class="quantity list-item__content text-muted text-right">
+	// 				${get_quantity_html()}
+	// 			</div>
+	// 			<div class="discount-percentage list-item__content text-muted text-right">
+	// 				${get_discount_html()}
+	// 			</div>
+	// 			<div class="rate list-item__content text-muted text-right">
+	// 				5000
+	// 			</div>
+	// 			<div class="total list-item__content text-muted text-right">
+	// 				5000
+	// 			</div>
+	// 			<div class="remove-icon list-item__content text-muted text-right">
+	// 				<i class="fa fa-trash red fa-lg btn trash-register"></i>
+	// 			</div>
+	// 		</div>
+	// `	);
 }
