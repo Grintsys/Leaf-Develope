@@ -38,6 +38,8 @@ erpnext.PointOfSales = class PointOfSales {
 				this.make_fields_detail_sale();
 				this.click_add();
 				// this.make_table_items();
+
+				this.make_register_item();
 			},
 			() => this.page.set_title(__('Point of Sales'))
 		]);
@@ -105,15 +107,44 @@ erpnext.PointOfSales = class PointOfSales {
 
 		var arr = data.split(",");
 
-		this.wrapper.find('.tbody-items').append(`
-			<tr>
-			<th scope="row">` + arr[0] + `</th>
-			<td><input type="number" value="1"></td>
-			<td><input type="currency" value="0"></td>
-			<td>` + arr[1] + `</td>
-			<td>` + arr[2] + `</td>
-			</tr>
-		`)
+		this.wrapper.find('.cart-items').append(`
+			<div class="list-item indicator green register">
+				<div class="item-name list-item__content list-item__content--flex-1.5">
+				` + arr[0] + `
+				</div>
+				<div class="quantity list-item__content text-muted text-right">
+					${get_quantity_html()}
+				</div>
+				<div class="discount-percentage list-item__content text-muted text-right">
+					${get_discount_html()}
+				</div>
+				<div class="rate list-item__content text-muted text-right">
+				` + arr[1] + `
+				</div>
+				<div class="total list-item__content text-muted text-right">
+				` + arr[2] + `
+				</div>
+				<div class="remove-icon list-item__content text-muted text-right">
+					<i class="fa fa-trash red fa-lg btn trash-register"></i>
+				</div>
+			</div>
+	`	);
+
+	function get_quantity_html() {
+		return `
+			<div class="input-group input-group-xs input-number">
+				<input class="form-control" type="number" value="1">
+			</div>
+		`;
+	}
+
+	function get_discount_html() {
+		return `
+			<div class="input-group input-group-xs input-number">
+				<input class="form-control" type="number" value="0">
+			</div>
+		`;
+	}
 	}
 
 	item_list(){
@@ -126,11 +157,18 @@ erpnext.PointOfSales = class PointOfSales {
 					</div>
 					<div class="btn-add">
 					</div>
-					<div class="items-wrapper">
-					</div>
 				</div>
 				<div class="cart-wrapper">
-					
+					<div class="list-item-table">
+						<div class="list-item list-item--head">
+							<div class="list-item__content list-item__content--flex-1.5 text-muted">${__('Name')}</div>
+							<div class="list-item__content text-muted text-right">${__('Quantity')}</div>
+							<div class="list-item__content text-muted text-right">${__('Discount')}</div>
+							<div class="list-item__content text-muted text-right">${__('Rate')}</div>
+							<div class="list-item__content text-muted text-right">${__('Total')}</div>
+							<div class="list-item__content text-muted text-right">${__('Actions')}</div>
+						</div>
+					</div>
 				</div>
 				<div class="cart-items">
 				
@@ -150,10 +188,10 @@ erpnext.PointOfSales = class PointOfSales {
 				<div class="detail-items">
 					<div class="detail">
 					</div>
-					<div class="totals">
-					</div>
 				<div>
 			</div>
+			</div>
+			<div class="totals">
 			</div>
 			<div class="buttons flex">
 			</div>
@@ -299,6 +337,26 @@ erpnext.PointOfSales = class PointOfSales {
 			render_input: true,
 		});
 
+		this.payment_amount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Payment amount'),
+				fieldname: 'payment_amount'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+
+		this.payment_card_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Payment credit card'),
+				fieldname: 'payment_card',
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+
 		this.return_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Currency',
@@ -366,4 +424,27 @@ erpnext.PointOfSales = class PointOfSales {
 		`);
 	}
 
+	// make_register_item(){
+	// 	this.wrapper.find('.cart-items').append(`
+	// 		<div class="list-item indicator green register">
+	// 			<div class="item-name list-item__content list-item__content--flex-1.5">
+	// 				Panadol Antigripal 500mg
+	// 			</div>
+	// 			<div class="quantity list-item__content text-muted text-right">
+	// 				${get_quantity_html()}
+	// 			</div>
+	// 			<div class="discount-percentage list-item__content text-muted text-right">
+	// 				${get_discount_html()}
+	// 			</div>
+	// 			<div class="rate list-item__content text-muted text-right">
+	// 				5000
+	// 			</div>
+	// 			<div class="total list-item__content text-muted text-right">
+	// 				5000
+	// 			</div>
+	// 			<div class="remove-icon list-item__content text-muted text-right">
+	// 				<i class="fa fa-trash red fa-lg btn trash-register"></i>
+	// 			</div>
+	// 		</div>
+	// `	);
 }
