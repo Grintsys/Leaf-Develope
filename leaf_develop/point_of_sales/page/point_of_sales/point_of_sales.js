@@ -37,7 +37,6 @@ erpnext.PointOfSales = class PointOfSales {
 				this.make_fields();
 				this.make_fields_detail_sale();
 				this.click_add();
-				// this.make_table_items();
 
 				this.make_register_item();
 			},
@@ -232,19 +231,6 @@ erpnext.PointOfSales = class PointOfSales {
 		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
 	}
 
-	make_table_items(){
-		this.table_items = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Table',
-				label: __(''),
-				fieldname: 'pos_table_item',
-				options: 'Pos Table Item',
-			},
-			parent: this.wrapper.find('.cart-items'),
-			render_input: true,
-		});
-	}
-
 	make_fields_detail_sale(){
 		const me = this;
 		this.customer_field = frappe.ui.form.make_control({
@@ -423,28 +409,4 @@ erpnext.PointOfSales = class PointOfSales {
 			</div>
 		`);
 	}
-
-	// make_register_item(){
-	// 	this.wrapper.find('.cart-items').append(`
-	// 		<div class="list-item indicator green register">
-	// 			<div class="item-name list-item__content list-item__content--flex-1.5">
-	// 				Panadol Antigripal 500mg
-	// 			</div>
-	// 			<div class="quantity list-item__content text-muted text-right">
-	// 				${get_quantity_html()}
-	// 			</div>
-	// 			<div class="discount-percentage list-item__content text-muted text-right">
-	// 				${get_discount_html()}
-	// 			</div>
-	// 			<div class="rate list-item__content text-muted text-right">
-	// 				5000
-	// 			</div>
-	// 			<div class="total list-item__content text-muted text-right">
-	// 				5000
-	// 			</div>
-	// 			<div class="remove-icon list-item__content text-muted text-right">
-	// 				<i class="fa fa-trash red fa-lg btn trash-register"></i>
-	// 			</div>
-	// 		</div>
-	// `	);
 }
