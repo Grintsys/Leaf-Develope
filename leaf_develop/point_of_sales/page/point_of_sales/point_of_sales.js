@@ -141,6 +141,7 @@ erpnext.PointOfSales = class PointOfSales {
 		if(discount>maxDiscount){
 		this.wrapper.find(`.${item_code}_discount`).val(0);
 		discount = 0;
+		frappe.msgprint(__("The discount exceeds the maximum limit"))
 		}
 		const itemRate = this.get_item_rate(item_code);
 		const quantity = Number(this.wrapper.find(`.${item_code}_quantity`).val());
@@ -393,10 +394,30 @@ erpnext.PointOfSales = class PointOfSales {
 		  			</div>
 				</div>
 	  		</div>
+		  `);
+		  
+		  this.wrapper.find('.detail').append(`
+			<div class="card">
+				<div class="card-header" id="headingThree">
+		  			<h2 class="mb-0">
+						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+							<a>
+			  					<i class="octicon octicon-chevron-down"></i>
+			  						${__('Exempt and ISV')}
+		  					</a>
+						</button>
+		  			</h2>
+				</div>
+				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+		  			<div class="card-body exempt_and_isv">
+		  			</div>
+				</div>
+	  		</div>
 	  	`);
 
 		this.make_field_detail_discount();
 		this.make_fields_total_detail();
+		this.make_exempt_and_isv();
 		this.make_totals();
 	}
 
@@ -454,6 +475,7 @@ erpnext.PointOfSales = class PointOfSales {
 	}
 
 	make_field_detail_discount(){
+		const me = this;
 		this.reason_for_discount_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Link',
@@ -465,23 +487,115 @@ erpnext.PointOfSales = class PointOfSales {
 			render_input: true,
 		});
 
-		this.percentage_for_discount_field = frappe.ui.form.make_control({
+		this.type_margin_field = frappe.ui.form.make_control({
 			df: {
-				fieldtype: 'Int',
-				label: __('Percentage for discount'),
-				fieldname: 'percentage'
+				fieldtype: 'Select',
+				label: __('Margin type'),
+				fieldname: 'margin_type',
+				options: [
+					'Percentage',
+					'Amount'
+				],
+				onchange:function() {
+					me.make_discount_type(me.type_margin_field.get_value());
+				},
 			},
 			parent: this.wrapper.find('.discount-detail'),
 			render_input: true,
 		});
+	}
 
-		this.amount_for_discount_field = frappe.ui.form.make_control({
+	make_discount_type(margin_type){
+		const me = this;
+		if (margin_type == "Percentage"){
+			me.wrapper.find('div[data-fieldname="amount"]').remove();
+			this.percentage_for_discount_field = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Int',
+					label: __('Percentage for discount'),
+					fieldname: 'percentage'
+				},
+				parent: this.wrapper.find('.discount-detail'),
+				render_input: true,
+			});
+		}else{
+			me.wrapper.find('div[data-fieldname="percentage"]').remove();
+			this.amount_for_discount_field = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Currency',
+					label: __('Amount for discount'),
+					fieldname: 'amount'
+				},
+				parent: this.wrapper.find('.discount-detail'),
+				render_input: true,
+			});
+		}
+	}
+
+	make_exempt_and_isv(){
+		this.base_isv_15_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Currency',
-				label: __('Amount for discount'),
-				fieldname: 'amount'
+				label: __('Base ISV 15'),
+				fieldname: 'base_isv_15',
+				read_only: 1
 			},
-			parent: this.wrapper.find('.discount-detail'),
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.isv_15_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('ISV 15'),
+				fieldname: 'isv_15',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.base_isv_18_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Base ISV 18'),
+				fieldname: 'base_isv_18',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.isv_18_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('ISV 18'),
+				fieldname: 'isv_18',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.exempt_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Exempt'),
+				fieldname: 'exempt',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.exonerated_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Exonerated'),
+				fieldname: 'exonerated',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
 			render_input: true,
 		});
 	}
@@ -567,11 +681,13 @@ class Cart {
 				options: 'Item',
 				placeholder: __('Search item by name, code and barcode'),
 				get_query: () => {
-					return {
-						filters: {
-							item_group: this.item_group_field.get_value()
-						}
-					};
+					if (this.item_group_field.get_value() != 'Todos los Grupos de Artículos'){
+						return {
+							filters: {
+								item_group: this.item_group_field.get_value()
+							}
+						};
+					}
 				}
 			},
 			parent: this.wrapper.find('.search-field'),
@@ -584,7 +700,7 @@ class Cart {
 
 		this.wrapper.find('.btn-add').append(`<button class="btn btn-default btn-xs add" data-fieldtype="Button">${__('Agregar')}</button>`);
 		
-		frappe.db.get_value("Item Group", {lft: 2}, "name", (r) => {
+		frappe.db.get_value("Item Group", {lft: 1, is_group: 1}, "name", (r) => {
 			this.item_group_field.set_value(r.name);
 		})
 		
