@@ -41,10 +41,10 @@ def get_customer_rtn(customer_name):
 	customers = frappe.get_all("Customer",["rtn","customer_default"],filters = {"customer_name": customer_name})
 	json = {}
 	for customer in customers:
-			json = {
-				'customer_default': customer.customer_default,
-				'rtn': customer.rtn,
-			}
+		json = {
+			'customer_default': customer.customer_default,
+			'rtn': customer.rtn,
+		}
 	
 	return json
 
