@@ -38,6 +38,9 @@
   "allow_disabled_clients",
   "show_without_existence",
   "display_items_in_stock",
+  "close_the_box",
+  "security_section",
+  "credential",
   "section_break_15",
   "section_break_11",
   "payments",
@@ -435,11 +438,27 @@
    "hidden": 1,
    "label": "Code Name",
    "unique": 1
+  },
+  {
+   "fieldname": "security_section",
+   "fieldtype": "Section Break",
+   "label": "Security"
+  },
+  {
+   "fieldname": "credential",
+   "fieldtype": "Password",
+   "label": "Credential"
+  },
+  {
+   "default": "0",
+   "fieldname": "close_the_box",
+   "fieldtype": "Check",
+   "label": "Close the box"
   }
  ],
  "icon": "icon-cog",
  "links": [],
- "modified": "2020-05-22 16:13:18.026412",
+ "modified": "2020-06-11 15:43:08.563334",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
  "name": "Point Of Sale Profile",

@@ -8,36 +8,17 @@
  "field_order": [
   "pos",
   "sucursal",
-  "cash",
-  "card",
-  "check",
-  "date"
+  "colum_breack_1",
+  "date",
+  "user",
+  "payment_methop",
+  "methop_of_payment"
  ],
  "fields": [
   {
-   "fieldname": "cash",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Cash",
-   "reqd": 1
-  },
-  {
-   "fieldname": "card",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Card",
-   "reqd": 1
-  },
-  {
-   "fieldname": "check",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Check",
-   "reqd": 1
-  },
-  {
    "fieldname": "pos",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Pos",
    "options": "GPos",
    "reqd": 1
@@ -45,19 +26,43 @@
   {
    "fieldname": "sucursal",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Sucursal",
    "options": "GSucursal",
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "methop_of_payment",
+   "fieldtype": "Table",
+   "label": "Methop of payment",
+   "options": "Payment Method Table",
+   "reqd": 1
+  },
+  {
+   "fieldname": "colum_breack_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_methop",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User",
+   "read_only": 1
   }
  ],
  "links": [],
- "modified": "2020-05-12 14:38:52.448698",
+ "modified": "2020-06-11 15:38:47.520693",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
  "name": "Point of sale Cut",
