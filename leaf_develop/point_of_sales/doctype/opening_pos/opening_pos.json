@@ -1,12 +1,11 @@
 {
- "actions": [],
- "creation": "2020-06-11 15:24:06.960651",
+ "creation": "2020-06-11 16:38:03.806564",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "cashier",
-  "branch",
+  "branchopening",
   "workday",
   "amount",
   "date"
@@ -14,30 +13,22 @@
  "fields": [
   {
    "fieldname": "cashier",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Cashier",
-   "reqd": 1
-  },
-  {
-   "fieldname": "branch",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Branch",
+   "options": "GPos",
    "reqd": 1
   },
   {
    "fieldname": "workday",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Workday",
    "options": "Workday",
    "reqd": 1
   },
   {
    "fieldname": "amount",
-   "fieldtype": "Data",
-   "in_list_view": 1,
+   "fieldtype": "Currency",
    "label": "Amount",
    "reqd": 1
   },
@@ -47,13 +38,19 @@
    "fieldtype": "Datetime",
    "label": "Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "branchopening",
+   "fieldtype": "Link",
+   "label": "Branch Opening",
+   "options": "GSucursal",
+   "reqd": 1
   }
  ],
- "links": [],
- "modified": "2020-06-11 15:34:50.034496",
+ "modified": "2020-06-11 16:42:32.523309",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
- "name": "Cashier Opening",
+ "name": "Opening POS",
  "owner": "Administrator",
  "permissions": [
   {
