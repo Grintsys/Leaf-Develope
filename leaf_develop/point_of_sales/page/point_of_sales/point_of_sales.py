@@ -52,5 +52,28 @@ def get_customer_rtn(customer_name):
 def get_pos_config():
 	user = frappe.session.user
 	pos = frappe.get_value('GCAI Allocation',{"user":user},["pos"],as_dict =1)
-	print(user)
-	return user
+	configs = frappe.get_all("Point Of Sale Profile",["*"],filters = {"cashier_name": pos.pos})
+	config = next(iter(configs))
+	if config is None:
+		frappe.throw("no config")
+	# paymentsMethods = frappe.get_all("Sales Invoice Payment",["*"],filters = {"parent":config.name})
+	# frappe.throw("{}".format(paymentsMethods))
+	
+	payments_Methods = frappe.get_all("Sales Invoice Payment",["mode_of_payment"],filters = {"parent":config.name})
+	config.paymentMethods = []
+	for payment_Method in payments_Methods:
+		config.paymentMethods.append(payment_Method.mode_of_payment)
+
+	item_groups = frappe.get_all("POS Item Group",["item_group"],filters = {"parent":config.name})
+	config.itemGroups = []
+	for item_group in item_groups:
+		config.itemGroups.append(item_group.item_group)
+
+
+	customer_groups = frappe.get_all("POS Customer Group",["customer_group"],filters = {"parent":config.name})
+
+	config.customerGroup = []
+	for customer_group in customer_groups:
+		config.customerGroup.append(customer_group.customer_group)
+
+	return config

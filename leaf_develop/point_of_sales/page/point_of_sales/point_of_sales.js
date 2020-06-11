@@ -6,8 +6,16 @@ frappe.pages['point-of-sales'].on_page_load = function (wrapper) {
 	});
 
 	page.set_indicator('Online', 'green')
-
-	wrapper.point_of_sale = new erpnext.PointOfSales(wrapper);
+	frappe.call({
+		method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_pos_config",
+		callback: function (item) {
+			if(item){
+				wrapper.point_of_sale = new erpnext.PointOfSales(wrapper,item.message);
+				return;
+			}
+			frappe.throw("no config")
+		}
+	})
 }
 
 
@@ -16,39 +24,30 @@ frappe.pages['point-of-sales'].on_page_load = function (wrapper) {
 
 
 erpnext.PointOfSales = class PointOfSales {
-	constructor(wrapper) {
+	constructor(wrapper,config) {
 		// 0 setTimeout hack - this gives time for canvas to get width and height
 		this.wrapper = $(wrapper).find('.layout-main-section');
 		this.page = wrapper.page;
-		this.state = {};
+		this.config = config;
 		const assets = [
 			'assets/erpnext/js/pos/clusterize.js',
 			'assets/erpnext/css/point_of_sales.css'
 		];
-		this.get_pos_config()
 		frappe.require(assets, () => {
 			this.make();
 		});
 	}
 
-	get_pos_config(){
-		frappe.call({
-			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_pos_config",
-			callback: function (item) {
-			}
-		})
-	}
-
 	make() {
 		return frappe.run_serially([
 			// ()=> frappe.dom.freeze(),
-			() => {
+			()=>{
 				this.prepare_dom();
 				this.prepare_menu();
 				this.make_cart();
 
 				//item-container
-				this.detail();
+				this.make_detail();
 				this.make_buttons();
 				this.make_fields_detail_sale();
 			},
@@ -67,22 +66,77 @@ erpnext.PointOfSales = class PointOfSales {
 		`);
 	}
 
+	print_invoice(){
+		debugger
+	}
+
+	clear_invoice(){
+		$(this.wrapper.find('.item-list-cart')).remove();
+		this.update_totals();
+		this.customer_field.set_value("");
+		this.wrapper.find('div[data-fieldname="customer_rtn"]').remove();
+	}
+
+	open_modal_auth(callback){
+		const me = this;
+		var dialog = new frappe.ui.Dialog({
+			title:__('Authentication'),
+			fields: [
+				{fieldname: 'password', fieldtype: 'Password',label:`Password`},
+			],
+			primary_action: (values) => {
+				callback();
+				dialog.hide();
+			}
+		});
+
+		dialog.show();
+		
+	}
+
+	make_cut(){
+		frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
+		frappe.new_doc("Point of sale Cut")
+	}
+
 	prepare_menu() {
+		const me = this;
+
 		this.page.add_action_icon(__("fa fa-trash text-secondary fa-2x btn"), function () {
+			if(me.config.clear_all_screen_items){
+				me.clear_invoice(me);
+				return;
+			}
+			me.open_modal_auth(()=> {
+				me.clear_invoice();
+			});
+
 		});
+
 		this.page.add_action_icon(__("fa fa-print text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			if(me.config.authorize_reprint_invoice){
+				me.print_invoice();
+				return
+			}
+			me.open_modal_auth(()=> {
+				me.print_invoice();
+			});
 		});
+
 		this.page.add_action_icon(__("fa fa-calculator text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Message");
+			frappe.msgprint("Calculator");
 		});
 		this.page.add_action_icon(__("fa fa-exchange text-secondary fa-2x btn"), function () {
 			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
 			frappe.new_doc("Withdrawal and Entry")
 		});
 		this.page.add_action_icon(__("fa fa-cut text-secondary fa-2x btn"), function () {
-			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
-			frappe.new_doc("Point of sale Cut")
+			if(me.config.make_cut){
+				me.make_cut();
+				return;
+			}
+			me.open_modal_auth(() =>me.make_cut());
+			
 		});
 		this.page.add_action_icon(__("fa fa-lock text-secondary fa-2x btn"), function () {
 			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
@@ -113,11 +167,26 @@ erpnext.PointOfSales = class PointOfSales {
 				onChangeDiscount: (item_code,discount)=>{
 					this.update_item_discount(item_code,discount)
 				},
+				onChangeRate:(item_code,rate)=>{
+					this.update_item_rate(item_code,rate)
+				},
 				onUpdatetotal:() => {
 					this.update_totals();
+				},
+				onRemoveItem: (item) => {
+					if(this.config.delete_an_invoice_item){
+						item.remove();
+						this.update_totals();
+						return;
+					}
+					this.open_modal_auth(()=> {
+						item.remove();
+						this.update_totals();
+					})
 				}
 
-			}
+			},
+			config: this.config
 		});
 	}
 
@@ -129,6 +198,13 @@ erpnext.PointOfSales = class PointOfSales {
 		this.wrapper.find(`.${item_code}_total`).text(total);
 	}
 
+	update_item_rate(item_code,itemRate){
+		const discount = Number(this.wrapper.find(`.${item_code}_discount`).val());
+		const quantity = Number(this.wrapper.find(`.${item_code}_quantity`).val());
+		this.wrapper.find(`.${item_code}_rate`).val(itemRate);
+		const total = this.get_item_new_total(itemRate,discount,quantity);
+		this.wrapper.find(`.${item_code}_total`).text(total);
+	}
 	
 	get_item_max_discount(item_code){
 		const item = $(this.wrapper.find(`div[data-item-code="${unescape(item_code)}"]`));
@@ -141,7 +217,7 @@ erpnext.PointOfSales = class PointOfSales {
 		if(discount>maxDiscount){
 		this.wrapper.find(`.${item_code}_discount`).val(0);
 		discount = 0;
-		frappe.msgprint(__("The discount exceeds the maximum limit"))
+		frappe.msgprint(__(`The discount exceeds the maximum limit of ${maxDiscount}%`))
 		}
 		const itemRate = this.get_item_rate(item_code);
 		const quantity = Number(this.wrapper.find(`.${item_code}_quantity`).val());
@@ -169,14 +245,14 @@ erpnext.PointOfSales = class PointOfSales {
 	}
 
 	get_item_total_discount(item){
-		const itemRate = Number($(item).find('.rate').text());
+		const itemRate = Number($(item).find('.item-rate').val());
 		const itemDiscount = Number($(item).find('.item_discount').val());
 		const itemquantity = Number($(item).find('.item_quantity').val());
 		return (itemRate * itemquantity) * (itemDiscount/100) || 0;
 	}
 
 	get_item_rate(item_code){
-		return Number(this.wrapper.find(`.${item_code}_rate`).text());
+		return Number(this.wrapper.find(`.${item_code}_rate`).val());
 	}
 
 	check_repeated_items(item) {
@@ -186,7 +262,9 @@ erpnext.PointOfSales = class PointOfSales {
 	add_item(item){	
 		if(!item)return;
 		if(this.check_repeated_items(item)){
-			frappe.msgprint(__('Product already exists in list'))
+			const quantity = Number(this.wrapper.find(`.${item}_quantity`).val());
+			this.update_item_quantity(item,quantity+1);
+			this.update_totals();
 			return;
 		}
 		const me = this;
@@ -218,7 +296,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 	function get_item_html(item) {
 		return `
-		<div class="list-item indicator green register"
+		<div class="list-item item-list-cart indicator green register"
 		data-item-code="${escape(item.item_code)}"
 		>
 				<div class="item-name list-item__content list-item__content--flex-1.5">
@@ -230,9 +308,8 @@ erpnext.PointOfSales = class PointOfSales {
 				<div class="discount-percentage list-item__content text-muted text-right">
 					${get_discount_html(item)}
 				</div>
-				<div class="rate list-item__content text-muted text-right ${item.item_code}_rate"
-				>
-				` + item.price_cu + `
+				<div class="rate list-item__content text-muted text-right">
+				${get_rate_html(item)}
 				</div>
 				<div class="total list-item__content text-muted text-right ${item.item_code}_total"
 				>
@@ -256,16 +333,36 @@ erpnext.PointOfSales = class PointOfSales {
 		`;
 	}
 
-	function get_discount_html(item) {
-		return `
+	function get_rate_html(item) {
+		if(me.config.allow_user_to_edit_rate) return `
 			<div class="input-group input-group-xs input-number">
-				<input class="form-control item_discount ${item.item_code}_discount" type="number" min="0" value="0"/>
+				<input class="form-control  item-rate ${item.item_code}_rate" type="number" min="0" value="${item.price_cu}"/>
 			</div>
 		`;
-	}
+		return `
+		<div class="input-group input-group-xs input-number">
+				<input class="form-control  item-rate ${item.item_code}_rate" type="number" min="0" disabled value="${item.price_cu}"/>
+			</div>
+		`
 	}
 
-	detail(){
+	function get_discount_html(item) {
+		if(me.config.allow_user_to_edit_discount) return `
+			<div class="input-group input-group-xs input-number">
+				<input class="form-control item_discount ${item.item_code}_discount "  type="number" min="0" value="0"/>
+			</div>
+		`;
+		return `
+		<div class="input-group input-group-xs input-number">
+		<input class="form-control item_discount ${item.item_code}_discount "  disabled type="number" min="0" value="0"/>
+			</div>
+		`
+		}
+		}
+
+	
+
+	make_detail(){
 		this.wrapper.find('.item-container').append(`
 			<div class="pos-cart">
 				<div class="cart-wrapper">
@@ -326,6 +423,7 @@ erpnext.PointOfSales = class PointOfSales {
 	}
 
 	make_fields_detail_sale(){
+		const allCustomerGroups = 'Todas las categorías de clientes'
 		const me = this;
 		this.customer_field = frappe.ui.form.make_control({
 			df: {
@@ -337,6 +435,21 @@ erpnext.PointOfSales = class PointOfSales {
 				onchange:function() {
 					me.make_rtn_field(me.customer_field.get_value());
 				},
+				get_query: () => {
+					let filters=[];
+					if(me.config.customerGroup.some((group) => group === allCustomerGroups)){
+						if(!me.config.allow_disabled_clients){
+							filters.push( ["Customer","disabled","=",'0'])
+							}
+						return {filters};
+					}
+					filters.push(["Customer","customer_group","in",`${me.config.customerGroup.join()}`])
+
+					if(!me.config.allow_disabled_clients)
+						filters.push( ["Customer","disabled","=",'0'])
+
+					return {filters};
+				}
 			},
 			parent: this.wrapper.find('.customer_fields'),
 			render_input: true,
@@ -421,6 +534,62 @@ erpnext.PointOfSales = class PointOfSales {
 		this.make_totals();
 	}
 
+	make_payment_methods(){
+		this.config.paymentMethods.forEach((i)=>{
+			this[i] = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Currency',
+					label: __(i),
+					fieldname: 'payment_amount'
+				},
+				parent: this.wrapper.find('.detail-payment'),
+				render_input: true,
+			});
+			if(i =="Efectivo"){
+				this.return_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Return'),
+				fieldname: 'return'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+	}
+
+
+		})
+		// this.payment_amount_field = frappe.ui.form.make_control({
+		// 	df: {
+		// 		fieldtype: 'Currency',
+		// 		label: __(''),
+		// 		fieldname: 'payment_amount'
+		// 	},
+		// 	parent: this.wrapper.find('.detail-payment'),
+		// 	render_input: true,
+		// });
+
+		// this.payment_card_field = frappe.ui.form.make_control({
+		// 	df: {
+		// 		fieldtype: 'Currency',
+		// 		label: __('Payment credit card'),
+		// 		fieldname: 'payment_card',
+		// 	},
+		// 	parent: this.wrapper.find('.detail-payment'),
+		// 	render_input: true,
+		// });
+
+		// this.return_field = frappe.ui.form.make_control({
+		// 	df: {
+		// 		fieldtype: 'Currency',
+		// 		label: __('Return'),
+		// 		fieldname: 'return'
+		// 	},
+		// 	parent: this.wrapper.find('.detail-payment'),
+		// 	render_input: true,
+		// });
+	}
+
 	make_fields_total_detail(){
 		this.reason_for_sale_field = frappe.ui.form.make_control({
 			df: {
@@ -443,35 +612,7 @@ erpnext.PointOfSales = class PointOfSales {
 			render_input: true,
 		});
 
-		this.payment_amount_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Payment amount'),
-				fieldname: 'payment_amount'
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
-
-		this.payment_card_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Payment credit card'),
-				fieldname: 'payment_card',
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
-
-		this.return_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Return'),
-				fieldname: 'return'
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
+		this.make_payment_methods()
 	}
 
 	make_field_detail_discount(){
@@ -627,11 +768,12 @@ erpnext.PointOfSales = class PointOfSales {
 
 
 class Cart {
-	constructor({frm, wrapper, events}) {
+	constructor({frm, wrapper, events,config}) {
 		this.frm = frm;
 		this.item_data = {};
 		this.wrapper = wrapper;
 		this.events = events;
+		this.config = config;
 		this.make();
 		this.bind_events();
 	}
@@ -672,6 +814,7 @@ class Cart {
 	}
 	
 	make_fields() {
+		const allItemGroups = 'Todos los Grupos de Artículos'
 		const me = this;
 		this.search_field = frappe.ui.form.make_control({
 			df: {
@@ -681,7 +824,7 @@ class Cart {
 				options: 'Item',
 				placeholder: __('Search item by name, code and barcode'),
 				get_query: () => {
-					if (this.item_group_field.get_value() != 'Todos los Grupos de Artículos'){
+					if (this.item_group_field.get_value() != allItemGroups){
 						return {
 							filters: {
 								item_group: this.item_group_field.get_value()
@@ -692,28 +835,40 @@ class Cart {
 			},
 			parent: this.wrapper.find('.search-field'),
 			render_input: true,
-			
-			
 		});
 
 		
 
 		this.wrapper.find('.btn-add').append(`<button class="btn btn-default btn-xs add" data-fieldtype="Button">${__('Agregar')}</button>`);
 		
-		frappe.db.get_value("Item Group", {lft: 1, is_group: 1}, "name", (r) => {
-			this.item_group_field.set_value(r.name);
-		})
 		
 		this.item_group_field = frappe.ui.form.make_control({
 			df: {
 				fieldtype: 'Link',
 				label: 'Item Group',
 				options: 'Item Group',
-				fieldname: 'item_group'
+				fieldname: 'item_group',
+				get_query: () => {
+						return {
+						filters: [
+								["Item Group","item_group_name","in",`${me.config.itemGroups.join()}`],
+						]
+						};
+				}
 			},
 			parent: this.wrapper.find('.item-group-field'),
-			render_input: true
+			render_input: true,
+		
 		});
+
+		if(me.config.itemGroups.some((group) => group === allItemGroups)){
+			this.item_group_field.set_value(allItemGroups);
+		}
+		if(me.config.itemGroups.length > 0){
+			this.item_group_field.set_value(me.config.itemGroups[0]);
+		}
+
+
 	}
 
 
@@ -744,11 +899,22 @@ class Cart {
 			events.onUpdatetotal();
 
 		});
+
+		this.wrapper.on('change', '.item-rate', function() {
+			const $btn = $(this);
+			const item = $btn.closest('.list-item[data-item-code]');
+			const item_code = unescape(item.attr('data-item-code'));
+			const rate = Math.abs(Number(this.value));
+			events.onChangeRate(item_code,rate);
+			events.onUpdatetotal();
+
+		});
+
 		this.wrapper.on('click', '.remove-icon', function() {
 			const $btn = $(this);
 			const item = $btn.closest('.list-item[data-item-code]');
-			item.remove();
-			events.onUpdatetotal();
+			events.onRemoveItem(item);
+
 
 		});
 	}
