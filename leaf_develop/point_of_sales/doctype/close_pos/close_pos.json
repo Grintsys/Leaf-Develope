@@ -8,8 +8,10 @@
  "field_order": [
   "pos",
   "sucursal",
+  "colum_breack_1",
   "user",
   "date",
+  "section_payments",
   "method_payment",
   "total"
  ],
@@ -35,9 +37,10 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "User",
-   "reqd": 1
+   "read_only": 1
   },
   {
+   "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -55,11 +58,19 @@
    "fieldname": "total",
    "fieldtype": "Currency",
    "label": "Total",
-   "reqd": 1
+   "read_only": 1
+  },
+  {
+   "fieldname": "colum_breack_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_payments",
+   "fieldtype": "Section Break"
   }
  ],
  "links": [],
- "modified": "2020-05-12 11:08:34.035315",
+ "modified": "2020-06-11 15:37:38.434384",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
  "name": "Close Pos",

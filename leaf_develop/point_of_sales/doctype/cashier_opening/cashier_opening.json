@@ -1,0 +1,76 @@
+{
+ "actions": [],
+ "creation": "2020-06-11 15:24:06.960651",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cashier",
+  "branch",
+  "workday",
+  "amount",
+  "date"
+ ],
+ "fields": [
+  {
+   "fieldname": "cashier",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Cashier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Branch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "workday",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Workday",
+   "options": "Workday",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Amount",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "date",
+   "fieldtype": "Datetime",
+   "label": "Date",
+   "reqd": 1
+  }
+ ],
+ "links": [],
+ "modified": "2020-06-11 15:34:50.034496",
+ "modified_by": "Administrator",
+ "module": "Point Of Sales",
+ "name": "Cashier Opening",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
