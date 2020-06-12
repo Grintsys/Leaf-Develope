@@ -56,8 +56,8 @@ def get_pos_config():
 	config = next(iter(configs))
 	if config is None:
 		frappe.throw("no config")
-	# paymentsMethods = frappe.get_all("Sales Invoice Payment",["*"],filters = {"parent":config.name})
-	# frappe.throw("{}".format(paymentsMethods))
+	
+	config.credential = frappe.utils.password.get_decrypted_password('Point Of Sale Profile',config.name,'credential')
 	
 	payments_Methods = frappe.get_all("Sales Invoice Payment",["mode_of_payment"],filters = {"parent":config.name})
 	config.paymentMethods = []
