@@ -85,8 +85,13 @@ erpnext.PointOfSales = class PointOfSales {
 				{fieldname: 'password', fieldtype: 'Password',label:`Password`},
 			],
 			primary_action: (values) => {
-				callback();
-				dialog.hide();
+				if(values.password === me.config.credential){
+					callback();
+					dialog.hide();
+					return;
+				}
+				dialog.wrapper.find('input[data-fieldname="password"]').val("")
+				frappe.throw("Unauthorized credential")
 			}
 		});
 
