@@ -1,14 +1,16 @@
 {
+ "actions": [],
  "creation": "2020-06-11 16:38:03.806564",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "cashier",
-  "branchopening",
+  "branch",
   "workday",
   "amount",
-  "date"
+  "date",
+  "hour"
  ],
  "fields": [
   {
@@ -33,21 +35,28 @@
    "reqd": 1
   },
   {
-   "default": "Now",
+   "default": "Today",
    "fieldname": "date",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "label": "Date",
    "reqd": 1
   },
   {
-   "fieldname": "branchopening",
+   "fieldname": "hour",
+   "fieldtype": "Time",
+   "label": "Hour",
+   "reqd": 1
+  },
+  {
+   "fieldname": "branch",
    "fieldtype": "Link",
-   "label": "Branch Opening",
+   "label": "Branch",
    "options": "GSucursal",
    "reqd": 1
   }
  ],
- "modified": "2020-06-11 16:42:32.523309",
+ "links": [],
+ "modified": "2020-06-12 10:51:05.042357",
  "modified_by": "Administrator",
  "module": "Point Of Sales",
  "name": "Opening POS",
