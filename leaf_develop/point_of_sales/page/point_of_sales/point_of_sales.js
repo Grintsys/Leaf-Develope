@@ -6,11 +6,12 @@ frappe.pages['point-of-sales'].on_page_load = function (wrapper) {
 	});
 
 	page.set_indicator('Online', 'green')
+
 	frappe.call({
 		method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_pos_config",
 		callback: function (item) {
 			if(item){
-				wrapper.point_of_sale = new erpnext.PointOfSales(wrapper,item.message);
+					wrapper.point_of_sale = new erpnext.PointOfSales(wrapper,item.message);
 				return;
 			}
 			frappe.throw("no config")
@@ -18,6 +19,17 @@ frappe.pages['point-of-sales'].on_page_load = function (wrapper) {
 	})
 }
 
+
+frappe.pages['point-of-sales'].on_page_show = function(wrapper){
+	frappe.call({
+		method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_pos_config",
+		callback: function (item) {
+				if(item.message.requiresOpening)
+					frappe.new_doc("Opening POS")
+		}
+	})
+
+}
 
 
 
@@ -45,7 +57,6 @@ erpnext.PointOfSales = class PointOfSales {
 				this.prepare_dom();
 				this.prepare_menu();
 				this.make_cart();
-
 				//item-container
 				this.make_detail();
 				this.make_buttons();
@@ -129,7 +140,7 @@ erpnext.PointOfSales = class PointOfSales {
 		});
 
 		this.page.add_action_icon(__("fa fa-calculator text-secondary fa-2x btn"), function () {
-			frappe.msgprint("Calculator");
+			
 		});
 		this.page.add_action_icon(__("fa fa-exchange text-secondary fa-2x btn"), function () {
 			frappe.route_options = {"sucursal": "Principal", "pos": "Caja01"}
@@ -881,6 +892,11 @@ class Cart {
 	bind_events() {	
 		var me = this;
 		const events = this.events;
+		this.wrapper.on('keyup', 'input[data-fieldname="search_item"]', function(event) {
+			if(event.keyCode === 13){
+			events.onClickAdd(me.search_field.get_value());
+			}
+		});
 		this.wrapper.on('click', '.btn-add', function() {
 			events.onClickAdd(me.search_field.get_value());
 		});
