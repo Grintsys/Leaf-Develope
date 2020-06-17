@@ -51,11 +51,14 @@ def get_customer_rtn(customer_name):
 @frappe.whitelist()
 def get_pos_config():
 	user = frappe.session.user
-	pos = frappe.get_value('GCAI Allocation',{"user":user},["pos"],as_dict =1)
+	pos = frappe.get_value('GCAI Allocation',{"user":user},["pos","branch"],as_dict =1)
+	if pos is None:
+		frappe.throw("no GCAI Allocation")
+
 	configs = frappe.get_all("Point Of Sale Profile",["*"],filters = {"cashier_name": pos.pos})
-	config = next(iter(configs))
+	config = next(iter(configs),None)
 	if config is None:
-		frappe.throw("no config")
+		frappe.throw("no Point Of Sale Profile")
 	
 	config.credential = frappe.utils.password.get_decrypted_password('Point Of Sale Profile',config.name,'credential')
 	
@@ -76,4 +79,23 @@ def get_pos_config():
 	for customer_group in customer_groups:
 		config.customerGroup.append(customer_group.customer_group)
 
+
+	config.requiresOpening = True
+
+	openings = frappe.get_all("Opening POS",["*"],filters = {"cashier": pos.pos,"branch":pos.branch},order_by = "creation desc") 
+	lastOpening = next(iter(openings),None)
+	if lastOpening is None:
+		return config
+
+	clousures = frappe.get_all("Close Pos",["*"],filters = {"pos": pos.pos,"sucursal":pos.branch},order_by = "creation desc") 
+	lastClousure = next(iter(clousures),None)
+	if lastClousure is None:
+		config.requiresOpening = False
+		return config
+
+	if lastOpening.creation > lastClousure.creation:
+		config.requiresOpening = False
+
 	return config
+
+

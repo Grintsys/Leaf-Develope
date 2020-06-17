@@ -1,5 +1,4 @@
 {
- "actions": [],
  "creation": "2020-06-11 16:38:03.806564",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -55,9 +54,8 @@
    "reqd": 1
   }
  ],
- "links": [],
- "modified": "2020-06-12 10:51:05.042357",
- "modified_by": "Administrator",
+ "modified": "2020-06-16 11:11:16.287174",
+ "modified_by": "mzmaai70@gmail.com",
  "module": "Point Of Sales",
  "name": "Opening POS",
  "owner": "Administrator",
@@ -75,7 +73,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1

@@ -2,7 +2,8 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Opening POS', {
-	// refresh: function(frm) {
 
-	// }
+	after_save: function(frm) {
+		frappe.set_route("point-of-sales")
+	}
 });
