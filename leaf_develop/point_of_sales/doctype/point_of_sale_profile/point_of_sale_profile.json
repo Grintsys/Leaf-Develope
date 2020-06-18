@@ -1,5 +1,4 @@
 {
- "actions": [],
  "allow_rename": 1,
  "creation": "2020-05-21 09:15:36.501644",
  "doctype": "DocType",
@@ -17,6 +16,7 @@
   "column_break_9",
   "warehouse",
   "company_address",
+  "max_discount_percentage",
   "section_condictions",
   "update_stock",
   "ignore_pricing_rule",
@@ -28,6 +28,7 @@
   "show_only_existence",
   "authorize_reprint_invoice",
   "make_cut",
+  "allow_override_max_discount",
   "colum_break_24",
   "delete_an_invoice_item",
   "delete_saved_invoice",
@@ -454,12 +455,23 @@
    "fieldname": "close_the_box",
    "fieldtype": "Check",
    "label": "Close the box"
+  },
+  {
+   "default": "0",
+   "fieldname": "max_discount_percentage",
+   "fieldtype": "Percent",
+   "label": "Max Discount Porcentage"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_override_max_discount",
+   "fieldtype": "Check",
+   "label": "Allow override max discount"
   }
  ],
  "icon": "icon-cog",
- "links": [],
- "modified": "2020-06-11 15:43:08.563334",
- "modified_by": "Administrator",
+ "modified": "2020-06-18 14:16:48.457633",
+ "modified_by": "mzmaai70@gmail.com",
  "module": "Point Of Sales",
  "name": "Point Of Sale Profile",
  "owner": "Administrator",
