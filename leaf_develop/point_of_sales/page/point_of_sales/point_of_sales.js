@@ -57,10 +57,7 @@ erpnext.PointOfSales = class PointOfSales {
 				this.prepare_dom();
 				this.prepare_menu();
 				this.make_cart();
-				//item-container
 				this.make_detail();
-				this.make_buttons();
-				this.make_fields_detail_sale();
 			},
 			() => this.page.set_title(__('Point of Sales'))
 		]);
@@ -170,7 +167,7 @@ erpnext.PointOfSales = class PointOfSales {
 			wrapper: this.wrapper.find('.cart-container'),
 			events: {
 				onClickAdd: (item) => {
-					if(this.customer_field.get_value()){
+					if(this.detail.customer_field.get_value()){
 						this.add_item(item);
 						this.cart.search_field.set_value("");
 						return;
@@ -206,6 +203,67 @@ erpnext.PointOfSales = class PointOfSales {
 		});
 	}
 
+	get_max_discount_amount_config() {
+		let grandTotal = 0;
+		this.cart.wrapper.find('.list-item').each((index,item)=>{
+			grandTotal += Number($(item).find('.total').text());
+		});
+		return grandTotal * (this.config.max_discount_percentage/100);
+	}
+
+	updatePercentageDiscount(discount){
+		$(this.wrapper.find('input[data-fieldname="percentage"]')).val(discount);
+		this.update_totals()
+	}
+
+	updateAmountDiscount(discount){
+		$(this.wrapper.find('input[data-fieldname="amount"]')).val(discount);
+		this.update_totals()
+	}
+
+	make_detail() {
+		var me = this;
+		this.detail = new Detail({
+			frm: this.frm,
+			wrapper: this.wrapper.find('.item-container'),
+			events: {
+				onChangePercentageDiscount(discount){
+					if(discount <= me.config.max_discount_percentage){
+						me.updatePercentageDiscount(discount)
+						return
+					}
+					if(me.config.allow_override_max_discount){
+						me.open_modal_auth(()=> 
+						me.updatePercentageDiscount(discount)
+						);
+					}
+					else{
+						frappe.msgprint(`Discount is greather than ${me.config.max_discount_percentage}%`)
+					}	
+					$(me.wrapper.find('input[data-fieldname="percentage"]')).val(0);
+					me.update_totals()
+				},
+				onChangeAmountDiscount(discount){
+					const maxAmount = me.get_max_discount_amount_config(); 
+					if(discount <= maxAmount){
+						me.updateAmountDiscount(discount)
+						return
+					}
+					if(me.config.allow_override_max_discount){
+						me.open_modal_auth(()=> me.updateAmountDiscount(discount));
+					}
+					else{
+						frappe.msgprint(`Discount is greather than ${maxAmount.toFixed(2)}`)
+					}
+					$(me.wrapper.find('input[data-fieldname="amount"]')).val(0);
+					me.update_totals()
+				}
+			},
+			config: this.config
+		});
+	}
+
+
 	update_item_quantity(item_code,quantity){
 		const itemRate = this.get_item_rate(item_code);
 		const discount = Number(this.wrapper.find(`.${item_code}_discount`).val());
@@ -217,7 +275,7 @@ erpnext.PointOfSales = class PointOfSales {
 	update_item_rate(item_code,itemRate){
 		const discount = Number(this.wrapper.find(`.${item_code}_discount`).val());
 		const quantity = Number(this.wrapper.find(`.${item_code}_quantity`).val());
-		this.wrapper.find(`.${item_code}_rate`).val(itemRate);
+		this.wrapper.find(`.${item_code}_rate`).val(itemRate.toFixed(2));
 		const total = this.get_item_new_total(itemRate,discount,quantity);
 		this.wrapper.find(`.${item_code}_total`).text(total);
 	}
@@ -229,17 +287,29 @@ erpnext.PointOfSales = class PointOfSales {
 
 
 	update_item_discount(item_code,discount){
+		const me = this;
 		const maxDiscount = this.get_item_max_discount(item_code);
 		if(discount>maxDiscount){
-		this.wrapper.find(`.${item_code}_discount`).val(0);
-		discount = 0;
-		frappe.msgprint(__(`The discount exceeds the maximum limit of ${maxDiscount}%`))
+			this.wrapper.find(`.${item_code}_discount`).val(0);
+			this.open_modal_auth(()=> {
+				set_item_discount(item_code,discount)
+				this.update_totals()
+
+			});
 		}
-		const itemRate = this.get_item_rate(item_code);
-		const quantity = Number(this.wrapper.find(`.${item_code}_quantity`).val());
-		this.wrapper.find(`.${item_code}_discount`).val(discount);
-		const newTotal = this.get_item_new_total(itemRate,discount,quantity)
-		this.wrapper.find(`.${item_code}_total`).text(newTotal);
+		else{
+			set_item_discount(item_code,discount)
+			this.update_totals()
+
+		}		
+
+		function set_item_discount(item_code,discount){
+			const itemRate = me.get_item_rate(item_code);
+			const quantity = Number(me.wrapper.find(`.${item_code}_quantity`).val());
+			me.wrapper.find(`.${item_code}_discount`).val(discount);
+			const newTotal = me.get_item_new_total(itemRate,discount,quantity)
+			me.wrapper.find(`.${item_code}_total`).text(newTotal);
+		}
 	}
 
 	get_item_new_total(itemRate,discount,quantity) {
@@ -256,8 +326,48 @@ erpnext.PointOfSales = class PointOfSales {
 			grandTotal += Number($(item).find('.total').text());
 			totalDiscount += this.get_item_total_discount(item);
 		});
+		totalDiscount += this.get_total_invoice_discount(grandTotal);
+		grandTotal = this.get_total_invoice_value(grandTotal);
+
 		this.wrapper.find('.grand-total-value').text(grandTotal.toFixed(2));
 		this.wrapper.find('.total-discount-value').text(totalDiscount.toFixed(2));
+	}
+
+	get_total_invoice_value(grandTotal){
+		let invoiceTotal= grandTotal;
+		const percentage = $(this.wrapper.find('input[data-fieldname="percentage"]'));
+		const amount = $(this.wrapper.find('input[data-fieldname="amount"]'));
+		const selectedDiscount = this.detail.type_margin_field.get_value();
+		
+		if(selectedDiscount ==="Percentage"){
+			if(percentage.length > 0)
+				invoiceTotal -= grandTotal *(Number(percentage.val())/100)
+			else invoiceTotal -= grandTotal *0
+		}
+		if(selectedDiscount ==="Amount"){
+			if(amount.length > 0)
+				invoiceTotal -= Number(amount.val())
+			else invoiceTotal -=0
+		}
+		return invoiceTotal
+	}
+
+	get_total_invoice_discount(grandTotal){
+		let invoiceDiscount = 0;
+		const percentage = $(this.wrapper.find('input[data-fieldname="percentage"]'));
+		const amount = $(this.wrapper.find('input[data-fieldname="amount"]'));
+		const selectedDiscount = this.detail.type_margin_field.get_value();
+		if(selectedDiscount ==="Percentage"){
+			if(percentage.length > 0)
+				invoiceDiscount+= grandTotal *(Number(percentage.val())/100)
+			else invoiceDiscount+= grandTotal * 0
+		}
+		if(selectedDiscount ==="Amount"){
+			if(amount.length > 0)
+				invoiceDiscount += Number(amount.val())
+			else invoiceDiscount += 0
+		}
+		return invoiceDiscount
 	}
 
 	get_item_total_discount(item){
@@ -378,407 +488,7 @@ erpnext.PointOfSales = class PointOfSales {
 
 	
 
-	make_detail(){
-		this.wrapper.find('.item-container').append(`
-			<div class="pos-cart">
-				<div class="cart-wrapper">
-					<div class="list-item-table list-item list-item--head">
-						<h5 class="text-muted">Detail of sale</h5>
-					</div>
-				</div>
-				<div class="detail-items">
-					<div class="detail">
-						<div class="customer_fields">
-						</div>
-					</div>
-				<div>
-			</div>
-			</div>
-			<div class="totals">
-			</div>
-			<div class="buttons flex">
-			</div>
-		`)
-	}
 
-
-	make_buttons() {
-		this.wrapper.find('.buttons').append(`<div class="pause-btn" data-button-value="pause">Pause</div>`);
-		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
-	}
-
-	make_rtn_field(selectedCustomer){
-		const me = this;
-		if(!selectedCustomer){
-			return;
-		}
-		frappe.call({
-			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_customer_rtn",
-			args: {
-				customer_name: selectedCustomer
-			},
-			callback: function (customer) {
-				me.wrapper.find('div[data-fieldname="customer_rtn"]').remove();
-				if(customer.message.customer_default)return;
-				me.customer_rtn_field = frappe.ui.form.make_control({
-					df: {
-						fieldtype: 'Data',
-						label: __('RTN'),
-						fieldname: 'customer_rtn',
-						read_only: 1
-					},
-					parent: me.wrapper.find('.customer_fields'),
-					render_input: true,
-				});
-				me.customer_rtn_field.set_value(customer.message.rtn)
-
-			}
-		})
-		
-
-	}
-
-	make_fields_detail_sale(){
-		const allCustomerGroups = 'Todas las categorías de clientes'
-		const me = this;
-		this.customer_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Link',
-				label: __('Customer'),
-				fieldname: 'customer',
-				options: 'Customer',
-				reqd: 1,
-				onchange:function() {
-					me.make_rtn_field(me.customer_field.get_value());
-				},
-				get_query: () => {
-					let filters=[];
-					if(me.config.customerGroup.some((group) => group === allCustomerGroups)){
-						if(!me.config.allow_disabled_clients){
-							filters.push( ["Customer","disabled","=",'0'])
-							}
-						return {filters};
-					}
-					filters.push(["Customer","customer_group","in",`${me.config.customerGroup.join()}`])
-
-					if(!me.config.allow_disabled_clients)
-						filters.push( ["Customer","disabled","=",'0'])
-
-					return {filters};
-				}
-			},
-			parent: this.wrapper.find('.customer_fields'),
-			render_input: true,
-		});
-
-
-	
-
-		this.numeration_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Data',
-				label: __('Numeration'),
-				fieldname: 'numeration',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.detail'),
-			render_input: true,
-		});
-
-		this.wrapper.find('.detail').append(`
-			<div class="accordion" id="accordionExample">
-				<div class="card">
-		  			<div class="card-header" id="headingOne">
-						<h2 class="mb-0">
-			  				<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-			  					<a>
-									<i class="octicon octicon-chevron-down"></i>
-			  							${__('Detail of discount')}
-		  						</a>
-			  				</button>
-						</h2>
-		  			</div>
-		  			<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-						<div class="card-body discount-detail">
-						</div>
-		  			</div>
-				</div>
-			</div>
-		`);
-		
-		this.wrapper.find('.detail').append(`
-			<div class="card">
-				<div class="card-header" id="headingTwo">
-		  			<h2 class="mb-0">
-						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-							<a>
-			  					<i class="octicon octicon-chevron-down"></i>
-			  						${__('Detail of payment')}
-		  					</a>
-						</button>
-		  			</h2>
-				</div>
-				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-		  			<div class="card-body detail-payment">
-		  			</div>
-				</div>
-	  		</div>
-		  `);
-		  
-		  this.wrapper.find('.detail').append(`
-			<div class="card">
-				<div class="card-header" id="headingThree">
-		  			<h2 class="mb-0">
-						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-							<a>
-			  					<i class="octicon octicon-chevron-down"></i>
-			  						${__('Exempt and ISV')}
-		  					</a>
-						</button>
-		  			</h2>
-				</div>
-				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-		  			<div class="card-body exempt_and_isv">
-		  			</div>
-				</div>
-	  		</div>
-	  	`);
-
-		this.make_field_detail_discount();
-		this.make_fields_total_detail();
-		this.make_exempt_and_isv();
-		this.make_totals();
-	}
-
-	make_payment_methods(){
-		this.config.paymentMethods.forEach((i)=>{
-			this[i] = frappe.ui.form.make_control({
-				df: {
-					fieldtype: 'Currency',
-					label: __(i),
-					fieldname: 'payment_amount'
-				},
-				parent: this.wrapper.find('.detail-payment'),
-				render_input: true,
-			});
-			if(i =="Efectivo"){
-				this.return_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Return'),
-				fieldname: 'return'
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
-	}
-
-
-		})
-		// this.payment_amount_field = frappe.ui.form.make_control({
-		// 	df: {
-		// 		fieldtype: 'Currency',
-		// 		label: __(''),
-		// 		fieldname: 'payment_amount'
-		// 	},
-		// 	parent: this.wrapper.find('.detail-payment'),
-		// 	render_input: true,
-		// });
-
-		// this.payment_card_field = frappe.ui.form.make_control({
-		// 	df: {
-		// 		fieldtype: 'Currency',
-		// 		label: __('Payment credit card'),
-		// 		fieldname: 'payment_card',
-		// 	},
-		// 	parent: this.wrapper.find('.detail-payment'),
-		// 	render_input: true,
-		// });
-
-		// this.return_field = frappe.ui.form.make_control({
-		// 	df: {
-		// 		fieldtype: 'Currency',
-		// 		label: __('Return'),
-		// 		fieldname: 'return'
-		// 	},
-		// 	parent: this.wrapper.find('.detail-payment'),
-		// 	render_input: true,
-		// });
-	}
-
-	make_fields_total_detail(){
-		this.reason_for_sale_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Link',
-				label: __('Reason for sale'),
-				fieldname: 'reason_for_sale',
-				options: 'Reason for sale'
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
-
-		this.exonerated_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Check',
-				label: __('Exonerated Sale'),
-				fieldname: 'exonerated'
-			},
-			parent: this.wrapper.find('.detail-payment'),
-			render_input: true,
-		});
-
-		this.make_payment_methods()
-	}
-
-	make_field_detail_discount(){
-		const me = this;
-		this.reason_for_discount_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Link',
-				label: __('Discount reason'),
-				fieldname: 'discount_reason',
-				options: 'Reason For Discount'
-			},
-			parent: this.wrapper.find('.discount-detail'),
-			render_input: true,
-		});
-
-		this.type_margin_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Select',
-				label: __('Margin type'),
-				fieldname: 'margin_type',
-				options: [
-					'Percentage',
-					'Amount'
-				],
-				onchange:function() {
-					me.make_discount_type(me.type_margin_field.get_value());
-				},
-			},
-			parent: this.wrapper.find('.discount-detail'),
-			render_input: true,
-		});
-	}
-
-	make_discount_type(margin_type){
-		const me = this;
-		if (margin_type == "Percentage"){
-			me.wrapper.find('div[data-fieldname="amount"]').remove();
-			this.percentage_for_discount_field = frappe.ui.form.make_control({
-				df: {
-					fieldtype: 'Int',
-					label: __('Percentage for discount'),
-					fieldname: 'percentage'
-				},
-				parent: this.wrapper.find('.discount-detail'),
-				render_input: true,
-			});
-		}else{
-			me.wrapper.find('div[data-fieldname="percentage"]').remove();
-			this.amount_for_discount_field = frappe.ui.form.make_control({
-				df: {
-					fieldtype: 'Currency',
-					label: __('Amount for discount'),
-					fieldname: 'amount'
-				},
-				parent: this.wrapper.find('.discount-detail'),
-				render_input: true,
-			});
-		}
-	}
-
-	make_exempt_and_isv(){
-		this.base_isv_15_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Base ISV 15'),
-				fieldname: 'base_isv_15',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-
-		this.isv_15_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('ISV 15'),
-				fieldname: 'isv_15',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-
-		this.base_isv_18_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Base ISV 18'),
-				fieldname: 'base_isv_18',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-
-		this.isv_18_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('ISV 18'),
-				fieldname: 'isv_18',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-
-		this.exempt_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Exempt'),
-				fieldname: 'exempt',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-
-		this.exonerated_field = frappe.ui.form.make_control({
-			df: {
-				fieldtype: 'Currency',
-				label: __('Exonerated'),
-				fieldname: 'exonerated',
-				read_only: 1
-			},
-			parent: this.wrapper.find('.exempt_and_isv'),
-			render_input: true,
-		});
-	}
-
-	make_totals(){
-		this.wrapper.find('.totals').append(`
-			<div class="border border-grey fixed-bottom">
-				<div class="total-discount flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
-					<div class="flex flex-col">
-						<div class="text-md text-dark-grey text-bold">Discount</div>
-					</div>
-					<div class="flex flex-col text-right">
-						<div class="total-discount-value text-md text-dark-grey text-bold">0.00</div>
-					</div>
-				</div>
-				<div class="grand-total flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
-					<div class="flex flex-col">
-						<div class="text-md text-dark-grey text-bold">Grand Total</div>
-					</div>
-					<div class="flex flex-col text-right">
-						<div class="grand-total-value text-md text-dark-grey text-bold">0.00</div>
-					</div>
-				</div>
-			</div>
-		`);
-	}
 }
 
 
@@ -892,9 +602,10 @@ class Cart {
 	bind_events() {	
 		var me = this;
 		const events = this.events;
-		this.wrapper.on('keyup', 'input[data-fieldname="search_item"]', function(event) {
+		this.wrapper.on('keydown', 'input[data-fieldname="search_item"]', function(event) {
 			if(event.keyCode === 13){
-			events.onClickAdd(me.search_field.get_value());
+			// me.search_field.set_value("");
+			// events.onClickAdd(me.search_field.get_value());
 			}
 		});
 		this.wrapper.on('click', '.btn-add', function() {
@@ -917,8 +628,6 @@ class Cart {
 			const item_code = unescape(item.attr('data-item-code'));
 			const discount = Math.abs(Number(this.value));
 			events.onChangeDiscount(item_code,discount);
-			events.onUpdatetotal();
-
 		});
 
 		this.wrapper.on('change', '.item-rate', function() {
@@ -938,6 +647,448 @@ class Cart {
 
 
 		});
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Detail {
+	constructor({frm, wrapper, events,config}) {
+		this.frm = frm;
+		this.item_data = {};
+		this.wrapper = wrapper;
+		this.events = events;
+		this.config = config;
+		this.make();
+		this.bind_events();
+	}
+
+	make() {
+		this.make_invoice_detail();
+		this.make_buttons();
+		this.make_fields_detail_sale();
+	}
+
+
+	bind_events() {	
+		var me = this;
+		const events = this.events;
+		this.wrapper.on('change', 'input[data-fieldname="percentage"]', function(event) {
+				var discountInput = $(this)
+				events.onChangePercentageDiscount(Number(discountInput.val()));
+			}
+		)
+		this.wrapper.on('change', 'input[data-fieldname="amount"]', function(event) {
+			var discountInput = $(this)
+			events.onChangeAmountDiscount(Number(discountInput.val()));
+			}
+		)
+		this.wrapper.on('change', 'select[data-fieldname="margin_type"]', function(event) {
+			events.onChangePercentageDiscount(0);
+		}
+		)	
+	}
+
+	make_buttons() {
+		this.wrapper.find('.buttons').append(`<div class="pause-btn" data-button-value="pause">Pause</div>`);
+		this.wrapper.find('.buttons').append(`<div class="checkout-btn" data-button-value="checkout">Checkout</div>`);
+	}
+
+
+	make_invoice_detail(){
+		this.wrapper.append(`
+			<div class="pos-cart">
+				<div class="cart-wrapper">
+					<div class="list-item-table list-item list-item--head">
+						<h5 class="text-muted">Detail of sale</h5>
+					</div>
+				</div>
+				<div class="detail-items">
+					<div class="detail">
+						<div class="customer_fields">
+						</div>
+					</div>
+				<div>
+			</div>
+			</div>
+			<div class="totals">
+			</div>
+			<div class="buttons flex">
+			</div>
+		`)
+	}
+
+
+
+	
+	make_rtn_field(selectedCustomer){
+		const me = this;
+		if(!selectedCustomer){
+			return;
+		}
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_customer_rtn",
+			args: {
+				customer_name: selectedCustomer
+			},
+			callback: function (customer) {
+				me.wrapper.find('div[data-fieldname="customer_rtn"]').remove();
+				if(customer.message.customer_default)return;
+				me.customer_rtn_field = frappe.ui.form.make_control({
+					df: {
+						fieldtype: 'Data',
+						label: __('RTN'),
+						fieldname: 'customer_rtn',
+						read_only: 1
+					},
+					parent: me.wrapper.find('.customer_fields'),
+					render_input: true,
+				});
+				me.customer_rtn_field.set_value(customer.message.rtn)
+
+			}
+		})
+		
+
+	}
+
+	make_fields_detail_sale(){
+		const allCustomerGroups = 'Todas las categorías de clientes'
+		const me = this;
+		this.customer_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Customer'),
+				fieldname: 'customer',
+				options: 'Customer',
+				reqd: 1,
+				onchange:function() {
+					me.make_rtn_field(me.customer_field.get_value());
+				},
+				get_query: () => {
+					let filters=[];
+					if(me.config.customerGroup.some((group) => group === allCustomerGroups)){
+						if(!me.config.allow_disabled_clients){
+							filters.push( ["Customer","disabled","=",'0'])
+							}
+						return {filters};
+					}
+					filters.push(["Customer","customer_group","in",`${me.config.customerGroup.join()}`])
+
+					if(!me.config.allow_disabled_clients)
+						filters.push( ["Customer","disabled","=",'0'])
+
+					return {filters};
+				}
+			},
+			parent: this.wrapper.find('.customer_fields'),
+			render_input: true,
+		});
+
+		this.customer_field.set_value(me.config.customer);
+	
+
+		this.numeration_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Data',
+				label: __('Numeration'),
+				fieldname: 'numeration',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.detail'),
+			render_input: true,
+		});
+
+		this.wrapper.find('.detail').append(`
+			<div class="accordion" id="accordionExample">
+				<div class="card">
+		  			<div class="card-header" id="headingOne">
+						<h2 class="mb-0">
+			  				<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+			  					<a>
+									<i class="octicon octicon-chevron-down"></i>
+			  							${__('Detail of discount')}
+		  						</a>
+			  				</button>
+						</h2>
+		  			</div>
+		  			<div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+						<div class="card-body discount-detail">
+						</div>
+		  			</div>
+				</div>
+			</div>
+		`);
+		
+		this.wrapper.find('.detail').append(`
+			<div class="card">
+				<div class="card-header" id="headingTwo">
+		  			<h2 class="mb-0">
+						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							<a>
+			  					<i class="octicon octicon-chevron-down"></i>
+			  						${__('Detail of payment')}
+		  					</a>
+						</button>
+		  			</h2>
+				</div>
+				<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+		  			<div class="card-body detail-payment">
+		  			</div>
+				</div>
+	  		</div>
+		  `);
+		  
+		  this.wrapper.find('.detail').append(`
+			<div class="card">
+				<div class="card-header" id="headingThree">
+		  			<h2 class="mb-0">
+						<button class="btn btn-link btn-block btn-collapse control-label" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+							<a>
+			  					<i class="octicon octicon-chevron-down"></i>
+			  						${__('Exempt and ISV')}
+		  					</a>
+						</button>
+		  			</h2>
+				</div>
+				<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+		  			<div class="card-body exempt_and_isv">
+		  			</div>
+				</div>
+	  		</div>
+	  	`);
+
+		this.make_field_detail_discount();
+		this.make_fields_total_detail();
+		this.make_exempt_and_isv();
+		this.make_totals();
+	}
+
+	make_payment_methods(){
+		this.config.paymentMethods.forEach((i)=>{
+			this[i] = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Currency',
+					label: __(i),
+					fieldname: 'payment_amount'
+				},
+				parent: this.wrapper.find('.detail-payment'),
+				render_input: true,
+			});
+			if(i =="Efectivo"){
+				this.return_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Return'),
+				fieldname: 'return'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+	}
+
+
+		})
+
+	}
+
+	make_fields_total_detail(){
+		this.reason_for_sale_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Reason for sale'),
+				fieldname: 'reason_for_sale',
+				options: 'Reason for sale'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+
+		this.exonerated_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Check',
+				label: __('Exonerated Sale'),
+				fieldname: 'exonerated'
+			},
+			parent: this.wrapper.find('.detail-payment'),
+			render_input: true,
+		});
+
+		this.make_payment_methods()
+	}
+
+	make_field_detail_discount(){
+		const me = this;
+		this.reason_for_discount_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Link',
+				label: __('Discount reason'),
+				fieldname: 'discount_reason',
+				options: 'Reason For Discount'
+			},
+			parent: this.wrapper.find('.discount-detail'),
+			render_input: true,
+		});
+
+		this.type_margin_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Select',
+				label: __('Margin type'),
+				fieldname: 'margin_type',
+				options: [
+					'Percentage',
+					'Amount'
+				],
+				onchange:function() {
+					me.make_discount_type(me.type_margin_field.get_value());
+				},
+			},
+			parent: this.wrapper.find('.discount-detail'),
+			render_input: true,
+		});
+	}
+
+	make_discount_type(margin_type){
+		const me = this;
+		if (margin_type == "Percentage"){
+			me.wrapper.find('div[data-fieldname="amount"]').remove();
+			this.percentage_for_discount_field = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Int',
+					label: __('Percentage for discount'),
+					fieldname: 'percentage'
+				},
+				parent: this.wrapper.find('.discount-detail'),
+				render_input: true,
+			});
+		}else{
+			me.wrapper.find('div[data-fieldname="percentage"]').remove();
+			this.amount_for_discount_field = frappe.ui.form.make_control({
+				df: {
+					fieldtype: 'Currency',
+					label: __('Amount for discount'),
+					fieldname: 'amount'
+				},
+				parent: this.wrapper.find('.discount-detail'),
+				render_input: true,
+			});
+		}
+
+	}
+
+	make_exempt_and_isv(){
+		this.base_isv_15_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Base ISV 15'),
+				fieldname: 'base_isv_15',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.isv_15_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('ISV 15'),
+				fieldname: 'isv_15',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.base_isv_18_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Base ISV 18'),
+				fieldname: 'base_isv_18',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.isv_18_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('ISV 18'),
+				fieldname: 'isv_18',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.exempt_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Exempt'),
+				fieldname: 'exempt',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+
+		this.exonerated_field = frappe.ui.form.make_control({
+			df: {
+				fieldtype: 'Currency',
+				label: __('Exonerated'),
+				fieldname: 'exonerated',
+				read_only: 1
+			},
+			parent: this.wrapper.find('.exempt_and_isv'),
+			render_input: true,
+		});
+	}
+
+	make_totals(){
+		this.wrapper.find('.totals').append(`
+			<div class="border border-grey fixed-bottom">
+				<div class="total-discount flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
+					<div class="flex flex-col">
+						<div class="text-md text-dark-grey text-bold">Discount</div>
+					</div>
+					<div class="flex flex-col text-right">
+						<div class="total-discount-value text-md text-dark-grey text-bold">0.00</div>
+					</div>
+				</div>
+				<div class="grand-total flex justify-between items-center h-16 pr-8 pl-8 border-b-grey">
+					<div class="flex flex-col">
+						<div class="text-md text-dark-grey text-bold">Grand Total</div>
+					</div>
+					<div class="flex flex-col text-right">
+						<div class="grand-total-value text-md text-dark-grey text-bold">0.00</div>
+					</div>
+				</div>
+			</div>
+		`);
 	}
 
 }
