@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 import frappe, json
 from frappe.utils.nestedset import get_root_of
 from frappe.utils import cint
+from frappe import _
 from erpnext.accounts.doctype.pos_profile.pos_profile import get_item_groups
 
 from six import string_types
@@ -98,4 +99,45 @@ def get_pos_config():
 
 	return config
 
+
+
+
+def initial_number(number):
+
+	if number >= 1 and number < 10:
+		return("0000000" + str(number))
+	elif number >= 10 and number < 100:
+		return("000000" + str(number))
+	elif number >= 100 and number < 1000:
+		return("00000" + str(number))
+	elif number >= 1000 and number < 10000:
+		return("0000" + str(number))
+	elif number >= 10000 and number < 100000:
+		return("000" + str(number))
+	elif number >= 100000 and number < 1000000:
+		return("00" + str(number))
+	elif number >= 1000000 and number < 10000000:
+		return("0" + str(number))
+	elif number >= 10000000:
+		return(str(number))
+
+
+@frappe.whitelist()
+def get_invoice_numeration():
+	user = frappe.session.user
+	gcai_allocation = frappe.get_value('GCAI Allocation',{"user":user},["pos","branch","company"],as_dict =1)
+	if gcai_allocation is None:
+		frappe.throw(_("The user {} does not have an assigned GCAI Allocation".format(user)))
+
+	cais = frappe.get_all("GCAI", ["*"], 
+					filters = {"company": gcai_allocation.company, "sucursal": gcai_allocation.branch, "pos_name": gcai_allocation.pos, })
+
+	cai = next(iter(cais),None)
+	if cai is None:
+		frappe.throw(_("The user {} does not have an assigned GCAI".format(user)))
+	
+	number = initial_number(cai.current_numbering)
+	numeration = "{}-{}-{}-{}".format(cai.codebranch, cai.codepos, cai.codedocument, number)
+
+	return numeration
 
