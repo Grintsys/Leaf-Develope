@@ -776,6 +776,18 @@ class Detail {
 
 	}
 
+	set_invoice_numeration(){
+		const me = this;
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_invoice_numeration",
+			args: {
+			},
+			callback: function (numeration) {
+					me.numeration_field.set_value(numeration.message)
+			}
+		})
+	}
+
 	make_fields_detail_sale(){
 		const allCustomerGroups = 'Todas las categorías de clientes'
 		const me = this;
@@ -822,6 +834,8 @@ class Detail {
 			parent: this.wrapper.find('.detail'),
 			render_input: true,
 		});
+
+		this.set_invoice_numeration();
 
 		this.wrapper.find('.detail').append(`
 			<div class="accordion" id="accordionExample">
