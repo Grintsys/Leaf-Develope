@@ -372,16 +372,11 @@ erpnext.PointOfSales = class PointOfSales {
 		totalDiscount += totalInvoiceDiscount;
 		const discountDistroISV = totalInvoiceDiscount/grandTotal;
 		grandTotal = this.get_total_invoice_value(grandTotal);
-		// this.detail.isv_15_field.set_value(totalBase15 -totalISV15)
-		// this.detail.base_isv_15_field.set_value(totalISV15)
-		// this.detail.isv_18_field.set_value(totalBase18 - totalISV18)
-		// this.detail.base_isv_18_field.set_value(totalISV18)
-		// this.detail.exonerated_field.set_value(totalBase0)
 		this.detail.isv_15_field.set_value(this.get_discount_isv(discountDistroISV,totalISV15,totalBase15))
 		this.detail.base_isv_15_field.set_value(this.get_discount_isv(discountDistroISV,totalISV15,0))
 		this.detail.isv_18_field.set_value(this.get_discount_isv(discountDistroISV,totalISV18,totalBase18))
 		this.detail.base_isv_18_field.set_value(this.get_discount_isv(discountDistroISV,totalISV18,0))
-		this.detail.exonerated_field.set_value(this.get_discount_isv(discountDistroISV,totalBase0,0))
+		this.detail.exempt_field.set_value(this.get_discount_isv(discountDistroISV,totalBase0,0))
 		this.wrapper.find('.grand-total-value').text(grandTotal.toFixed(2));
 		this.wrapper.find('.total-discount-value').text(totalDiscount.toFixed(2));
 	}
