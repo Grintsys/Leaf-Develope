@@ -7,27 +7,46 @@ from frappe.utils.nestedset import get_root_of
 from frappe.utils import cint
 from frappe import _
 from erpnext.accounts.doctype.pos_profile.pos_profile import get_item_groups
-
+import json
 from six import string_types
 
 @frappe.whitelist()
 def item(item):
 	data = ""
-	json = {}
-	items = frappe.get_all("Item", ["item_name", "item_code"], filters = {"name": item})
-	for item_selected in items:
-		item_prices = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item_selected.item_code})
-		for price in item_prices:
-			json = {
-				'item_code': item_selected.item_code,
-				'item_name': item_selected.item_name,
-				'price_cu': str(price.price_list_rate),
-				'total': str(price.price_list_rate)
-			}
+	isv =0	
+	items = frappe.get_all("Item", ["*"], filters = {"name": item})
+	item_selected = next(iter(items))
+	if item_selected is None:
+		frappe.throw("No item is found")
+	item_prices = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item_selected.item_code})
+	if len(item_prices) is 0:
+		frappe.throw("Item has no price")
+	
+	taxes = frappe.get_all("Item Tax",["*"],filters = {"parent":item_selected.name})
+	if(len(taxes)>0):
+		tax = next(iter(taxes))
+		if tax is not None:
+			taxesTemplates = frappe.get_all("Item Tax Template",["*"],filters = {"name":tax.item_tax_template})
+			if len(taxesTemplates)>0:
+				taxTemplate = next(iter(taxesTemplates))
+				if taxTemplate is not None:
+					taxesDetail = frappe.get_all("Item Tax Template Detail",["*"],filters = {"parent":taxTemplate.name})
+					taxDetail = next(iter(taxesDetail))
+					if taxDetail is not None:
+						isv = taxDetail.tax_rate
 
-	if len(items) > 0 and len(item_prices) > 0:
-		data = items[0].item_name + "," + str(item_prices[0].price_list_rate) + "," + str(item_prices[0].price_list_rate)
+	price = next(iter(item_prices))
+	if price is None:
+		frappe.throw("Item has no price")
+	json = {
+		'item_code': item_selected.item_code,
+		'item_name': item_selected.item_name,
+		'price_cu': str(price.price_list_rate),
+		'total': str(price.price_list_rate),
+		'isv':isv
+	}
 
+	
 	return json
 
 @frappe.whitelist()
@@ -121,6 +140,13 @@ def initial_number(number):
 	elif number >= 10000000:
 		return(str(number))
 
+@frappe.whitelist()
+def get_margin_types():
+	reasons = []
+	discountReasons = frappe.get_all("Reason For Discount", ["reason"]) 
+	for discountReason in discountReasons:
+		reasons.append(discountReason.reason)
+	return reasons
 
 @frappe.whitelist()
 def get_invoice_numeration():
@@ -141,3 +167,14 @@ def get_invoice_numeration():
 
 	return numeration
 
+
+@frappe.whitelist()
+def proceed_checkout(invoice_data):
+	invoice_data = json.loads(invoice_data)
+	sale_invoce = frappe.new_doc("Sales Invoice")
+
+	sale_invoce.customer = invoice_data["customer"]
+	
+
+
+	return sale_invoce

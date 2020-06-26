@@ -169,7 +169,8 @@ erpnext.PointOfSales = class PointOfSales {
 				onClickAdd: (item) => {
 					if(this.detail.customer_field.get_value()){
 						this.add_item(item);
-						this.cart.search_field.set_value("");
+						// this.cart.search_field.set_value("");
+						$(this.wrapper.find('input[data-fieldname="search_item"]')).val("")
 						return;
 					}
 					frappe.throw(`${__('Customer is required')}`);
@@ -221,12 +222,32 @@ erpnext.PointOfSales = class PointOfSales {
 		this.update_totals()
 	}
 
+	proceed_checkout(){
+		let invoice_data= {
+			customer: this.detail.customer_field.get_value()
+		}
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.proceed_checkout",
+			args: {
+				invoice_data
+			},
+			callback: function (item) {
+			debugger
+			}
+		})
+
+
+	}
+
 	make_detail() {
 		var me = this;
 		this.detail = new Detail({
 			frm: this.frm,
 			wrapper: this.wrapper.find('.item-container'),
 			events: {
+				onClickCheckout:()=>{
+					me.proceed_checkout()
+				},
 				onChangePercentageDiscount(discount){
 					if(discount <= me.config.max_discount_percentage){
 						me.updatePercentageDiscount(discount)
@@ -321,16 +342,58 @@ erpnext.PointOfSales = class PointOfSales {
 	update_totals(){
 		let grandTotal = 0;
 		let totalDiscount = 0;
+		let totalISV15 = 0;
+		let totalBase15 = 0;
+		let totalBase18 = 0;
+		let totalBase0 = 0;
+		let totalISV18 = 0;
+
+
 		
 		this.wrapper.find('.list-item').each((index,item)=>{
-			grandTotal += Number($(item).find('.total').text());
+			let itemPrice= Number($(item).find('.total').text());
+			grandTotal += itemPrice;
+			let closestitem = $(item).closest('.list-item[data-item-code]');
+			let isv = Number(closestitem.attr('isv'));
+			if(isv === 15){
+				totalISV15 += this.get_item_isv(itemPrice,isv)
+				totalBase15 += itemPrice;
+			}
+			if(isv === 18){
+				totalISV18 += this.get_item_isv(itemPrice,isv)
+				totalBase18 += itemPrice;
+			}
+			if(isv === 0){
+				totalBase0 += itemPrice;
+			}
 			totalDiscount += this.get_item_total_discount(item);
 		});
-		totalDiscount += this.get_total_invoice_discount(grandTotal);
+		const totalInvoiceDiscount = this.get_total_invoice_discount(grandTotal);
+		totalDiscount += totalInvoiceDiscount;
+		const discountDistroISV = totalInvoiceDiscount/grandTotal;
 		grandTotal = this.get_total_invoice_value(grandTotal);
-
+		// this.detail.isv_15_field.set_value(totalBase15 -totalISV15)
+		// this.detail.base_isv_15_field.set_value(totalISV15)
+		// this.detail.isv_18_field.set_value(totalBase18 - totalISV18)
+		// this.detail.base_isv_18_field.set_value(totalISV18)
+		// this.detail.exonerated_field.set_value(totalBase0)
+		this.detail.isv_15_field.set_value(this.get_discount_isv(discountDistroISV,totalISV15,totalBase15))
+		this.detail.base_isv_15_field.set_value(this.get_discount_isv(discountDistroISV,totalISV15,0))
+		this.detail.isv_18_field.set_value(this.get_discount_isv(discountDistroISV,totalISV18,totalBase18))
+		this.detail.base_isv_18_field.set_value(this.get_discount_isv(discountDistroISV,totalISV18,0))
+		this.detail.exonerated_field.set_value(this.get_discount_isv(discountDistroISV,totalBase0,0))
 		this.wrapper.find('.grand-total-value').text(grandTotal.toFixed(2));
 		this.wrapper.find('.total-discount-value').text(totalDiscount.toFixed(2));
+	}
+
+	get_discount_isv(discount,isv,base){
+		if(base === 0)
+			return  isv - (discount * isv) || 0
+		return (base - isv) - (discount * (base - isv)) || 0
+	}
+
+	get_item_isv(grandTotal,isv){
+		return grandTotal / ((isv/100)+1)
 	}
 
 	get_total_invoice_value(grandTotal){
@@ -423,7 +486,7 @@ erpnext.PointOfSales = class PointOfSales {
 	function get_item_html(item) {
 		return `
 		<div class="list-item item-list-cart indicator green register"
-		data-item-code="${escape(item.item_code)}"
+		data-item-code="${escape(item.item_code)}" isv="${item.isv}"
 		>
 				<div class="item-name list-item__content list-item__content--flex-1.5">
 				` + item.item_name + `
@@ -587,6 +650,7 @@ class Cart {
 		
 		});
 
+
 		if(me.config.itemGroups.some((group) => group === allItemGroups)){
 			this.item_group_field.set_value(allItemGroups);
 		}
@@ -602,12 +666,16 @@ class Cart {
 	bind_events() {	
 		var me = this;
 		const events = this.events;
-		this.wrapper.on('keydown', 'input[data-fieldname="search_item"]', function(event) {
-			if(event.keyCode === 13){
-			// me.search_field.set_value("");
-			// events.onClickAdd(me.search_field.get_value());
-			}
-		});
+		// this.wrapper.on('keyup', 'input[data-fieldname="search_item"]', function(e) {
+		// 	if(e.keyCode === 13){
+		// 		$(this).val()
+		// 		setTimeout(()=>{
+		// 			events.onClickAdd(me.scannerCode);
+		// 		},200)
+		// 		return
+		// 	}
+		// 	me.scannerCode = $(this).val()
+		// });
 		this.wrapper.on('click', '.btn-add', function() {
 			events.onClickAdd(me.search_field.get_value());
 		});
@@ -697,6 +765,9 @@ class Detail {
 	bind_events() {	
 		var me = this;
 		const events = this.events;
+		this.wrapper.on('click', '.checkout-btn', function() {
+			events.onClickCheckout();
+		});
 		this.wrapper.on('change', 'input[data-fieldname="percentage"]', function(event) {
 				var discountInput = $(this)
 				events.onChangePercentageDiscount(Number(discountInput.val()));
@@ -896,7 +967,7 @@ class Detail {
 	  		</div>
 	  	`);
 
-		this.make_field_detail_discount();
+		this.get_discount_reasons();
 		this.make_fields_total_detail();
 		this.make_exempt_and_isv();
 		this.make_totals();
@@ -955,14 +1026,14 @@ class Detail {
 		this.make_payment_methods()
 	}
 
-	make_field_detail_discount(){
+	make_discount_fields(reasons) {
 		const me = this;
 		this.reason_for_discount_field = frappe.ui.form.make_control({
 			df: {
-				fieldtype: 'Link',
+				fieldtype: 'Select',
 				label: __('Discount reason'),
 				fieldname: 'discount_reason',
-				options: 'Reason For Discount'
+				options: reasons
 			},
 			parent: this.wrapper.find('.discount-detail'),
 			render_input: true,
@@ -984,6 +1055,20 @@ class Detail {
 			parent: this.wrapper.find('.discount-detail'),
 			render_input: true,
 		});
+	}
+
+	get_discount_reasons(){
+		const me = this;
+		frappe.call({
+			method: "leaf_develop.point_of_sales.page.point_of_sales.point_of_sales.get_margin_types",
+			
+			callback: function (marginTypes) {
+				me.make_discount_fields(marginTypes.message)
+			}
+		})
+		
+
+
 	}
 
 	make_discount_type(margin_type){
