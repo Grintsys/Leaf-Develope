@@ -1,0 +1,92 @@
+{
+ "autoname": "[name_cai]",
+ "creation": "2021-03-15 14:31:56.086748",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name_cai",
+  "initial_number",
+  "final_number",
+  "creation_date",
+  "limit_date",
+  "select_doc_for_series",
+  "update",
+  "prefix"
+ ],
+ "fields": [
+  {
+   "fieldname": "name_cai",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "initial_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Initial Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "FInal Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "creation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Creation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "limit_date",
+   "fieldtype": "Date",
+   "label": "Limit Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "prefix",
+   "fieldtype": "Select",
+   "label": "Prefix",
+   "reqd": 1
+  },
+  {
+   "fieldname": "select_doc_for_series",
+   "fieldtype": "Select",
+   "label": "Select Transaction",
+   "reqd": 1
+  },
+  {
+   "fieldname": "update",
+   "fieldtype": "Button",
+   "label": "Update"
+  }
+ ],
+ "modified": "2021-03-16 16:55:24.029120",
+ "modified_by": "Administrator",
+ "module": "CAI",
+ "name": "CAI",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
