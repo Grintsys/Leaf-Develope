@@ -1,0 +1,54 @@
+{
+ "cards": [
+  {
+   "hidden": 0,
+   "label": "Account Status",
+   "links": "[\n    {\n        \"label\": \"Patient statement\",\n        \"name\": \"Patient statement\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Advance Statement\",\n        \"name\": \"Advance Statement\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"Patient statement\"]\n    },\n    {\n        \"label\": \"Return Advance Statement\",\n        \"name\": \"Return Advance Statement\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"Patient statement\"]\n    },\n    {\n        \"label\": \"Inventory Requisition\",\n        \"name\": \"Inventory Requisition\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"Patient statement\"]\n    },\n    {\n        \"label\": \"Medical Honorarium\",\n        \"name\": \"Medical Honorarium\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"Medical\"]\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "Doctors",
+   "links": "[\n    {\n        \"label\": \"Medical\",\n        \"name\": \"Medical\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"Specialty\"]\n    },\n    {\n        \"label\": \"Specialty\",\n        \"name\": \"Specialty\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Honorarium Payment\",\n        \"name\": \"Honorarium Payment\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "Reports",
+   "links": "[\n    {\n\t    \"type\": \"report\",\n\t\t\"name\": \"Payment Of Honorarium\",\n\t\t\"doctype\": \"Payment Of Honorarium\",\n        \"dependencies\": [\"Medical Honorarium\"]\n\t},\n    {\n\t    \"type\": \"report\",\n\t\t\"name\": \"Patient Medical Fees\",\n\t\t\"doctype\": \"Patient Medical Fees\",\n        \"dependencies\": [\"Medical Honorarium\"]\n\t},\n    {\n\t\t\"type\": \"report\",\n\t\t\"name\": \"History Account Status\",\n\t\t\"doctype\": \"History Account Status\",\n        \"dependencies\": [\"Medical Honorarium\", \"Return of inventory requisition\", \"Inventory Requisition\"]\n\t},\n    {\n\t    \"type\": \"report\",\n\t\t\"name\": \"General report of hospital accounts\",\n\t\t\"doctype\": \"General report of hospital accounts\",\n        \"dependencies\": [\"Patient statement\"]\n\t},\n\t{\n\t\t\"type\": \"report\",\n\t\t\"name\": \"Detailed general report of hospital accounts\",\n\t\t\"doctype\": \"Detailed general report of hospital accountss\",\n        \"dependencies\": [\"Patient statement\"]\n\t}\n]"
+  }
+ ],
+ "category": "Modules",
+ "charts": [],
+ "creation": "2020-05-26 14:38:47.732922",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Desk Page",
+ "extends_another_page": 0,
+ "idx": 0,
+ "is_standard": 1,
+ "label": "Account Status",
+ "modified": "2020-05-28 11:16:55.414158",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Account Status",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "label": "Patient statement",
+   "link_to": "Patient statement",
+   "type": "DocType"
+  },
+  {
+   "label": "Medical Honorarium",
+   "link_to": "Medical Honorarium",
+   "type": "DocType"
+  },
+  {
+   "label": "Honorarium Payment",
+   "link_to": "Honorarium Payment",
+   "type": "DocType"
+  }
+ ]
+}

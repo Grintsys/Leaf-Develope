@@ -1,0 +1,59 @@
+{
+ "cards": [
+  {
+   "hidden": 0,
+   "label": "CAI",
+   "links": "[\n    {\n        \"description\": \"This option is for create new cais.\",\n        \"label\": \"GCAI\",\n        \"name\": \"GCAI\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"GType Document\", \"GSucursal\", \"GPos\", \"GNumber Declaration\"]\n    },\n    {\n        \"description\": \"This option is assign cai to users.\",\n        \"label\": \"GCAI Allocation\",\n        \"name\": \"GCAI Allocation\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"GCAI\"]\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "Maintenance",
+   "links": "[\n    {\n        \"description\": \"This doctype is for create new documents types.\",\n        \"label\": \"GType Document\",\n        \"name\": \"GType Document\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"This doctype is for create new sucursales.\",\n        \"label\": \"GSucursal\",\n        \"name\": \"GSucursal\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"This doctype is for create new Pos.\",\n        \"label\": \"GPos\",\n        \"name\": \"GPos\",\n        \"onboard\": 1,\n        \"type\": \"doctype\",\n        \"dependencies\": [\"GSucursal\"]\n    },\n    {\n        \"description\": \"This doctype is for create new number declaration.\",\n        \"label\": \"GNumber Declaration\",\n        \"name\": \"GNumber Declaration\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  },
+  {
+   "hidden": 0,
+   "label": "Settings",
+   "links": "[\n    {\n        \"description\": \"This doctype is for update of settings.\",\n        \"label\": \"GCai Settings\",\n        \"name\": \"GCai Settings\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    }\n]"
+  }
+ ],
+ "category": "Modules",
+ "charts": [],
+ "creation": "2020-05-26 13:43:54.160456",
+ "developer_mode_only": 0,
+ "disable_user_customization": 0,
+ "docstatus": 0,
+ "doctype": "Desk Page",
+ "extends_another_page": 0,
+ "idx": 0,
+ "is_standard": 1,
+ "label": "Cai",
+ "modified": "2020-05-27 10:49:10.161392",
+ "modified_by": "Administrator",
+ "module": "CAI",
+ "name": "Cai",
+ "owner": "Administrator",
+ "pin_to_bottom": 0,
+ "pin_to_top": 0,
+ "shortcuts": [
+  {
+   "label": "GCAI",
+   "link_to": "GCAI",
+   "type": "DocType"
+  },
+  {
+   "label": "GCAI Allocation",
+   "link_to": "GCAI Allocation",
+   "type": "DocType"
+  },
+  {
+   "label": "GPos",
+   "link_to": "GPos",
+   "type": "DocType"
+  },
+  {
+   "label": "GNumber Declaration",
+   "link_to": "GNumber Declaration",
+   "type": "DocType"
+  }
+ ]
+}

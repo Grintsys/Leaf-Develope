@@ -1,5 +1,4 @@
 {
- "actions": [],
  "autoname": "AS-MH-.YYYY.-.#####",
  "creation": "2020-02-05 14:10:07.469083",
  "doctype": "DocType",
@@ -155,11 +154,11 @@
    "read_only": 1
   }
  ],
- "links": [],
- "modified": "2020-03-30 15:41:02.532792",
+ "modified": "2021-01-07 18:04:24.648577",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",
+ "name_case": "Title Case",
  "owner": "Administrator",
  "permissions": [
   {
