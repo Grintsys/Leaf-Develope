@@ -1,18 +1,21 @@
 {
- "autoname": "[name_cai]",
+ "autoname": "field:name_cai",
  "creation": "2021-03-15 14:31:56.086748",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "name_cai",
+  "no_declaration",
+  "cai",
   "initial_number",
   "final_number",
-  "creation_date",
-  "limit_date",
+  "reception_date",
+  "issue_deadline",
   "select_doc_for_series",
   "update",
-  "prefix"
+  "prefix",
+  "status"
  ],
  "fields": [
   {
@@ -20,7 +23,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "initial_number",
@@ -34,19 +38,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "FInal Number",
-   "reqd": 1
-  },
-  {
-   "fieldname": "creation_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Creation Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "limit_date",
-   "fieldtype": "Date",
-   "label": "Limit Date",
    "reqd": 1
   },
   {
@@ -65,9 +56,42 @@
    "fieldname": "update",
    "fieldtype": "Button",
    "label": "Update"
+  },
+  {
+   "fieldname": "no_declaration",
+   "fieldtype": "Data",
+   "in_global_search": 1,
+   "in_standard_filter": 1,
+   "label": "No. Declaration",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cai",
+   "fieldtype": "Data",
+   "label": "CAI",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reception_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Reception date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "issue_deadline",
+   "fieldtype": "Date",
+   "label": "Issue deadline",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nInactive"
   }
  ],
- "modified": "2021-03-16 16:55:24.029120",
+ "modified": "2021-03-18 15:45:48.024167",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "CAI",
