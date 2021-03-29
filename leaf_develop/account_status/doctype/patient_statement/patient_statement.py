@@ -7,6 +7,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from datetime import datetime, timedelta, date
+from frappe.permissions import get_doctypes_with_read
 
 class Patientstatement(Document):
 	def validate(self):
@@ -24,6 +25,7 @@ class Patientstatement(Document):
 
 		if self.docstatus == 1:
 			self.state = "Closed"
+			self.new_sale_invoice()
 		
 		if self.docstatus == 2:
 			self.state = "Cancelled"
@@ -44,3 +46,49 @@ class Patientstatement(Document):
 		if len(payment) > 0:
 			for item in payment:
 				doc = frappe.delete_doc("Account Statement Payment", item.name)
+	
+	def new_sale_invoice(self):
+		now = datetime.now()
+		doc = frappe.new_doc('Sales Invoice')
+		doc.naming_series = self.naming_series
+		doc.patient_statement = self.name
+		doc.due_date = now.date()
+		doc.customer = self.client
+		doc.reason_for_sale = self.reason_for_sale
+		doc.patient = self.patient
+
+		inventory_requisitions = frappe.get_all("Inventory Requisition", ["name"], filters = {"patient_statement": self.name, "state": "Closed"})
+
+		for inv_req in inventory_requisitions:
+			products = frappe.get_all("Inventory Item", ["item", "quantity"], filters = {"parent": inv_req.name})
+
+			for product in products:
+				row = doc.append("items", {})
+				row.item_code = product.item
+				row.qty = product.quantity
+
+		doc.save()
+
+	def get_prefix(self, arg=None):
+		prefixes = ""
+		options = ""
+		try:
+			options = self.get_options('Sales Invoice')
+		except frappe.DoesNotExistError:
+			frappe.msgprint(_('Unable to find DocType {0}').format(d))
+
+		if options:
+			prefixes = prefixes + "\n" + options
+
+		prefixes.replace("\n\n", "\n")
+		prefixes = prefixes.split("\n")
+		prefixes = "\n".join(sorted(prefixes))
+
+		return {
+			"prefix": prefixes
+		}
+
+
+	def get_options(self, arg=None):
+		if frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series"):
+			return frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series").options
