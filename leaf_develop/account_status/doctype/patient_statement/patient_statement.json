@@ -7,6 +7,9 @@
  "field_order": [
   "date",
   "client",
+  "patient",
+  "reason_for_sale",
+  "naming_series",
   "cumulative_total",
   "total_advance",
   "outstanding_balance",
@@ -63,10 +66,31 @@
    "options": "Patient statement",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "reason_for_sale",
+   "fieldtype": "Link",
+   "label": "Reason for sale",
+   "options": "Reason for sale",
+   "reqd": 1
+  },
+  {
+   "bold": 1,
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "reqd": 1
+  },
+  {
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "label": "Patient",
+   "options": "Patient",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-01-07 17:54:19.561526",
+ "modified": "2021-03-25 14:31:04.819097",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",
