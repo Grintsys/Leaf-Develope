@@ -14,6 +14,7 @@ class Returnofinventoryrequisition(Document):
 
 	def status(self):
 		if self.docstatus == 1:
+			self.material_request()
 			self.delete_products_account_status_payment()
 			self.state = "Closed"
 	
@@ -61,6 +62,20 @@ class Returnofinventoryrequisition(Document):
 				doc.save()
 		
 		self.apply_changes(total_price)
+
+	def material_request(self):
+		products = frappe.get_all("Inventory Item Return", ["item", "quantity"], filters = {"parent": self.name})
+		doc = frappe.new_doc('Material Request')
+		doc.schedule_date = self.date_create
+		doc.material_request_type = 'Material Transfer'
+		doc.requested_by = self.patient_statement
+		for list_product in products:
+			row = doc.append("items", {
+				'item_code': list_product.item,
+				'qty': list_product.quantity,
+				'schedule_date': self.date_create
+				})
+		doc.save()
 
 	def add_products_account_status_payment(self):
 		total_price = 0
