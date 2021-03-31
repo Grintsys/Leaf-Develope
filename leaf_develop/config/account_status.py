@@ -39,6 +39,11 @@ def get_data():
                     "type": "doctype",
                     "name": "Medical Honorarium",
                     "onboard": 1,
+                },
+				{
+                    "type": "doctype",
+                    "name": "Patient Warehouse",
+                    "onboard": 1,
                 }
 			]
 		},

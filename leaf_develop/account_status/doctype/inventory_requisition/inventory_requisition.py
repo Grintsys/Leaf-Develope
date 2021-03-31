@@ -13,6 +13,7 @@ class InventoryRequisition(Document):
 
 	def status(self):
 		if self.docstatus == 1:
+			self.material_request()
 			self.add_products_account_status_payment()
 			self.state = "Closed"
 	
@@ -24,6 +25,22 @@ class InventoryRequisition(Document):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		doc.cumulative_total += total_price
 		doc.outstanding_balance += total_price
+		doc.save()
+	
+	def material_request(self):
+		products = frappe.get_all("Inventory Item", ["item", "quantity"], filters = {"parent": self.name})
+		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse"])
+		doc = frappe.new_doc('Material Request')
+		doc.schedule_date = self.date_create
+		doc.material_request_type = 'Material Transfer'
+		doc.requested_by = self.patient_statement
+		for list_product in products:
+			row = doc.append("items", {
+				'item_code': list_product.item,
+				'qty': list_product.quantity,
+				'schedule_date': self.date_create,
+				'warehouse': warehouse[0].name_warehouse
+				})
 		doc.save()
 	
 	def add_products_account_status_payment(self):

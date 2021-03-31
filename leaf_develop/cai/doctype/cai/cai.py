@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from frappe.permissions import get_doctypes_with_read
+from frappe.model.naming import parse_naming_series
 
 class CAI(Document):
 	def get_transactions(self, arg=None):
@@ -44,3 +45,22 @@ class CAI(Document):
 	def get_options(self, arg=None):
 		if frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series"):
 			return frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series").options
+	
+	def before_insert(self):
+		cai = frappe.get_all("CAI", ["cai"], filters = { "status": "Active", "prefix": self.prefix})
+		if len(cai) > 0:
+			self.status = "Pending"
+		else:
+			self.status = "Active"
+			new_current = int(self.initial_number) - 1
+			name = self.parse_naming_series(self.prefix)
+
+			frappe.db.set_value("Series", name, "current", new_current, update_modified=False)
+	
+	def parse_naming_series(self, prefix):
+		parts = prefix.split('.')
+		if parts[-1] == "#" * len(parts[-1]):
+			del parts[-1]
+
+		pre = parse_naming_series(parts)
+		return pre
