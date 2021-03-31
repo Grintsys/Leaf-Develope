@@ -65,6 +65,7 @@ class Returnofinventoryrequisition(Document):
 
 	def material_request(self):
 		products = frappe.get_all("Inventory Item Return", ["item", "quantity"], filters = {"parent": self.name})
+		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse"])
 		doc = frappe.new_doc('Material Request')
 		doc.schedule_date = self.date_create
 		doc.material_request_type = 'Material Transfer'
@@ -73,7 +74,8 @@ class Returnofinventoryrequisition(Document):
 			row = doc.append("items", {
 				'item_code': list_product.item,
 				'qty': list_product.quantity,
-				'schedule_date': self.date_create
+				'schedule_date': self.date_create,
+				'warehouse': warehouse[0].name_warehouse
 				})
 		doc.save()
 
