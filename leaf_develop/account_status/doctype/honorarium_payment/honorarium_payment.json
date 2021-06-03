@@ -1,5 +1,4 @@
 {
- "actions": [],
  "autoname": "AS-HP-.YYYY.-.#####",
  "creation": "2020-02-07 09:21:33.416442",
  "doctype": "DocType",
@@ -18,7 +17,8 @@
   "colum_break2",
   "type_payment",
   "transaction_payment",
-  "amended_from"
+  "amended_from",
+  "receipt_number"
  ],
  "fields": [
   {
@@ -108,11 +108,15 @@
    "label": "Transaction Payment",
    "options": "Cash\nWire Transfer",
    "reqd": 1
+  },
+  {
+   "fieldname": "receipt_number",
+   "fieldtype": "Data",
+   "label": "Receipt Number"
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2020-03-30 15:41:41.130929",
+ "modified": "2021-06-02 21:52:49.008328",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment",

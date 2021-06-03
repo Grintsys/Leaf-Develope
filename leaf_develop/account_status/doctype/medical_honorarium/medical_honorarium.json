@@ -18,13 +18,16 @@
   "name_medical",
   "rtn",
   "payment_section",
+  "cash_check",
   "total",
   "honorarium_payment",
   "detail_section",
   "total_payment",
   "colum_break3",
   "total_remaining",
-  "amended_from"
+  "amended_from",
+  "receipt_number",
+  "cai"
  ],
  "fields": [
   {
@@ -152,9 +155,25 @@
    "fieldtype": "Data",
    "label": "Specialty",
    "read_only": 1
+  },
+  {
+   "fieldname": "receipt_number",
+   "fieldtype": "Data",
+   "label": " Receipt Number"
+  },
+  {
+   "fieldname": "cai",
+   "fieldtype": "Data",
+   "label": "CAI"
+  },
+  {
+   "default": "0",
+   "fieldname": "cash_check",
+   "fieldtype": "Check",
+   "label": "Cash"
   }
  ],
- "modified": "2021-01-07 18:04:24.648577",
+ "modified": "2021-06-01 11:57:02.139079",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",

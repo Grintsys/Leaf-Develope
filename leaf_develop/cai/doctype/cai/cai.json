@@ -15,6 +15,8 @@
   "select_doc_for_series",
   "update",
   "prefix",
+  "expired_days",
+  "expired_amount",
   "status"
  ],
  "fields": [
@@ -90,9 +92,19 @@
    "label": "Status",
    "options": "Pending\nActive\nInactive",
    "read_only": 1
+  },
+  {
+   "fieldname": "expired_days",
+   "fieldtype": "Data",
+   "label": "Expired Days"
+  },
+  {
+   "fieldname": "expired_amount",
+   "fieldtype": "Int",
+   "label": "Expired Amount"
   }
  ],
- "modified": "2021-03-23 14:09:20.824599",
+ "modified": "2021-05-19 15:47:32.367302",
  "modified_by": "Administrator",
  "module": "CAI",
  "name": "CAI",
