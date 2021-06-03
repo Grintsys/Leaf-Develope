@@ -47,16 +47,18 @@ class InventoryRequisition(Document):
 		total_price = 0
 		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
 
+		patient_statement = frappe.get_all("Patient statement", ["price_list"], filters = {"name": self.patient_statement})
+
 		account_payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 		
 		if len(account_payment) == 0:
 			frappe.throw(_("There is no invoice assigned to this statement."))
 
 		for item in products:
-			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})			
+			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item, "price_list": patient_statement[0].price_list})			
 
 			if len(product_price) == 0:
-				frappe.throw(_("{} does not have a defined price.".format(item.product_name)))
+				frappe.throw(_("{} does not have a defined price in price list {}.".format(item.product_name, patient_statement[0].price_list)))
 
 			for product in product_price:
 				price = item.quantity * product.price_list_rate
