@@ -17,8 +17,12 @@
   "colum_break2",
   "name_medical",
   "rtn",
+  "medical_honorarium_detail_section",
+  "medical_honorarium_detail",
   "payment_section",
-  "cash_check",
+  "cash_total",
+  "wire_tranfser_total",
+  "totals",
   "total",
   "honorarium_payment",
   "detail_section",
@@ -50,7 +54,8 @@
    "fieldname": "total",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Total"
+   "label": "Total",
+   "read_only": 1
   },
   {
    "fetch_from": "medical.full_name",
@@ -167,13 +172,35 @@
    "label": "CAI"
   },
   {
-   "default": "0",
-   "fieldname": "cash_check",
-   "fieldtype": "Check",
-   "label": "Cash"
+   "fieldname": "medical_honorarium_detail",
+   "fieldtype": "Table",
+   "label": "Medical Honorarium Detail Table",
+   "options": "Medical Honorarium Detail",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cash_total",
+   "fieldtype": "Currency",
+   "label": "Cash Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "wire_tranfser_total",
+   "fieldtype": "Currency",
+   "label": "Wire Transfer Total",
+   "read_only": 1
+  },
+  {
+   "fieldname": "totals",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "medical_honorarium_detail_section",
+   "fieldtype": "Section Break",
+   "label": "Medical Honorarium Detail"
   }
  ],
- "modified": "2021-06-01 11:57:02.139079",
+ "modified": "2021-06-11 14:47:49.727246",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",
