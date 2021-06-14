@@ -35,6 +35,12 @@ def get_data():
 					"onboard": 1,
 					"dependencies": ["Inventory Requisition"]
 				},
+				{
+					"type": "doctype",
+					"name": "Administrative Expenses",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
                 {
                     "type": "doctype",
                     "name": "Medical Honorarium",
