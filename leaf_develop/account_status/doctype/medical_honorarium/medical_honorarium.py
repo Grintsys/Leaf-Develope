@@ -13,10 +13,11 @@ form_grid_templates = {
 
 class MedicalHonorarium(Document):
 	def validate(self):
-		self.remaining()
-		self.verificate_changes()
+		if self.docstatus == 1:
+			self.remaining()
+			self.verificate_changes()
 
-		self.add_medical_honorarium_payment()
+			self.add_medical_honorarium_payment()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()
@@ -62,7 +63,7 @@ class MedicalHonorarium(Document):
 			frappe.throw(_("There is no invoice assigned to this statement."))
 
 		for item in medico:
-			price = self.total
+			price = self.wire_tranfser_total
 			total_price += price
 			
 			products = frappe.get_all("Item", ["item_name"], filters = {'name': item.service})	
@@ -123,3 +124,27 @@ class MedicalHonorarium(Document):
 				doc.save()	
 
 		self.apply_changes(total_price)
+	
+	def on_update(self):
+		self.calculate_totals()
+		self.remaining()
+		self.verificate_changes()
+
+		self.add_medical_honorarium_payment()
+	
+	def calculate_totals(self):
+		cash_total = 0
+		wire_tranfser_total = 0
+		details = frappe.get_all("Medical Honorarium Detail", ["amount", "transaction_payment"], filters = {"parent": self.name})
+
+		for detail in details:
+			if detail.transaction_payment == "Cash":
+				cash_total += detail.amount
+			
+			if detail.transaction_payment == "Wire Transfer":
+				wire_tranfser_total += detail.amount
+
+		self.cash_total = cash_total
+		self.wire_tranfser_total = wire_tranfser_total
+		self.total = cash_total + wire_tranfser_total
+		
