@@ -14,7 +14,7 @@ form_grid_templates = {
 class MedicalHonorarium(Document):
 	def validate(self):		
 		if self.docstatus == 1:
-			self.apply_changes(self.wire_tranfser_total)
+			self.apply_changes(self.total, self.wire_tranfser_total)
 	# 		self.remaining()
 	# 		self.verificate_changes()
 
@@ -32,11 +32,16 @@ class MedicalHonorarium(Document):
 				if(self.total > 0 and self.total_payment != 0):
 					self.db_set('total_remaining', self.total, update_modified=False)
 	
-	def apply_changes(self, total):
+	def apply_changes(self, total, wire_transfer_total):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
-		doc.outstanding_balance += total
-		doc.cumulative_total += total
+		doc.outstanding_balance += wire_transfer_total
+		doc.cumulative_total += wire_transfer_total
 		doc.save()
+
+		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
+		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
+		docu.outstanding_balance += total
+		docu.save()
 
 	def verificate_changes(self):
 		now = frappe.get_all("Medical Honorarium", filters={'name': self.name}, fields={"total", "medical", "date", "patient_statement"})
@@ -83,6 +88,7 @@ class MedicalHonorarium(Document):
 				doc = frappe.get_doc("Account Statement Payment Item", ver_product[0].name)				
 				doc.price = price
 				doc.net_pay = price
+				doc.sale_amount = self.wire_tranfser_total
 				doc.save()
 
 				total_price = price - price_ver
@@ -106,6 +112,7 @@ class MedicalHonorarium(Document):
 					row.quantity = 1
 					row.price = price
 					row.net_pay = price
+					row.sale_amount = self.wire_tranfser_total
 					row.reference = self.name
 					doc.total += price
 					doc.save()
@@ -135,17 +142,25 @@ class MedicalHonorarium(Document):
 				doc.total -= price
 				doc.save()	
 
-		# self.apply_changes(total_price)
+		wire_transfer_total = self.wire_tranfser_total - (self.wire_tranfser_total * 2)
+
+		self.apply_changes(total_price, wire_transfer_total)
 	
 	def on_update(self):
-		if self.status == "Paid Out":
+		total = 0
+		honorarium_payment = frappe.get_all("Honorarium Payment", filters={'honorarium': self.name}, fields={"total"})
+
+		for honorarium in honorarium_payment:
+			total += honorarium.total
+
+		if self.status != "Paid Out" or total <= self.total:
 			self.calculate_totals()
 			self.remaining()
 			self.verificate_changes()
 
 			self.add_medical_honorarium_payment()
-		# else:
-		# 	frappe.throw(_("This Medical Honorarium Paid Out."))
+		else:
+			frappe.throw(_("This Medical Honorarium Paid Out."))
 	
 	def calculate_totals(self):
 		cash_total = 0

@@ -57,15 +57,19 @@ class Patientstatement(Document):
 		doc.reason_for_sale = self.reason_for_sale
 		doc.patient = self.patient
 
-		inventory_requisitions = frappe.get_all("Inventory Requisition", ["name"], filters = {"patient_statement": self.name, "state": "Closed"})
+		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
+		
+		items = frappe.get_all("Account Statement Payment Item", ["item", "item_name", "quantity", "price", "net_pay", "sale_amount"], filters = {"parent": payment[0].name})
 
-		for inv_req in inventory_requisitions:
-			products = frappe.get_all("Inventory Item", ["item", "quantity"], filters = {"parent": inv_req.name})
+		for item in items:
+			row = doc.append("items", {})
+			row.item_code = item.item
+			row.qty = item.quantity
 
-			for product in products:
-				row = doc.append("items", {})
-				row.item_code = product.item
-				row.qty = product.quantity
+			if item.net_pay != item.sale_amount:
+				row.rate = item.sale_amount
+			else:
+				row.rate = item.price
 
 		doc.save()
 
