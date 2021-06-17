@@ -23,12 +23,21 @@ class ReturnAdvanceStatement(Document):
 	def apply_changes(self, signo):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		
+		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
+
+		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
+
 		if signo == "+":
 			doc.total_advance += self.amount
 			doc.outstanding_balance -= self.amount
+			docu.total_advance += self.amount
+			docu.outstanding_balance -= self.amount
 		
 		if signo == "-":
 			doc.total_advance -= self.amount
 			doc.outstanding_balance += self.amount
+			docu.total_advance -= self.amount
+			docu.outstanding_balance += self.amount
 
 		doc.save()
+		docu.save()

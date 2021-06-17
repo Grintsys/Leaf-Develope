@@ -1,5 +1,4 @@
 {
- "actions": [],
  "autoname": "INV-REQ-.YYYY.-.#####",
  "creation": "2020-02-05 14:11:27.515378",
  "doctype": "DocType",
@@ -11,7 +10,8 @@
   "products",
   "reference",
   "state",
-  "amended_from"
+  "amended_from",
+  "description"
  ],
  "fields": [
   {
@@ -58,11 +58,15 @@
    "in_standard_filter": 1,
    "label": "Reference",
    "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2020-04-01 22:06:05.135152",
+ "modified": "2021-06-17 12:06:17.832851",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",

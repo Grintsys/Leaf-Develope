@@ -44,18 +44,21 @@
   {
    "fieldname": "cumulative_total",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Cumulative Total",
    "read_only": 1
   },
   {
    "fieldname": "total_advance",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Total Advance",
    "read_only": 1
   },
   {
    "fieldname": "outstanding_balance",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Outstanding Balance",
    "read_only": 1
   },
@@ -98,7 +101,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-06-02 22:00:59.233511",
+ "modified": "2021-06-15 10:43:36.103922",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",
