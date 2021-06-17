@@ -27,6 +27,11 @@ class Returnofinventoryrequisition(Document):
 		doc.cumulative_total += total_price
 		doc.outstanding_balance += total_price
 		doc.save()
+
+		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
+		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
+		docu.outstanding_balance += total_price
+		docu.save()
 	
 	def delete_products_account_status_payment(self):
 		total_price = 0
@@ -103,7 +108,8 @@ class Returnofinventoryrequisition(Document):
 					total_price += price
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
-					doc_product.net_pay += price					
+					doc_product.net_pay += price	
+					doc_product.sale_amount += price					
 					doc_product.save()
 
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
@@ -118,6 +124,7 @@ class Returnofinventoryrequisition(Document):
 					row.quantity = item.quantity
 					row.price = product.price_list_rate
 					row.net_pay = price
+					row.sale_amount = price
 					row.reference = self.name
 					doc.total += price
 					doc.save()
