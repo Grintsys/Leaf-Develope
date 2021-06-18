@@ -59,7 +59,8 @@ class Returnofinventoryrequisition(Document):
 				else:					
 					doc_product = frappe.get_doc("Account Statement Payment Item", product.name)
 					doc_product.quantity -= item.quantity
-					doc_product.net_pay -= price					
+					doc_product.net_pay -= price	
+					doc_product.sale_amount -= price					
 					doc_product.save()
 
 				doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
