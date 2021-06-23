@@ -12,14 +12,22 @@ class AdministrativeExpenses(Document):
 		self.status()
 
 	def status(self):
+		# if self.docstatus == 0:
+		# 	self.add_products_account_status_payment()
+
 		if self.docstatus == 1:
 			self.material_request()
-			self.add_products_account_status_payment()
 			self.state = "Closed"
+	
+	def on_update(self):
+		self.add_products_account_status_payment()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()
 		self.state = "Cancelled"
+	
+	def on_trash(self):
+		self.delete_products_account_status_payment()
 
 	def apply_changes(self, total_price):		
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
@@ -40,21 +48,21 @@ class AdministrativeExpenses(Document):
 			frappe.throw("There is no Patient Warehouse to assign, create a new one.")
 
 		doc = frappe.new_doc('Material Request')
-		doc.schedule_date = self.date_create
+		doc.schedule_date = self.date
 		doc.material_request_type = 'Material Transfer'
 		doc.requested_by = self.patient_statement
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,
 				'qty': list_product.quantity,
-				'schedule_date': self.date_create,
+				'schedule_date': self.date,
 				'warehouse': warehouse[0].name_warehouse
 				})
 		doc.save()
 	
 	def add_products_account_status_payment(self):
 		total_price = 0
-		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": self.name})
+		products = frappe.get_all("Inventory Item", ["item", "product_name", "quantity", "name"], filters = {"parent": self.name, "add": 0})
 
 		patient_statement = frappe.get_all("Patient statement", ["price_list"], filters = {"name": self.patient_statement})
 
@@ -84,7 +92,13 @@ class AdministrativeExpenses(Document):
 
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 					doc.total += price
+					doc.outstanding_balance = doc.total - doc.total_advance
 					doc.save()
+
+					docItem = frappe.get_doc("Inventory Item", item.name)
+					# # docItem.db_set('add', 1, update_modified=False)
+					docItem.add = 1
+					docItem.save(ignore_permissions=True, ignore_version=True)
 				else:
 					total_price += price
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
@@ -97,9 +111,15 @@ class AdministrativeExpenses(Document):
 					row.sale_amount = price
 					row.reference = self.name
 					doc.total += price
+					doc.outstanding_balance = doc.total - doc.total_advance
 					doc.save()
+
+					docItem = frappe.get_doc("Inventory Item", item.name)
+					# # docItem.db_set('add', 1, update_modified=False)
+					docItem.add = 1
+					docItem.save(ignore_permissions=True, ignore_version=True)
 			
-		self.apply_changes(total_price)
+		# self.apply_changes(total_price)
 	
 	def delete_products_account_status_payment(self):
 		total_price = 0

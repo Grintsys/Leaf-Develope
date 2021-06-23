@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "patient_statement",
-  "date_create",
+  "date",
   "products",
   "reference",
   "state",
@@ -16,16 +16,10 @@
   {
    "fieldname": "patient_statement",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Patient Statement",
    "options": "Patient statement",
-   "reqd": 1
-  },
-  {
-   "fieldname": "date_create",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date Create",
    "reqd": 1
   },
   {
@@ -39,8 +33,7 @@
    "fieldname": "reference",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Reference",
-   "reqd": 1
+   "label": "Reference"
   },
   {
    "fieldname": "state",
@@ -66,10 +59,15 @@
    "options": "Inventory Requisition",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Creation Date"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-06-10 15:02:53.014935",
+ "modified": "2021-06-22 15:26:36.756889",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Administrative Expenses",
