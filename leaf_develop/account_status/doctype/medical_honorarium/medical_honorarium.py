@@ -95,6 +95,7 @@ class MedicalHonorarium(Document):
 
 				doc_acc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 				doc_acc.total += total_price
+				doc_acc.outstanding_balance = doc_acc.total - doc_acc.total_advance
 				doc_acc.save()
 
 				# self.apply_changes(total_price)
@@ -115,6 +116,7 @@ class MedicalHonorarium(Document):
 					row.sale_amount = self.wire_tranfser_total
 					row.reference = self.name
 					doc.total += price
+					doc.outstanding_balance = doc.total - doc.total_advance
 					doc.save()
 
 				# self.apply_changes(self.wire_tranfser_total)
