@@ -70,7 +70,7 @@
  "modified": "2021-06-22 15:26:36.756889",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Administrative Expenses",
+ "name": "Hospital Expenses",
  "owner": "Administrator",
  "permissions": [
   {
