@@ -7,7 +7,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-class AdministrativeExpenses(Document):
+class HospitalExpenses(Document):
 	def validate(self):
 		self.status()
 
@@ -20,7 +20,8 @@ class AdministrativeExpenses(Document):
 			self.state = "Closed"
 	
 	def on_update(self):
-		self.add_products_account_status_payment()
+		if self.docstatus == 0:
+			self.add_products_account_status_payment()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()

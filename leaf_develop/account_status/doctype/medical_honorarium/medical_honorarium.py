@@ -14,7 +14,7 @@ form_grid_templates = {
 class MedicalHonorarium(Document):
 	def validate(self):		
 		if self.docstatus == 1:
-			self.apply_changes(self.total, self.wire_tranfser_total)
+			self.apply_changes(self.total, self.bank_check)
 	# 		self.remaining()
 	# 		self.verificate_changes()
 
@@ -32,10 +32,10 @@ class MedicalHonorarium(Document):
 				if(self.total > 0 and self.total_payment != 0):
 					self.db_set('total_remaining', self.total, update_modified=False)
 	
-	def apply_changes(self, total, wire_transfer_total):
+	def apply_changes(self, total, bank_check):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
-		doc.outstanding_balance += wire_transfer_total
-		doc.cumulative_total += wire_transfer_total
+		doc.outstanding_balance += bank_check
+		doc.cumulative_total += bank_check
 		doc.save()
 
 		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
@@ -88,7 +88,7 @@ class MedicalHonorarium(Document):
 				doc = frappe.get_doc("Account Statement Payment Item", ver_product[0].name)				
 				doc.price = price
 				doc.net_pay = price
-				doc.sale_amount = self.wire_tranfser_total
+				doc.sale_amount = self.bank_check
 				doc.save()
 
 				total_price = price - price_ver
@@ -113,13 +113,13 @@ class MedicalHonorarium(Document):
 					row.quantity = 1
 					row.price = price
 					row.net_pay = price
-					row.sale_amount = self.wire_tranfser_total
+					row.sale_amount = self.bank_check
 					row.reference = self.name
 					doc.total += price
 					doc.outstanding_balance = doc.total - doc.total_advance
 					doc.save()
 
-				# self.apply_changes(self.wire_tranfser_total)
+				# self.apply_changes(self.bank_check)
 
 	def delete_products_account_status_payment(self):
 		total_price = 0
@@ -144,9 +144,9 @@ class MedicalHonorarium(Document):
 				doc.total -= price
 				doc.save()	
 
-		wire_transfer_total = self.wire_tranfser_total - (self.wire_tranfser_total * 2)
+		bank_check = self.bank_check - (self.bank_check * 2)
 
-		self.apply_changes(total_price, wire_transfer_total)
+		self.apply_changes(total_price, bank_check)
 	
 	def on_update(self):
 		total = 0
@@ -166,19 +166,19 @@ class MedicalHonorarium(Document):
 	
 	def calculate_totals(self):
 		cash_total = 0
-		wire_tranfser_total = 0
+		bank_check = 0
 		details = frappe.get_all("Medical Honorarium Detail", ["amount", "transaction_payment"], filters = {"parent": self.name})
 
 		for detail in details:
 			if detail.transaction_payment == "Cash":
 				cash_total += detail.amount
 			
-			if detail.transaction_payment == "Wire Transfer":
-				wire_tranfser_total += detail.amount
+			if detail.transaction_payment == "Bank Check":
+				bank_check += detail.amount
 
 		self.db_set('cash_total', cash_total, update_modified=False)
-		self.db_set('wire_tranfser_total', wire_tranfser_total, update_modified=False)
-		self.db_set('total', cash_total + wire_tranfser_total, update_modified=False)
+		self.db_set('bank_check', bank_check, update_modified=False)
+		self.db_set('total', cash_total + bank_check, update_modified=False)
 
 		total_honorarium_payment = 0
 		honorarium_payment = frappe.get_all("Honorarium Payment", filters={'honorarium': self.name}, fields={"total"})
@@ -186,5 +186,5 @@ class MedicalHonorarium(Document):
 		for honorarium in honorarium_payment:
 			total_honorarium_payment += honorarium.total
 		
-		self.db_set('total_remaining', cash_total + wire_tranfser_total - total_honorarium_payment, update_modified=False)
+		self.db_set('total_remaining', cash_total + bank_check - total_honorarium_payment, update_modified=False)
 		
