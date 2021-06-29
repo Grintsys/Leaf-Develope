@@ -106,7 +106,7 @@
    "fieldname": "transaction_payment",
    "fieldtype": "Select",
    "label": "Transaction Payment",
-   "options": "Cash\nWire Transfer",
+   "options": "Cash\nBank Check",
    "reqd": 1
   },
   {
@@ -116,7 +116,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-06-14 12:54:16.020210",
+ "modified": "2021-06-29 09:06:01.205550",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Honorarium Payment",

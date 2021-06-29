@@ -36,12 +36,12 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Transaction Payment",
-   "options": "Cash\nWire Transfer",
+   "options": "\nCash\nBank Check",
    "reqd": 1
   }
  ],
  "istable": 1,
- "modified": "2021-06-11 13:26:22.137083",
+ "modified": "2021-06-29 08:56:06.353869",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium Detail",

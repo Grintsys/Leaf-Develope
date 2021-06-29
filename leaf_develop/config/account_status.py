@@ -37,7 +37,7 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Administrative Expenses",
+					"name": "Hospital Expenses",
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
 				},
