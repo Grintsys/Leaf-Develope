@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from datetime import date
+from datetime import datetime
 
 class HospitalExpenses(Document):
 	def validate(self):
@@ -48,15 +50,17 @@ class HospitalExpenses(Document):
 		if len(warehouse) == 0:
 			frappe.throw("There is no Patient Warehouse to assign, create a new one.")
 
+		now = datetime.now()
+
 		doc = frappe.new_doc('Material Request')
-		doc.schedule_date = self.date
+		doc.schedule_date = now
 		doc.material_request_type = 'Material Transfer'
 		doc.requested_by = self.patient_statement
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,
 				'qty': list_product.quantity,
-				'schedule_date': self.date,
+				'schedule_date': now,
 				'warehouse': warehouse[0].name_warehouse
 				})
 		doc.save()
