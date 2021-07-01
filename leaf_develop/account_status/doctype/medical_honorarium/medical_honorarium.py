@@ -83,9 +83,12 @@ class MedicalHonorarium(Document):
 
 			ver_product = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.service, "reference": self.name})	
 
+			medical_honorarium_details = frappe.get_all("Medical Honorarium Detail", ["name"], filters = {'parent': self.name})
+
 			if len(ver_product) > 0:
 				price_ver = ver_product[0].price
-				doc = frappe.get_doc("Account Statement Payment Item", ver_product[0].name)				
+				doc = frappe.get_doc("Account Statement Payment Item", ver_product[0].name)		
+				doc.quantity = len(medical_honorarium_details)		
 				doc.price = price
 				doc.net_pay = price
 				doc.sale_amount = self.bank_check
@@ -110,7 +113,7 @@ class MedicalHonorarium(Document):
 					row = doc.append("products_table", {})
 					row.item = item.service
 					row.item_name = product.item_name
-					row.quantity = 1
+					row.quantity = len(medical_honorarium_details)
 					row.price = price
 					row.net_pay = price
 					row.sale_amount = self.bank_check
