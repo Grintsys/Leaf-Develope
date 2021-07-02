@@ -18,7 +18,7 @@ class HospitalExpenses(Document):
 		# 	self.add_products_account_status_payment()
 
 		if self.docstatus == 1:
-			self.material_request()
+			# self.material_request()
 			self.state = "Closed"
 	
 	def on_update(self):
