@@ -71,7 +71,7 @@ class InventoryRequisition(Document):
 
 			for product in product_price:
 				price = item.quantity * product.price_list_rate
-				product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
+				product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": item.item, "price": product.price_list_rate, "parent": account_payment[0].name})
 
 				if len(product_verified) > 0:
 					price = item.quantity * product_verified[0].price
@@ -110,7 +110,13 @@ class InventoryRequisition(Document):
 			return
 
 		for item in products:
-			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "quantity", "price"], filters = {"item": item.item, "parent": account_payment[0].name})
+			patient_statement = frappe.get_all("Patient statement", ["price_list"], filters = {"name": self.patient_statement})
+			product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item, "price_list": patient_statement[0].price_list})
+
+			if len(product_price) == 0:
+				frappe.throw(_("{} does not have a defined price in price list {}.".format(item.product_name, patient_statement[0].price_list)))
+				
+			product_verified = frappe.get_all("Account Statement Payment Item", ["name", "quantity", "price"], filters = {"item": item.item, "price": product_price[0].price_list_rate, "parent": account_payment[0].name})
 			
 			for product in product_verified:
 				price = item.quantity * product.price
