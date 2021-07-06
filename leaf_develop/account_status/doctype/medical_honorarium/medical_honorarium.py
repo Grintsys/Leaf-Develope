@@ -170,9 +170,11 @@ class MedicalHonorarium(Document):
 	def calculate_totals(self):
 		cash_total = 0
 		bank_check = 0
+		total_amount = 0
 		details = frappe.get_all("Medical Honorarium Detail", ["amount", "transaction_payment"], filters = {"parent": self.name})
 
 		for detail in details:
+			total_amount += detail.amount
 			if detail.transaction_payment == "Cash":
 				cash_total += detail.amount
 			
@@ -181,8 +183,8 @@ class MedicalHonorarium(Document):
 
 		self.db_set('cash_total', cash_total, update_modified=False)
 		self.db_set('bank_check', bank_check, update_modified=False)
-		self.db_set('total', cash_total + bank_check, update_modified=False)
-
+		self.db_set('total', total_amount, update_modified=False)
+		
 		total_honorarium_payment = 0
 		honorarium_payment = frappe.get_all("Honorarium Payment", filters={'honorarium': self.name}, fields={"total"})
 
