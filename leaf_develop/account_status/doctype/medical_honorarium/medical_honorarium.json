@@ -29,9 +29,7 @@
   "total_payment",
   "colum_break3",
   "total_remaining",
-  "amended_from",
-  "receipt_number",
-  "cai"
+  "amended_from"
  ],
  "fields": [
   {
@@ -162,16 +160,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "receipt_number",
-   "fieldtype": "Data",
-   "label": " Receipt Number"
-  },
-  {
-   "fieldname": "cai",
-   "fieldtype": "Data",
-   "label": "CAI"
-  },
-  {
    "fieldname": "medical_honorarium_detail",
    "fieldtype": "Table",
    "label": "Medical Honorarium Detail Table",
@@ -201,7 +189,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-06-29 08:59:08.385381",
+ "modified": "2021-07-06 15:24:50.070685",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Medical Honorarium",
