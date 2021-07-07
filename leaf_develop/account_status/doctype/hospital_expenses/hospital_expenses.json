@@ -1,73 +1,73 @@
 {
  "autoname": "ADM-EXP-.YYYY.-.#####",
- "creation": "2021-06-10 14:29:04.522056",
+ "creation": "2021-07-07 14:12:33.151937",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "patient_statement",
-  "date",
-  "products",
-  "reference",
-  "state",
-  "amended_from"
+  "creation_date",
+  "service",
+  "product_name",
+  "amended_from",
+  "hospital_expenses_detail",
+  "total_amount"
  ],
  "fields": [
   {
    "fieldname": "patient_statement",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Patient Statement",
    "options": "Patient statement",
    "reqd": 1
   },
   {
-   "fieldname": "products",
-   "fieldtype": "Table",
-   "label": "Products",
-   "options": "Inventory Item",
+   "fieldname": "creation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Creation Date",
    "reqd": 1
   },
   {
-   "fieldname": "reference",
+   "fieldname": "service",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Service",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hospital Expenses",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "hospital_expenses_detail",
+   "fieldtype": "Table",
+   "label": "Hospital Expenses Detail",
+   "options": "Hospital Expenses Detail"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "service.item_name",
+   "fieldname": "product_name",
    "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "Reference"
-  },
-  {
-   "fieldname": "state",
-   "fieldtype": "Select",
-   "label": "State",
-   "options": "Open\nClosed\nCanceled",
+   "label": "Product Name",
    "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Inventory Requisition",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Inventory Requisition",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-07-01 14:25:11.338585",
+ "modified": "2021-07-07 16:21:18.639129",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Expenses",
@@ -86,6 +86,7 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
