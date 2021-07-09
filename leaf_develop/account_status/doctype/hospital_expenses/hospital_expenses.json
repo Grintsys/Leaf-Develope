@@ -32,7 +32,6 @@
   {
    "fieldname": "service",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Service",
    "options": "Item",
    "reqd": 1
@@ -62,12 +61,13 @@
    "fetch_from": "service.item_name",
    "fieldname": "product_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Product Name",
    "read_only": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-07-07 16:21:18.639129",
+ "modified": "2021-07-09 14:36:52.164893",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Expenses",
