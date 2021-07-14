@@ -33,6 +33,7 @@ def execute(filters=None):
 	honorarium = []
 	advance = []
 	return_advance = []
+	expenses_hospital = []
 
 	arr_values = []
 	condition = get_conditions(filters)
@@ -45,6 +46,7 @@ def execute(filters=None):
 		total_honorarium = 0
 		total_advance = 0
 		total_return_advance = 0
+		total_expenses_hospital = 0
 
 		patientarr += [{'indent': 0.0, "movement": patient.name}]
 
@@ -86,6 +88,14 @@ def execute(filters=None):
 		return_requisition += [{'indent': 1.0, "movement": "Retorno de Requisiciones", "quantity": len(patient_return),"total": total_requisition_return}]
 		arr_values.append([len(patient_return), total_requisition_return])
 
+		expenses_hospital_list = frappe.get_all("Hospital Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name})
+
+		for exp_hos in expenses_hospital_list:
+			total_expenses_hospital += exp_hos.total_amount
+
+		expenses_hospital += [{'indent': 1.0, "movement": "Gastos Hospitalarios", "quantity": len(expenses_hospital_list),"total": total_expenses_hospital}]
+		arr_values.append([len(expenses_hospital_list), total_expenses_hospital])
+
 		honorariums = frappe.get_all("Medical Honorarium", ["total"], filters = {"patient_statement": patient.name})
 
 		for hon in honorariums:
@@ -113,6 +123,7 @@ def execute(filters=None):
 	data.extend(patientarr or [])
 	data.extend(requisition or [])
 	data.extend(return_requisition or [])
+	data.extend(expenses_hospital or [])
 	data.extend(honorarium or [])
 	data.extend(advance or [])
 	data.extend(return_advance or [])
@@ -124,7 +135,7 @@ def execute(filters=None):
 	for val in arr_values:
 		totales.append(val[1])
 
-	labels = ["Requisiciones", "Retorno de requisciones", "Honorarios Medicos", "Avances", "Retorno de avances"]
+	labels = ["Requisiciones", "Retorno de requisciones", "Gastos Hospitalarios", "Honorarios Medicos", "Avances", "Retorno de avances"]
 	datasets = [{'values': totales}]
 
 	chart= {
