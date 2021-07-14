@@ -36,6 +36,7 @@ def execute(filters=None):
 	arr_requisition = []
 	arr_return = []
 	arr_honorarium = []
+	arr_gastos = []
 
 	conditions = get_conditions(filters)
 	
@@ -71,6 +72,19 @@ def execute(filters=None):
 	
 	req_data += [{}]
 
+	req_data += [{'indent': 0.0, "movement_type": "Gastos Hospitalarios"}]	
+
+	condition_gastos = get_conditions_hospital_expenses(filters)
+	
+	gastos = frappe.get_all("Hospital Expenses", ["name", "creation_date", "product_name"], filters = condition_gastos, order_by = "creation_date asc")
+
+	for gasto in gastos:
+		gastos_detail = frappe.get_all("Hospital Expenses Detail", ["name"], filters = {"parent": gasto.name})
+		req_data += [{'indent': 1.0, "movement_type": gasto.name, "date": gasto.creation_date, "item": gasto.product_name, "quantity": len(gastos_detail)}]
+		arr_gastos += [gasto.date]
+
+	req_data += [{}]
+
 	req_data += [{'indent': 0.0, "movement_type": "Honorarios Medicos"}]
 
 	condition_honorarium = get_conditions_honorarium(filters)
@@ -87,7 +101,7 @@ def execute(filters=None):
 				for product in products:
 					req_data += [{'indent': 1.0, "movement_type": honorarium.name, "date": honorarium.date, "item": product.item_name, "quantity": 1}]
 					arr_honorarium += [honorarium.date]
-	
+
 	data.extend(req_data or [])
 
 	message = None
@@ -122,10 +136,10 @@ def execute(filters=None):
 	# datasets = get_dataset(datasets, values_data_return, "Retorno de requisiciones")
 	# datasets = get_dataset(datasets, values_data_honorarium, "Honorarios Medicos")
 
-	labels = ["Requisiciones", "Retorno de requisiciones", "Honorarios Medicos"]
+	labels = ["Requisiciones", "Retorno de requisiciones", "Gastos Hospitalarios", "Honorarios Medicos"]
 	datasets = []
 
-	datasets += [{'values': [len(arr_requisition), len(arr_return), len(arr_honorarium)]}]
+	datasets += [{'values': [len(arr_requisition), len(arr_return),len(arr_gastos), len(arr_honorarium)]}]
 
 	chart= {
 		'data': 
@@ -152,6 +166,15 @@ def get_conditions_honorarium(filters):
 
 	conditions += "{"
 	if filters.get("from_date") and filters.get("to_date"): conditions += '"date": [">=", "{}", "<=", "{}"]'.format(filters.get("from_date"), filters.get("to_date"))
+	conditions += "}"
+
+	return conditions
+
+def get_conditions_hospital_expenses(filters):
+	conditions = ''
+
+	conditions += "{"
+	if filters.get("from_date") and filters.get("to_date"): conditions += '"creation_date": ["between", ["{}", "{}"]]'.format(filters.get("from_date"), filters.get("to_date"))
 	conditions += "}"
 
 	return conditions
