@@ -1,22 +1,25 @@
 {
- "actions": [],
  "autoname": "ADV-STA-.YYYY.-.#####",
  "creation": "2020-02-05 13:21:28.417153",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "responsible_payment",
+  "id_rtn",
   "date_create",
   "patient_statement",
   "amount",
+  "in_words",
   "way_to_pay",
   "state",
-  "amended_from"
+  "amended_from",
+  "cashier"
  ],
  "fields": [
   {
    "fieldname": "date_create",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Date Create",
    "reqd": 1
@@ -58,11 +61,34 @@
    "options": "Advance Statement",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "responsible_payment",
+   "fieldtype": "Data",
+   "label": "Responsible For Payment",
+   "reqd": 1
+  },
+  {
+   "fieldname": "id_rtn",
+   "fieldtype": "Data",
+   "label": "ID or RTN",
+   "reqd": 1
+  },
+  {
+   "fieldname": "in_words",
+   "fieldtype": "Data",
+   "label": "In Words",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cashier",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Cahier"
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2020-04-06 21:56:16.318372",
+ "modified": "2021-07-23 14:15:41.568411",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",

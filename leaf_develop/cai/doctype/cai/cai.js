@@ -26,7 +26,17 @@ frappe.ui.form.on('CAI', {
 		});
 	},
 
-	update: function(frm) {
+	// update: function(frm) {
+	// 	frappe.call({
+	// 		method: "get_prefix",
+	// 		doc: frm.doc,
+	// 		callback: function(r) {
+	// 			frm.set_df_property("prefix", "options", r.message.prefix);
+	// 		}
+	// 	});
+	// },
+
+	select_doc_for_series: function(frm) {
 		frappe.call({
 			method: "get_prefix",
 			doc: frm.doc,
