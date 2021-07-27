@@ -6,10 +6,14 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils.data import money_in_words
 
 class AdvanceStatement(Document):
 	def validate(self):
 		self.status()
+
+		self.in_words = money_in_words(self.amount)
+		self.cashier = frappe.session.user
 
 	def status(self):
 		if self.docstatus == 1:
