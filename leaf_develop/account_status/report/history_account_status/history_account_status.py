@@ -37,6 +37,7 @@ def execute(filters=None):
 	arr_return = []
 	arr_honorarium = []
 	arr_gastos = []
+	arr_laboratory = []
 
 	conditions = get_conditions(filters)
 	
@@ -81,7 +82,19 @@ def execute(filters=None):
 	for gasto in gastos:
 		gastos_detail = frappe.get_all("Hospital Expenses Detail", ["name"], filters = {"parent": gasto.name})
 		req_data += [{'indent': 1.0, "movement_type": gasto.name, "date": gasto.creation_date, "item": gasto.product_name, "quantity": len(gastos_detail)}]
-		arr_gastos += [gasto.date]
+		arr_gastos += [gasto.creation_date]
+	
+	req_data += [{}]
+
+	req_data += [{'indent': 0.0, "movement_type": "Gastos de laboratorio"}]	
+
+	condition_gastos = get_conditions_laboratory_expenses(filters)
+	
+	laboratories = frappe.get_all("Laboratory Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = condition_gastos, order_by = "creation_date asc")
+	
+	for laboratory in laboratories:
+		req_data += [{'indent': 1.0, "movement_type": laboratory.name, "date": laboratory.creation_date, "item": laboratory.product_name, "quantity": 1}]
+		arr_laboratory += [laboratory.creation_date]
 
 	req_data += [{}]
 
@@ -136,10 +149,10 @@ def execute(filters=None):
 	# datasets = get_dataset(datasets, values_data_return, "Retorno de requisiciones")
 	# datasets = get_dataset(datasets, values_data_honorarium, "Honorarios Medicos")
 
-	labels = ["Requisiciones", "Retorno de requisiciones", "Gastos Hospitalarios", "Honorarios Medicos"]
+	labels = ["Requisiciones", "Retorno de requisiciones", "Gastos Hospitalarios", "Gastos De Laboratorio", "Honorarios Medicos"]
 	datasets = []
 
-	datasets += [{'values': [len(arr_requisition), len(arr_return),len(arr_gastos), len(arr_honorarium)]}]
+	datasets += [{'values': [len(arr_requisition), len(arr_return),len(arr_gastos), len(arr_laboratory), len(arr_honorarium)]}]
 
 	chart= {
 		'data': 
@@ -174,7 +187,16 @@ def get_conditions_hospital_expenses(filters):
 	conditions = ''
 
 	conditions += "{"
-	if filters.get("from_date") and filters.get("to_date"): conditions += '"creation_date": ["between", ["{}", "{}"]]'.format(filters.get("from_date"), filters.get("to_date"))
+	if filters.get("from_date") and filters.get("to_date"): conditions += '"creation_date": ["between", ["{}", "{}"]], "docstatus": 1'.format(filters.get("from_date"), filters.get("to_date"))
+	conditions += "}"
+
+	return conditions
+
+def get_conditions_laboratory_expenses(filters):
+	conditions = ''
+
+	conditions += "{"
+	if filters.get("from_date") and filters.get("to_date"): conditions += '"creation_date": ["between", ["{}", "{}"]], "docstatus": 1'.format(filters.get("from_date"), filters.get("to_date"))
 	conditions += "}"
 
 	return conditions
