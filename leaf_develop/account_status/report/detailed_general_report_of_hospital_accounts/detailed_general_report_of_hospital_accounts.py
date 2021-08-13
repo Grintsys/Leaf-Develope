@@ -49,6 +49,7 @@ def execute(filters=None):
 	advance = []
 	return_advance = []
 	hospital_expense = []
+	laboratory_expense = []
 
 	arr_values = []
 	condition = get_conditions(filters)
@@ -59,6 +60,7 @@ def execute(filters=None):
 	advance_detail = []
 	return_advance_detail = []
 	hospital_expense_detail = []
+	laboratory_expense_detail = []
 	
 	patient_statement = frappe.get_all("Patient statement", ["name"], filters = condition)
 
@@ -69,6 +71,7 @@ def execute(filters=None):
 		total_advance = 0
 		total_return_advance = 0
 		total_gastos = 0
+		total_laboratory = 0
 
 		patientarr += [{'indent': 0.0, "movement": patient.name}]
 
@@ -155,6 +158,21 @@ def execute(filters=None):
 		hospital_expense += [{'indent': 1.0, "movement": "Gastos Hspitalarios", "quantity": len(gastos), "total_price": total_gastos}]
 		arr_values.append([len(gastos), total_gastos])
 
+		laboratories = frappe.get_all("Laboratory Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": 1}, order_by = "creation_date asc")
+
+		for laboratory in laboratories:
+			price_laboratory =  0
+			total_laboratory +=  gasto.total_amount
+
+			if gasto.total_amount > 0:
+				price_laboratory =  laboratory.total_amount
+
+			laboratory_expense_detail += [{'indent': 2.0, "movement": laboratory.name, "date": laboratory.creation_date, "item": laboratory.product_name, "quantity": len(gastos_detail), "total": price_laboratory, "total_price": laboratory.total_amount}]
+
+		laboratory_expense += [{}]
+		laboratory_expense += [{'indent': 1.0, "movement": "Gastos de laboratorio", "quantity": len(laboratories), "total_price": total_laboratory}]
+		arr_values.append([len(laboratories), total_laboratory])
+
 		advances = frappe.get_all("Advance Statement", ["name", "amount", "date_create"], filters = {"patient_statement": patient.name, "docstatus": 1}, order_by = "date_create asc")
 
 		for adv in advances:
@@ -182,6 +200,8 @@ def execute(filters=None):
 	data.extend(return_requisition_detail or [])
 	data.extend(hospital_expense or [])
 	data.extend(hospital_expense_detail or [])
+	data.extend(laboratory_expense or [])
+	data.extend(laboratory_expense_detail or [])
 	data.extend(honorarium or [])
 	data.extend(honorarium_detail or [])
 	data.extend(advance or [])

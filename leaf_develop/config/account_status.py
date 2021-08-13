@@ -41,6 +41,12 @@ def get_data():
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
 				},
+				{
+					"type": "doctype",
+					"name": "Laboratory Expenses",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
                 {
                     "type": "doctype",
                     "name": "Medical Honorarium",
