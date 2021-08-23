@@ -34,7 +34,7 @@ class InventoryRequisition(Document):
 	
 	def material_request(self):
 		products = frappe.get_all("Inventory Item", ["item", "quantity"], filters = {"parent": self.name})
-		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse", "to_warehouse"])
+		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse", "to_warehouse", "from_warehouse"])
 
 		if len(warehouse) == 0:
 			frappe.throw("There is no Patient Warehouse to assign, create a new one.")
@@ -55,7 +55,7 @@ class InventoryRequisition(Document):
 				})
 		doc.save()
 
-		self.make_stock_entry(warehouse[0].name_warehouse, warehouse[0].to_warehouse, products)
+		self.make_stock_entry(warehouse[0].from_warehouse, warehouse[0].to_warehouse, products)
 
 	def make_stock_entry(self, from_warehoouse, to_warehouse, products):
 		material_transfer = frappe.get_all("Stock Entry Type", ["name"], filters = {"name": "Material Transfer"})
