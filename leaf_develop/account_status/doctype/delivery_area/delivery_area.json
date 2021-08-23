@@ -1,43 +1,42 @@
 {
- "autoname": "PAT-WAR-.YY.-.#####",
- "creation": "2021-03-29 15:28:54.772113",
+ "autoname": "field:name_area",
+ "creation": "2021-08-19 11:08:13.356735",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "name_warehouse",
-  "from_warehouse",
-  "to_warehouse"
+  "name_area",
+  "creation_date",
+  "delivery_area_detail"
  ],
  "fields": [
   {
-   "fieldname": "name_warehouse",
-   "fieldtype": "Link",
+   "fieldname": "name_area",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Name Warehouse",
-   "options": "Warehouse",
+   "label": "Name Area",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "to_warehouse",
-   "fieldtype": "Link",
-   "label": "Default Target Warehouse",
-   "options": "Warehouse",
+   "fieldname": "creation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Creation Date",
    "reqd": 1
   },
   {
-   "fieldname": "from_warehouse",
-   "fieldtype": "Link",
-   "label": "Default Source Warehouse",
-   "options": "Warehouse",
+   "fieldname": "delivery_area_detail",
+   "fieldtype": "Table",
+   "label": "Delivery Area Detail",
+   "options": "Delivery Area Detail",
    "reqd": 1
   }
  ],
- "modified": "2021-08-23 08:41:22.048295",
+ "modified": "2021-08-19 11:08:13.356735",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Patient Warehouse",
+ "name": "Delivery Area",
  "owner": "Administrator",
  "permissions": [
   {
