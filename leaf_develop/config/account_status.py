@@ -56,6 +56,16 @@ def get_data():
                     "type": "doctype",
                     "name": "Patient Warehouse",
                     "onboard": 1,
+                },
+				{
+                    "type": "doctype",
+                    "name": "Delivery Area",
+                    "onboard": 1,
+                },
+				{
+                    "type": "doctype",
+                    "name": "Dispatch Control",
+                    "onboard": 1,
                 }
 			]
 		},
