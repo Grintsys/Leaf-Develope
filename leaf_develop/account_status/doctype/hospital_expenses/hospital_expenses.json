@@ -67,7 +67,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-07-14 16:24:23.674327",
+ "modified": "2021-09-03 11:47:08.732191",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Expenses",
@@ -86,7 +86,6 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
