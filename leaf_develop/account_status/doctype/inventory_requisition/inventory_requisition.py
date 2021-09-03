@@ -65,12 +65,13 @@ class InventoryRequisition(Document):
 		doc.from_warehouse = from_warehoouse
 		doc.to_warehouse = to_warehouse
 		doc.description = self.description
+		doc.reference = self.reference
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,
 				'qty': list_product.quantity,
 				's_warehouse': from_warehoouse,
-				't_warehouse': to_warehouse
+				't_warehouse': to_warehouse,
 				})
 		doc.save()
 	
