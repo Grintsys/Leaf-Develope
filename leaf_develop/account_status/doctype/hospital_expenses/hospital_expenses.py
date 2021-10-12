@@ -6,11 +6,15 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from datetime import datetime
 
 class HospitalExpenses(Document):
 	def on_update(self):
 		self.calculate_total()
 		self.add_products_account_status_payment()
+
+		if self.creation_date == None:
+			self.creation_date = datetime.now()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()

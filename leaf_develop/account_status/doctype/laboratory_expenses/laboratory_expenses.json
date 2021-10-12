@@ -9,6 +9,7 @@
   "creation_date",
   "service",
   "product_name",
+  "detail",
   "total_amount",
   "amended_from"
  ],
@@ -26,7 +27,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Creation Date",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "service",
@@ -66,10 +67,17 @@
    "options": "Laboratory Expenses",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "detail",
+   "fieldtype": "Table",
+   "label": "Laboratory Expenses Details",
+   "options": "Laboratory Expenses Details",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-09-03 11:46:40.482126",
+ "modified": "2021-10-12 14:05:55.085827",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Laboratory Expenses",
