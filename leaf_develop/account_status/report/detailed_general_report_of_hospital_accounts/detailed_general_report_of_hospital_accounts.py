@@ -155,14 +155,14 @@ def execute(filters=None):
 			hospital_expense_detail += [{'indent': 2.0, "movement": gasto.name, "date": gasto.creation_date, "item": gasto.product_name, "quantity": len(gastos_detail), "total": price_gasto, "total_price": gasto.total_amount}]
 
 		hospital_expense += [{}]
-		hospital_expense += [{'indent': 1.0, "movement": "Gastos Hspitalarios", "quantity": len(gastos), "total_price": total_gastos}]
+		hospital_expense += [{'indent': 1.0, "movement": "Gastos Hospitalarios", "quantity": len(gastos), "total_price": total_gastos}]
 		arr_values.append([len(gastos), total_gastos])
 
 		laboratories = frappe.get_all("Laboratory Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]}, order_by = "creation_date asc")
 
 		for laboratory in laboratories:
 			price_laboratory =  0
-			total_laboratory +=  gasto.total_amount
+			total_laboratory +=  laboratory.total_amount
 
 			if gasto.total_amount > 0:
 				price_laboratory =  laboratory.total_amount
@@ -176,8 +176,9 @@ def execute(filters=None):
 		advances = frappe.get_all("Advance Statement", ["name", "amount", "date_create"], filters = {"patient_statement": patient.name, "docstatus": 1}, order_by = "date_create asc")
 
 		for adv in advances:
-			total_advance += adv.amount
-			advance_detail += [{'indent': 2.0, "movement": adv.name, "date": adv.date_create, "quantity": 1, "total": adv.amount, "total_price": adv.amount}]
+			total_advance -= adv.amount
+			advamount = adv.amount - (adv.amount * 2)
+			advance_detail += [{'indent': 2.0, "movement": adv.name, "date": adv.date_create, "quantity": 1, "total": advamount, "total_price": advamount}]
 		
 		advance += [{}]
 		advance += [{'indent': 1.0, "movement": "Avances", "quantity": len(advances), "total_price": total_advance}]

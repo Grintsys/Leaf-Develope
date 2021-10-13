@@ -103,7 +103,7 @@ def execute(filters=None):
 		for exp_lab in expenses_laboratory_list:
 			total_expenses_laboratory += exp_lab.total_amount
 
-		expenses_laboratory += [{'indent': 1.0, "movement": "Gastos de laboratorio", "quantity": len(expenses_hospital_list),"total": total_expenses_laboratory}]
+		expenses_laboratory += [{'indent': 1.0, "movement": "Gastos de laboratorio", "quantity": len(expenses_laboratory_list),"total": total_expenses_laboratory}]
 		arr_values.append([len(expenses_laboratory_list), total_expenses_laboratory])
 
 		honorariums = frappe.get_all("Medical Honorarium", ["total"], filters = {"patient_statement": patient.name})
@@ -117,7 +117,7 @@ def execute(filters=None):
 		advances = frappe.get_all("Advance Statement", ["amount"], filters = {"patient_statement": patient.name, "docstatus": 1})
 
 		for adv in advances:
-			total_advance += adv.amount
+			total_advance -= adv.amount
 		
 		advance += [{'indent': 1.0, "movement": "Avances", "quantity": len(advances),"total": total_advance}]
 		arr_values.append([len(advances), total_advance])
