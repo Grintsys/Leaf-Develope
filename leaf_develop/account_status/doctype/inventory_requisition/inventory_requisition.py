@@ -40,6 +40,7 @@ class InventoryRequisition(Document):
 			frappe.throw("There is no Patient Warehouse to assign, create a new one.")
 
 		doc = frappe.new_doc('Material Request')
+		doc.name = "Requisición de hospital"
 		doc.schedule_date = self.date_create
 		doc.material_request_type = 'Material Transfer'
 		doc.requested_by = self.patient_statement
