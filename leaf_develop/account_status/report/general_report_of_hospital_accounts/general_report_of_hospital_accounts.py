@@ -90,7 +90,7 @@ def execute(filters=None):
 		return_requisition += [{'indent': 1.0, "movement": "Retorno de Requisiciones", "quantity": len(patient_return),"total": total_requisition_return}]
 		arr_values.append([len(patient_return), total_requisition_return])
 
-		expenses_hospital_list = frappe.get_all("Hospital Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": 1})
+		expenses_hospital_list = frappe.get_all("Hospital Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]})
 
 		for exp_hos in expenses_hospital_list:
 			total_expenses_hospital += exp_hos.total_amount
@@ -98,7 +98,7 @@ def execute(filters=None):
 		expenses_hospital += [{'indent': 1.0, "movement": "Gastos Hospitalarios", "quantity": len(expenses_hospital_list),"total": total_expenses_hospital}]
 		arr_values.append([len(expenses_hospital_list), total_expenses_hospital])
 
-		expenses_laboratory_list = frappe.get_all("Laboratory Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": 1})
+		expenses_laboratory_list = frappe.get_all("Laboratory Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]})
 
 		for exp_lab in expenses_laboratory_list:
 			total_expenses_laboratory += exp_lab.total_amount

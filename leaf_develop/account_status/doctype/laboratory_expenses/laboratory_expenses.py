@@ -6,11 +6,15 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from datetime import datetime
 
 class LaboratoryExpenses(Document):
 	def on_update(self):
 		self.calculate_total()
 		self.add_products_account_status_payment()
+
+		if self.creation_date == None:
+			self.creation_date = datetime.now()
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()
@@ -25,11 +29,9 @@ class LaboratoryExpenses(Document):
 		if len(product_price) == 0:
 				frappe.throw(_("{} does not have a defined price in price list {}.".format(self.product_name, patient_statement[0].price_list)))
 
-		# hospital_expenses_detail = frappe.get_all("Hospital Expenses Detail", ["reason"], filters = {"parent": self.name})
+		laboratory_expenses_detail = frappe.get_all("Laboratory Expenses Details", ["reason"], filters = {"parent": self.name})
 
-		# total_amount = product_price[0].price_list_rate * len(hospital_expenses_detail)
-
-		total_amount = product_price[0].price_list_rate
+		total_amount = product_price[0].price_list_rate * len(laboratory_expenses_detail)
 
 		self.db_set('total_amount', total_amount, update_modified=False)
 
@@ -42,10 +44,9 @@ class LaboratoryExpenses(Document):
 
 		product_price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": self.service, "price_list": patient_statement[0].price_list})
 
-		# hospital_expenses_detail = frappe.get_all("Hospital Expenses Detail", ["reason"], filters = {"parent": self.name})
+		laboratory_expenses_detail = frappe.get_all("Laboratory Expenses Details", ["reason"], filters = {"parent": self.name})
 
-		# quantity = len(hospital_expenses_detail)
-		quantity = 1
+		quantity = len(laboratory_expenses_detail)
 		
 		if len(account_payment) == 0:
 			frappe.throw(_("There is no invoice assigned hospital expenses detail to this statement."))
@@ -84,9 +85,9 @@ class LaboratoryExpenses(Document):
 		if len(product_price) == 0:
 			frappe.throw(_("{} does not have a defined price in price list {}.".format(self.product_name, patient_statement[0].price_list)))
 
-		# hospital_expenses_detail = frappe.get_all("Hospital Expenses Detail", ["reason"], filters = {"parent": self.name})
+		laboratory_expenses_detail = frappe.get_all("Laboratory Expenses Details", ["reason"], filters = {"parent": self.name})
 
-		quantity = 1
+		quantity = len(laboratory_expenses_detail)
 				
 		product_verified = frappe.get_all("Account Statement Payment Item", ["name", "quantity", "price"], filters = {"item": self.service, "price": product_price[0].price_list_rate, "parent": account_payment[0].name})
 			

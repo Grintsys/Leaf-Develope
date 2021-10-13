@@ -77,17 +77,45 @@ class Returnofinventoryrequisition(Document):
 
 	def material_request(self):
 		products = frappe.get_all("Inventory Item Return", ["item", "quantity"], filters = {"parent": self.name})
-		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse"])
+		warehouse = frappe.get_all("Patient Warehouse", ["name_warehouse", "to_warehouse", "from_warehouse"])
+
+		if len(warehouse) == 0:
+			frappe.throw("There is no Patient Warehouse to assign, create a new one.")
+
 		doc = frappe.new_doc('Material Request')
+		doc.name = "Requisición de hospital"
 		doc.schedule_date = self.date_create
 		doc.material_request_type = 'Material Transfer'
 		doc.requested_by = self.patient_statement
+		doc.description = self.description
+		doc.docstatus = 1
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,
 				'qty': list_product.quantity,
+				'description': list_product.item,
 				'schedule_date': self.date_create,
 				'warehouse': warehouse[0].name_warehouse
+				})
+		doc.save()
+
+		self.make_stock_entry(warehouse[0].from_warehouse, warehouse[0].to_warehouse, products)
+
+	def make_stock_entry(self, from_warehoouse, to_warehouse, products):
+		material_transfer = frappe.get_all("Stock Entry Type", ["name"], filters = {"name": "Material Transfer"})
+
+		doc = frappe.new_doc('Stock Entry')
+		doc.stock_entry_type = material_transfer[0].name
+		doc.from_warehouse = to_warehouse
+		doc.to_warehouse = from_warehoouse
+		doc.description = self.description
+		doc.reference = self.reference
+		for list_product in products:
+			row = doc.append("items", {
+				'item_code': list_product.item,
+				'qty': list_product.quantity,
+				's_warehouse': to_warehouse,
+				't_warehouse': from_warehoouse,
 				})
 		doc.save()
 
