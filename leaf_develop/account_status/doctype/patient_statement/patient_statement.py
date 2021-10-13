@@ -11,6 +11,7 @@ from frappe.permissions import get_doctypes_with_read
 
 class Patientstatement(Document):
 	def validate(self):
+		self.calculate_age()
 		self.status()
 
 	def on_update(self):
@@ -35,6 +36,7 @@ class Patientstatement(Document):
 		doc.patient_statement = self.name
 		doc.date = self.date
 		doc.customer = self.client
+		doc.reason_for_sale = self.reason_for_sale
 		doc.insert()
 	
 	def on_trash(self):
@@ -96,3 +98,12 @@ class Patientstatement(Document):
 	def get_options(self, arg=None):
 		if frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series"):
 			return frappe.get_meta(arg or self.select_doc_for_series).get_field("naming_series").options
+	
+	def calculate_age(self):
+		patient = frappe.get_doc("Patient", self.patient)
+
+		if patient.dob != None:
+			today = date.today()
+			self.age = today.year - patient.dob.year - ((today.month, today.day) < (patient.dob.month, patient.dob.day))
+		else:
+			frappe.msgprint(_("Pacient has no date of birthday"))

@@ -141,7 +141,7 @@ def execute(filters=None):
 		honorarium += [{'indent': 1.0, "movement": "Honorarios Medicos", "quantity": len(honorariums), "total_price": total_honorarium}]
 		arr_values.append([len(honorariums), total_honorarium])
 	
-		gastos = frappe.get_all("Hospital Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name}, order_by = "creation_date asc")
+		gastos = frappe.get_all("Hospital Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]}, order_by = "creation_date asc")
 
 		for gasto in gastos:
 			price_gasto =  0
@@ -158,7 +158,7 @@ def execute(filters=None):
 		hospital_expense += [{'indent': 1.0, "movement": "Gastos Hspitalarios", "quantity": len(gastos), "total_price": total_gastos}]
 		arr_values.append([len(gastos), total_gastos])
 
-		laboratories = frappe.get_all("Laboratory Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": 1}, order_by = "creation_date asc")
+		laboratories = frappe.get_all("Laboratory Expenses", ["name", "creation_date", "product_name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]}, order_by = "creation_date asc")
 
 		for laboratory in laboratories:
 			price_laboratory =  0
