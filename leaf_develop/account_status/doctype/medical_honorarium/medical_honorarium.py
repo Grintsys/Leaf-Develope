@@ -14,7 +14,7 @@ form_grid_templates = {
 class MedicalHonorarium(Document):
 	def validate(self):		
 		if self.docstatus == 1:
-			self.apply_changes(self.total, self.bank_check)
+			self.apply_changes(self.total, self.bank_check, self.cash_total)
 	# 		self.remaining()
 	# 		self.verificate_changes()
 
@@ -32,7 +32,7 @@ class MedicalHonorarium(Document):
 				if(self.total > 0 and self.total_payment != 0):
 					self.db_set('total_remaining', self.total, update_modified=False)
 	
-	def apply_changes(self, total, bank_check):
+	def apply_changes(self, total, bank_check, cash_total):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		doc.outstanding_balance += bank_check
 		doc.cumulative_total += bank_check
@@ -41,6 +41,10 @@ class MedicalHonorarium(Document):
 		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
 		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
 		docu.outstanding_balance += total
+		docu.cash_total_medical_fees += cash_total
+		docu.bank_check_total_medical_fees += bank_check
+		docu.total_medical_fees += total
+		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
 		docu.save()
 
 	def verificate_changes(self):
@@ -119,7 +123,6 @@ class MedicalHonorarium(Document):
 					row.sale_amount = self.bank_check
 					row.reference = self.name
 					doc.total += price
-					doc.outstanding_balance = doc.total - doc.total_advance
 					doc.save()
 
 				# self.apply_changes(self.bank_check)
@@ -148,8 +151,9 @@ class MedicalHonorarium(Document):
 				doc.save()	
 
 		bank_check = self.bank_check - (self.bank_check * 2)
+		cash_total = self.cash_total - (self.cash_total * 2)
 
-		self.apply_changes(total_price, bank_check)
+		self.apply_changes(total_price, bank_check, cash_total)
 	
 	def on_update(self):
 		total = 0

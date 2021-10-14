@@ -121,4 +121,5 @@ class HospitalExpenses(Document):
 		docu = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 		docu.total = total_price
 		docu.outstanding_balance = docu.total - docu.total_advance
+		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
 		docu.save()
