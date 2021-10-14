@@ -31,6 +31,7 @@ class Returnofinventoryrequisition(Document):
 		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
 		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
 		docu.outstanding_balance += total_price
+		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
 		docu.save()
 	
 	def delete_products_account_status_payment(self):
