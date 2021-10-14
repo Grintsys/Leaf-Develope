@@ -9,6 +9,9 @@ from frappe.model.document import Document
 
 class InventoryRequisition(Document):
 	def validate(self):
+		if self.made_by == None:
+			self.made_by = frappe.session['user']
+
 		self.status()
 
 	def status(self):
