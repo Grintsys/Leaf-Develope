@@ -7,6 +7,8 @@
  "field_order": [
   "patient_statement",
   "date_create",
+  "made_by",
+  "medical",
   "products",
   "reference",
   "state",
@@ -63,10 +65,22 @@
    "fieldname": "description",
    "fieldtype": "Long Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "made_by",
+   "fieldtype": "Data",
+   "label": "Made by",
+   "read_only": 1
+  },
+  {
+   "fieldname": "medical",
+   "fieldtype": "Data",
+   "label": "Medical",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-06-17 12:06:17.832851",
+ "modified": "2021-10-13 10:45:06.370338",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",

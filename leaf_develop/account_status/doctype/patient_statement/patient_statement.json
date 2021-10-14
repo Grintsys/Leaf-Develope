@@ -16,7 +16,8 @@
   "outstanding_balance",
   "state",
   "amended_from",
-  "price_list"
+  "price_list",
+  "acc_sta"
  ],
  "fields": [
   {
@@ -105,10 +106,17 @@
    "fieldtype": "Data",
    "label": "Age",
    "read_only": 1
+  },
+  {
+   "fieldname": "acc_sta",
+   "fieldtype": "Select",
+   "label": "Account Statement",
+   "options": "Open\nClosed",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-10-12 16:39:05.025354",
+ "modified": "2021-10-13 10:26:26.767290",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",
