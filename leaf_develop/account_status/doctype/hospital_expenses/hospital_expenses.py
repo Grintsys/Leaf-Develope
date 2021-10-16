@@ -51,7 +51,7 @@ class HospitalExpenses(Document):
 		if len(account_payment) == 0:
 			frappe.throw(_("There is no invoice assigned hospital expenses detail to this statement."))
 
-		product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": self.service, "price": product_price[0].price_list_rate, "parent": account_payment[0].name})
+		product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price", "quantity"], filters = {"item": self.service, "price": product_price[0].price_list_rate, "parent": account_payment[0].name})
 
 		if len(product_verified) > 0:
 			price = quantity * product_price[0].price_list_rate
@@ -122,4 +122,5 @@ class HospitalExpenses(Document):
 		docu.total = total_price
 		docu.outstanding_balance = docu.total - docu.total_advance
 		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
+		docu.total_sale_invoice = docu.total - docu.bank_check_total_medical_fees
 		docu.save()
