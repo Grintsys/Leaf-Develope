@@ -217,7 +217,7 @@ def execute(filters=None):
 	for val in arr_values:
 		totales.append(val[1])
 
-	labels = ["Requisiciones", "Retorno de requisciones", "Honorarios Medicos", "Avances", "Retorno de avances"]
+	labels = ["Requisiciones", "Retorno de requisciones", "Gastos Hospitalarios", "Gastos De Laboratorio", "Honorarios Medicos", "Avances", "Retorno de avances"]
 	datasets = [{'values': totales}]
 
 	chart= {
@@ -229,7 +229,7 @@ def execute(filters=None):
 		'type': 'pie'
 	}
 
-	total_pen = totales[0] - totales[1] + totales[2] - totales[3] + totales[4]
+	total_pen = totales[0] - totales[1] + totales[2] + totales[3] + totales[4] + totales[5] - totales[6]
 
 	endtotal = [{'indent': 0.0, "movement": "Saldo Pendiente", "total_price": total_pen}]
 
