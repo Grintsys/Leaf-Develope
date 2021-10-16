@@ -54,7 +54,6 @@ class LaboratoryExpenses(Document):
 		product_verified = frappe.get_all("Account Statement Payment Item", ["name", "price"], filters = {"item": self.service, "price": product_price[0].price_list_rate, "parent": account_payment[0].name})
 
 		if len(product_verified) > 0:
-			quantity += product_verified[0].quantity
 			price = quantity * product_price[0].price_list_rate
 			doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 			doc_product.quantity = quantity
