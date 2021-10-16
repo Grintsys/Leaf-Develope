@@ -34,7 +34,7 @@ class InventoryRequisition(Document):
 		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
 		docu.outstanding_balance += total_price
 		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
-		docu.total_sale_invoice = docu.total - docu.bank_check_total_medical_fees
+		docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
 		docu.save()
 	
 	def material_request(self):
