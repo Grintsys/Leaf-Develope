@@ -122,5 +122,5 @@ class LaboratoryExpenses(Document):
 		docu.total = total_price
 		docu.outstanding_balance = docu.total - docu.total_advance
 		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
-		docu.total_sale_invoice = docu.total - docu.bank_check_total_medical_fees
+		docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
 		docu.save()
