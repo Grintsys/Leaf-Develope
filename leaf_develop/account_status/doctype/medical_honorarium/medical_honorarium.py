@@ -45,6 +45,7 @@ class MedicalHonorarium(Document):
 		docu.bank_check_total_medical_fees += bank_check
 		docu.total_medical_fees += total
 		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
+		docu.total_sale_invoice = docu.total - docu.bank_check_total_medical_fees
 		docu.save()
 
 	def verificate_changes(self):
