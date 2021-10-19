@@ -38,14 +38,30 @@ class MedicalHonorarium(Document):
 		doc.cumulative_total += bank_check
 		doc.save()
 
+		# acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
+		# docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
+		# docu.outstanding_balance += total
+		# docu.total_without_medical_fees = docu.total - docu.total_medical_fees
+		# docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
+		# docu.save()
+	
+	def update_totals_honorarium(self):
+		medicals_honorariums = frappe.get_all("Medical Honorarium", {"name", "total", "bank_check", "cash_total"}, filters = {"patient_statement": self.patient_statement})
+		total, bank_check, cash_total = 0, 0, 0
+
+		for honorarium in medicals_honorariums:
+			total += honorarium.total
+			bank_check += honorarium.bank_check
+			cash_total += honorarium.cash_total
+		
 		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
 		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
-		docu.outstanding_balance += total
-		docu.cash_total_medical_fees += cash_total
-		docu.bank_check_total_medical_fees += bank_check
-		docu.total_medical_fees += total
+		docu.cash_total_medical_fees = cash_total
+		docu.bank_check_total_medical_fees = bank_check
+		docu.total_medical_fees = total
 		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
 		docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
+		docu.outstanding_balance = docu.total - docu.total_advance
 		docu.save()
 
 	def verificate_changes(self):
@@ -169,6 +185,7 @@ class MedicalHonorarium(Document):
 			self.verificate_changes()
 
 			self.add_medical_honorarium_payment()
+			self.update_totals_honorarium()
 		else:
 			frappe.throw(_("This Medical Honorarium Paid Out."))
 	
