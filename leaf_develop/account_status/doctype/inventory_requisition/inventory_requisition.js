@@ -11,5 +11,13 @@ frappe.ui.form.on('Inventory Requisition', {
 				filters:{'state': ["=","Open"], 'acc_sta': ["=","Open"]}
 			}
 		}
-	}
+	},
+
+	setup: function(frm) {
+		frm.set_query("item", "products", function(doc, cdt, cdn) {
+			return {
+				filters:{"default_company": doc.company}
+			};
+		});
+    },
 });

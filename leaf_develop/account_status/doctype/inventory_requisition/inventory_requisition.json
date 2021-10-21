@@ -13,7 +13,8 @@
   "reference",
   "state",
   "amended_from",
-  "description"
+  "description",
+  "company"
  ],
  "fields": [
   {
@@ -78,10 +79,18 @@
    "fieldtype": "Data",
    "label": "Medical",
    "reqd": 1
+  },
+  {
+   "fetch_from": "patient_statement.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-10-14 14:05:00.384301",
+ "modified": "2021-10-20 14:19:13.948981",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",
