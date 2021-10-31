@@ -58,6 +58,8 @@ class Patientstatement(Document):
 		doc.customer = self.client
 		doc.reason_for_sale = self.reason_for_sale
 		doc.patient = self.patient
+		doc.selling_price_list = self.price_list
+		doc.ignore_pricing_rule = 1
 
 		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
 		
