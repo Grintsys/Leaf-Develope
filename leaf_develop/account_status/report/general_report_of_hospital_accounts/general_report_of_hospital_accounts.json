@@ -7,7 +7,7 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2020-04-02 14:04:35.580401",
+ "modified": "2021-11-02 16:13:16.424461",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "General report of hospital accounts",
@@ -19,6 +19,12 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Jefe de Cuentas Hospitalarias"
+  },
+  {
+   "role": "Agente de Cuentas Hospitalarias"
   }
  ]
 }
