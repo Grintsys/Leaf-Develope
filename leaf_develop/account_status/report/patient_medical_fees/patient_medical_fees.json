@@ -8,7 +8,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "H&C Ferrari",
- "modified": "2020-03-31 11:25:31.561497",
+ "modified": "2021-11-03 08:22:50.712736",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient Medical Fees",
@@ -20,6 +20,12 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Jefe de Cuentas Hospitalarias"
+  },
+  {
+   "role": "Agente de Cuentas Hospitalarias"
   }
  ]
 }
