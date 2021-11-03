@@ -7,18 +7,24 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2020-04-06 20:19:56.554501",
+ "modified": "2021-11-03 08:25:54.252806",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Detailed general report of hospital accounts",
  "owner": "Administrator",
- "prepared_report": 0,
+ "prepared_report": 1,
  "ref_doctype": "Patient statement",
  "report_name": "Detailed general report of hospital accounts",
  "report_type": "Script Report",
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Jefe de Cuentas Hospitalarias"
+  },
+  {
+   "role": "Agente de Cuentas Hospitalarias"
   }
  ]
 }
