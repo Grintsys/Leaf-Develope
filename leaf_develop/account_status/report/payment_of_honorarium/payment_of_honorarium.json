@@ -8,7 +8,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "H&C Ferrari",
- "modified": "2021-11-03 08:22:10.071949",
+ "modified": "2021-11-03 15:08:40.716243",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Payment Of Honorarium",
@@ -22,10 +22,7 @@
    "role": "System Manager"
   },
   {
-   "role": "Jefe de Cuentas Hospitalarias"
-  },
-  {
-   "role": "Agente de Cuentas Hospitalarias"
+   "role": "Crear cuenta de Paciente Hospitalizado"
   }
  ]
 }
