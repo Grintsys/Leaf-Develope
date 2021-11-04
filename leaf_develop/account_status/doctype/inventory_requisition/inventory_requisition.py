@@ -72,6 +72,7 @@ class InventoryRequisition(Document):
 		doc.to_warehouse = to_warehouse
 		doc.description = self.description
 		doc.reference = self.reference
+		doc.patient = self.patient
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,

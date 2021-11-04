@@ -7,7 +7,7 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2021-11-02 16:13:16.424461",
+ "modified": "2021-11-04 14:48:13.992588",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "General report of hospital accounts",
@@ -21,10 +21,7 @@
    "role": "System Manager"
   },
   {
-   "role": "Jefe de Cuentas Hospitalarias"
-  },
-  {
-   "role": "Agente de Cuentas Hospitalarias"
+   "role": "Crear cuenta de Paciente Hospitalizado"
   }
  ]
 }
