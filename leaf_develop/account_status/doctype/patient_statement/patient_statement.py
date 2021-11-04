@@ -25,6 +25,9 @@ class Patientstatement(Document):
 			self.state = "Open"
 
 		if self.docstatus == 1:
+			if self.acc_sta == "Open":
+				frappe.throw(_("This Patient Statement is open."))
+				
 			self.state = "Closed"
 			self.new_sale_invoice()
 		
