@@ -6,9 +6,13 @@
  "engine": "InnoDB",
  "field_order": [
   "patient_statement",
+  "patient",
+  "patient_name",
+  "column1",
   "date_create",
   "made_by",
   "medical",
+  "section",
   "products",
   "reference",
   "state",
@@ -87,10 +91,34 @@
    "hidden": 1,
    "label": "Company",
    "options": "Company"
+  },
+  {
+   "fetch_from": "patient_statement.patient",
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Patient",
+   "options": "Patient",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.patient_name",
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section",
+   "fieldtype": "Section Break"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-10-20 14:19:13.948981",
+ "modified": "2021-11-04 09:52:33.979415",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",
