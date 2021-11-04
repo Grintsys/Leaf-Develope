@@ -9,6 +9,11 @@
   "id_rtn",
   "date_create",
   "patient_statement",
+  "customer",
+  "patient",
+  "customer_name",
+  "patient_name",
+  "type_pay_advance",
   "amount",
   "in_words",
   "way_to_pay",
@@ -84,11 +89,48 @@
    "fieldname": "cashier",
    "fieldtype": "Data",
    "hidden": 1,
-   "label": "Cahier"
+   "label": "Cashier"
+  },
+  {
+   "fieldname": "type_pay_advance",
+   "fieldtype": "Link",
+   "label": "Type Pay Advance",
+   "options": "Type Pay Advance",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "patient_statement.client",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fetch_from": "patient_statement.patient",
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Patient",
+   "options": "Patient"
+  },
+  {
+   "fetch_from": "customer.customer_name",
+   "fieldname": "customer_name",
+   "fieldtype": "Data",
+   "label": "Customer Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.patient_name",
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name",
+   "read_only": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-07-23 14:15:41.568411",
+ "modified": "2021-11-04 14:43:19.465450",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",
