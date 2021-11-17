@@ -116,6 +116,12 @@ def get_data():
 					"name": "Detailed general report of hospital accounts",
 					"doctype": "Detailed general report of hospital accountss",
                     "dependencies": ["Patient statement"]
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Advance Statement For Hours",
+					"doctype": "Advance Statement",
 				}
             ]
         }
