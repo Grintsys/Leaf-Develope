@@ -7,7 +7,7 @@ from frappe import _
 
 def execute(filters=None):
 	if not filters: filters = {}
-	columns= [_("Serie") + "::240", _("Status") + "::240", _("Date") + "::240", _("Patient Statement") + "::240", _("Patient Name") + "::240", _("amount") + ":Currency:120"]
+	columns= [_("Serie") + "::240", _("Status") + "::240", _("Date") + "::240", _("Patient Statement") + "::240", _("Patient Name") + "::240", _("Cashier") + "::240", _("Way to pay") + "::240", _("amount") + ":Currency:120"]
 	data = return_data(filters)
 	return columns, data
 
@@ -22,7 +22,7 @@ def return_data(filters):
 
 	if len(advances):
 		for advance in advances:
-			row = [advance.name, advance.state, advance.date_create, advance.patient_statement, advance.patient_name, advance.amount]
+			row = [advance.name, advance.state, advance.date_create, advance.patient_statement, advance.patient_name, advance.cashier, advance.way_to_pay, advance.amount]
 			data.append(row)
 	
 	return data
@@ -32,7 +32,8 @@ def return_filters(filters, from_date, to_date):
 
 	conditions += "{"
 	conditions += '"date_create": ["between", ["{}", "{}"]]'.format(from_date, to_date)
-	conditions += ', "patient_statement": "{}"'.format(filters.get("patient_statement"))
+	if filters.get("patient_statement"):
+		conditions += ', "patient_statement": "{}"'.format(filters.get("patient_statement"))
 	conditions += '}'
 
 	return conditions
