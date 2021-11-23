@@ -22,8 +22,7 @@ frappe.query_reports["Advance Statement For Hours"] = {
 			"fieldname":"patient_statement",
 			"label": __("Patient Statement"),
 			"fieldtype": "Link",
-			"options": "Patient statement",
-			"reqd": 1
+			"options": "Patient statement"
 		}
 	]
 };
