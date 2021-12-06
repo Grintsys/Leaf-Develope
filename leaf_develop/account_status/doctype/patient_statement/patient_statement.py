@@ -11,6 +11,7 @@ from frappe.permissions import get_doctypes_with_read
 
 class Patientstatement(Document):
 	def validate(self):
+		self.set_serie()
 		self.calculate_age()
 		self.status()
 
@@ -33,6 +34,17 @@ class Patientstatement(Document):
 		
 		if self.docstatus == 2:
 			self.state = "Cancelled"
+	
+	def set_serie(self):
+		warehouse = frappe.get_all("Patient Warehouse", ["*"])
+
+		self.naming_series = warehouse[0].naming_series
+
+	def verificate_name(self):
+		patient = frappe.get_all("Patient statement", ["*"], filters = {"name": self.name, "docstatus": 0})
+
+		if len(patient) > 0:
+			frappe.throw(_("A Patient Statement with this unvalidated name already exists."))
 	
 	def new_account_statement_payment(self):
 		doc = frappe.new_doc('Account Statement Payment')

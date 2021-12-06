@@ -7,6 +7,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils.data import money_in_words
+from datetime import datetime
 
 class AdvanceStatement(Document):
 	def validate(self):
@@ -14,6 +15,9 @@ class AdvanceStatement(Document):
 
 		self.in_words = money_in_words(self.amount)
 		self.cashier = frappe.session.user
+	
+	def before_naming(self):
+		self.date_create = datetime.today()
 
 	def status(self):
 		if self.docstatus == 1:
