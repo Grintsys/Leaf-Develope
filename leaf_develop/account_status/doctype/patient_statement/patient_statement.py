@@ -98,7 +98,7 @@ class Patientstatement(Document):
 		try:
 			options = self.get_options('Sales Invoice')
 		except frappe.DoesNotExistError:
-			frappe.msgprint(_('Unable to find DocType {0}').format(d))
+			frappe.msgprint(_('Unable to find DocType {0}').format(""))
 
 		if options:
 			prefixes = prefixes + "\n" + options

@@ -7,6 +7,7 @@
  "field_order": [
   "patient_statement",
   "creation_date",
+  "company",
   "service",
   "product_name",
   "detail",
@@ -74,10 +75,17 @@
    "label": "Laboratory Expenses Details",
    "options": "Laboratory Expenses Details",
    "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2021-10-12 14:05:55.085827",
+ "modified": "2021-12-09 15:06:03.860085",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Laboratory Expenses",
