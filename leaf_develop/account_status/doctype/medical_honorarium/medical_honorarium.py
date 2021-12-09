@@ -36,6 +36,8 @@ class MedicalHonorarium(Document):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		doc.outstanding_balance += bank_check
 		doc.cumulative_total += bank_check
+		doc.total_without_medical_fees = doc.total - doc.total_medical_fees
+		doc.total_sale_invoice = doc.total - doc.cash_total_medical_fees
 		doc.save()
 
 		# acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
