@@ -10,6 +10,12 @@ frappe.ui.form.on('Laboratory Expenses', {
 			return {
 				filters:{'state': "Open", 'acc_sta': ["=","Open"]}
 			}
+		},
+
+		cur_frm.fields_dict['service'].get_query = function(doc, cdt, cdn) {
+			return {
+				filters:{'default_company': doc.company}
+			}
 		}
 	}
 });
