@@ -36,16 +36,14 @@ class MedicalHonorarium(Document):
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
 		doc.outstanding_balance += bank_check
 		doc.cumulative_total += bank_check
-		doc.total_without_medical_fees = doc.total - doc.total_medical_fees
-		doc.total_sale_invoice = doc.total - doc.cash_total_medical_fees
 		doc.save()
 
-		# acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
-		# docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
+		acc_sta_pay = frappe.get_all("Account Statement Payment", {"name"}, filters = {"patient_statement" : self.patient_statement})
+		docu = frappe.get_doc("Account Statement Payment", acc_sta_pay[0].name)
 		# docu.outstanding_balance += total
-		# docu.total_without_medical_fees = docu.total - docu.total_medical_fees
-		# docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
-		# docu.save()
+		docu.total_without_medical_fees = docu.total - docu.total_medical_fees
+		docu.total_sale_invoice = docu.total - docu.cash_total_medical_fees
+		docu.save()
 	
 	def update_totals_honorarium(self):
 		medicals_honorariums = frappe.get_all("Medical Honorarium", {"name", "total", "bank_check", "cash_total"}, filters = {"patient_statement": self.patient_statement})
