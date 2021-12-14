@@ -15,6 +15,9 @@ class AdvanceStatement(Document):
 
 		self.in_words = money_in_words(self.amount)
 		self.cashier = frappe.session.user
+
+	def on_update(self):
+		self.calculate_amount()
 	
 	def before_naming(self):
 		self.date_create = datetime.today()
@@ -49,3 +52,12 @@ class AdvanceStatement(Document):
 
 		doc.save()
 		docu.save()
+	
+	def calculate_amount(self):
+		amount = 0
+		self.amount = 0
+		for pay in self.get("payments"):
+			self.amount += pay.amount
+			amount += pay.amount
+		
+		self.db_set('amount', amount, update_modified=False)
