@@ -1,0 +1,43 @@
+{
+ "creation": "2021-12-14 13:37:02.131293",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "detail",
+  "amount",
+  "type_pay"
+ ],
+ "fields": [
+  {
+   "fieldname": "detail",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Detail"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount"
+  },
+  {
+   "fieldname": "type_pay",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type Pay",
+   "options": "\nCash\nCard\nWire transfer"
+  }
+ ],
+ "istable": 1,
+ "modified": "2021-12-14 13:41:11.505622",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Advance Statement Pay",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
