@@ -75,6 +75,10 @@ class Patientstatement(Document):
 		doc.patient = self.patient
 		doc.selling_price_list = self.price_list
 		doc.ignore_pricing_rule = 1
+		doc.excesses = 0
+		doc.deductible = 0
+		doc.ineligible_expenses = 0
+		doc.co_pay20 = 0
 
 		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
 		
