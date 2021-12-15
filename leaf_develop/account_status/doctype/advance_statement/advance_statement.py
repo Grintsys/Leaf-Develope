@@ -13,7 +13,6 @@ class AdvanceStatement(Document):
 	def validate(self):
 		self.status()
 
-		self.in_words = money_in_words(self.amount)
 		self.cashier = frappe.session.user
 
 	def on_update(self):
@@ -61,3 +60,4 @@ class AdvanceStatement(Document):
 			amount += pay.amount
 		
 		self.db_set('amount', amount, update_modified=False)
+		self.in_words = money_in_words(self.amount)
