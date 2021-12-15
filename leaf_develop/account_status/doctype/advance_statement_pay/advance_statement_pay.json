@@ -4,17 +4,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "detail",
   "amount",
   "type_pay"
  ],
  "fields": [
-  {
-   "fieldname": "detail",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Detail"
-  },
   {
    "fieldname": "amount",
    "fieldtype": "Currency",
@@ -30,7 +23,7 @@
   }
  ],
  "istable": 1,
- "modified": "2021-12-14 13:41:11.505622",
+ "modified": "2021-12-15 15:09:36.254288",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement Pay",
