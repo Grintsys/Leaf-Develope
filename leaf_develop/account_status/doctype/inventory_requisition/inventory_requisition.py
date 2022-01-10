@@ -9,6 +9,7 @@ from frappe.model.document import Document
 
 class InventoryRequisition(Document):
 	def validate(self):
+		self.validate_status_patient_statement()
 		if self.made_by == None:
 			self.made_by = frappe.session['user']
 
@@ -19,6 +20,12 @@ class InventoryRequisition(Document):
 			self.material_request()
 			self.add_products_account_status_payment()
 			self.state = "Closed"
+		
+	def validate_status_patient_statement(self):
+		patient = frappe.get_doc("Patient statement", self.patient_statement)
+
+		if patient.acc_sta == "Closed":
+			frappe.throw(_("Patient Statement closed."))
 	
 	def on_cancel(self):
 		self.delete_products_account_status_payment()
