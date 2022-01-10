@@ -10,6 +10,7 @@ from decimal import Decimal
 
 class Returnofinventoryrequisition(Document):
 	def validate(self):
+		self.validate_status_patient_statement()
 		self.status()
 
 	def status(self):
@@ -21,6 +22,12 @@ class Returnofinventoryrequisition(Document):
 	def on_cancel(self):
 		self.add_products_account_status_payment()
 		self.state = "Cancelled"
+
+	def validate_status_patient_statement(self):
+		patient = frappe.get_doc("Patient statement", self.patient_statement)
+
+		if patient.acc_sta == "Closed":
+			frappe.throw(_("Patient Statement closed."))
 
 	def apply_changes(self, total_price):		
 		doc = frappe.get_doc("Patient statement", self.patient_statement)
