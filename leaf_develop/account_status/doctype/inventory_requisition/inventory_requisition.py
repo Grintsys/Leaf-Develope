@@ -13,13 +13,20 @@ class InventoryRequisition(Document):
 		if self.made_by == None:
 			self.made_by = frappe.session['user']
 
-		self.status()
+		if self.docstatus == 1:
+			self.status()
+			self.change_status_material_request()
+
+	def change_status_material_request(self):
+		request = frappe.get_all("Material Request", ["name"], filters = {"reference_invenvtory": self.name})
+		material = frappe.get_doc("Material Request", request[0].name)
+		material.db_set('status', "Transferred", update_modified = False)
+		material.db_set('docstatus', 8, update_modified = False)
 
 	def status(self):
-		if self.docstatus == 1:
-			self.material_request()
-			self.add_products_account_status_payment()
-			self.state = "Closed"
+		self.material_request()
+		self.add_products_account_status_payment()
+		self.state = "Closed"
 		
 	def validate_status_patient_statement(self):
 		patient = frappe.get_doc("Patient statement", self.patient_statement)
@@ -58,6 +65,8 @@ class InventoryRequisition(Document):
 		doc.requested_by = self.patient_statement
 		doc.description = self.description
 		doc.docstatus = 1
+		doc.status = "Transferred"
+		doc.reference_invenvtory = self.name
 		for list_product in products:
 			row = doc.append("items", {
 				'item_code': list_product.item,
