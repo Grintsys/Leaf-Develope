@@ -89,6 +89,11 @@ def get_data():
 					"doctype": "Payment Of Honorarium",
                     "dependencies": ["Medical Honorarium"]
 				},
+				{
+					"type": "report",
+					"name": "Account Status Items",
+					"doctype": "Inventory Requisition"
+				},
                 {
 					"type": "report",
 					"is_query_report": True,
