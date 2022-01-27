@@ -27,6 +27,17 @@ def return_data(filters):
 		for item in items:
 			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Requisición de inventario", requisition.name, item.quantity]
 			data.append(row)
+		
+		condition_entry = return_filters_stock_entry(filters, from_date, to_date, requisition.name)
+
+		entries = frappe.get_all("Stock Entry", ["*"], filters = condition_entry)
+
+		for entry in entries:
+			items_entry = frappe.get_all("Stock Entry Detail", ["*"], filters = {"parent": entry.name})
+
+			for item_entry in items_entry:
+				row = [entry.posting_date, requisition.patient_statement, item_entry.item_code, item_entry.item_name, "Entrada de inventario", entry.name, item_entry.qty]
+				data.append(row)
 	
 	conditions = return_filters_inventory_requisiton(filters, from_date, to_date)
 
@@ -38,6 +49,7 @@ def return_data(filters):
 		for item in items:
 			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Retorno de requisición de inventario", requisition.name, item.quantity]
 			data.append(row)
+	
 
 	return data
 
@@ -47,6 +59,15 @@ def return_filters_inventory_requisiton(filters, from_date, to_date):
 	conditions += "{"
 	conditions += '"date_create": ["between", ["{}", "{}"]]'.format(from_date, to_date)
 	if filters.get("patient_statement"): conditions += ', "patient_statement": "{}"'.format(filters.get("patient_statement"))
+	conditions += '}'
+
+	return conditions
+
+def return_filters_stock_entry(filters, from_date, to_date, requisition):
+	conditions = ''	
+
+	conditions += "{"
+	conditions += '"inventory_requisition": "{}"'.format(requisition)
 	conditions += '}'
 
 	return conditions
