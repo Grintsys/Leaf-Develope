@@ -10,6 +10,7 @@
   "patient_name",
   "column1",
   "date_create",
+  "hour_create",
   "made_by",
   "medical",
   "section",
@@ -115,10 +116,15 @@
   {
    "fieldname": "section",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hour_create",
+   "fieldtype": "Time",
+   "label": "Hour Create"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-11-04 09:52:33.979415",
+ "modified": "2022-02-03 14:21:24.602327",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Inventory Requisition",

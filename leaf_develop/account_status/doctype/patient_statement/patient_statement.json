@@ -8,6 +8,7 @@
   "date",
   "client",
   "patient",
+  "file_number",
   "age",
   "company",
   "reason_for_sale",
@@ -129,10 +130,15 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "Patient DNI"
+  },
+  {
+   "fieldname": "file_number",
+   "fieldtype": "Data",
+   "label": "File Number"
   }
  ],
  "is_submittable": 1,
- "modified": "2021-12-06 13:03:05.551863",
+ "modified": "2022-02-03 14:18:49.380804",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient statement",
