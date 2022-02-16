@@ -91,8 +91,8 @@ def get_data():
 				},
 				{
 					"type": "report",
-					"name": "Account Status Items",
-					"doctype": "Inventory Requisition"
+					"is_query_report": True,
+					"name": "Account Status Items"
 				},
                 {
 					"type": "report",
