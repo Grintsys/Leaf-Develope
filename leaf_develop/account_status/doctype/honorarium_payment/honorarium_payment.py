@@ -20,7 +20,12 @@ class HonorariumPayment(Document):
 			self.calculate_honorarium()
 	
 	def calculate_honorarium(self):
+		validate = False
 		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
+		if doc.docstatus == 1:
+			validate = True
+			doc.db_set('docstatus', 0, update_modified = False)
+
 		if(self.total == self.honorarium_amount):
 			if(self.total_remaining == 0):
 				doc.status = "Paid Out"
@@ -34,7 +39,7 @@ class HonorariumPayment(Document):
 					doc.total_remaining -= self.total
 		doc.save()
 
-		self.data_table()
+		self.data_table(validate)
 	
 	def on_cancel(self):
 		self.status()
@@ -58,7 +63,7 @@ class HonorariumPayment(Document):
 			frappe.delete_doc("Honorarium Payment Detail", item.name)
 			
 
-	def data_table(self):
+	def data_table(self, validate):
 		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
 		row = doc.append("honorarium_payment", {
 			'series': self.name,
@@ -69,7 +74,11 @@ class HonorariumPayment(Document):
 			})
 		doc.save()
 
+		if validate:
+			doc.db_set('docstatus', 1, update_modified = False)
+
 	def verificate_status_honorarium(self):
 		doc = frappe.get_doc("Medical Honorarium", self.honorarium)
+
 		if(doc.status == "Paid Out"):
 			frappe.throw(_("There is no remaining balance for the honorarium {}".format(self.honorarium)))
