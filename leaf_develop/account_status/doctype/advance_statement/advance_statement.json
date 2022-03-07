@@ -29,7 +29,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Date Create",
-   "read_only": 1
+   "reqd": 1
   },
   {
    "fieldname": "amount",
@@ -141,7 +141,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2021-12-14 13:48:03.223732",
+ "modified": "2022-03-07 16:43:13.281878",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement",
