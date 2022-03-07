@@ -18,8 +18,8 @@ class AdvanceStatement(Document):
 	def on_update(self):
 		self.calculate_amount()
 	
-	def before_naming(self):
-		self.date_create = datetime.today()
+	# def before_naming(self):
+	# 	self.date_create = datetime.today()
 
 	def status(self):
 		if self.docstatus == 1:
