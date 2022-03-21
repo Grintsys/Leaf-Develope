@@ -7,7 +7,48 @@ from frappe import _
 
 def execute(filters=None):
 	if not filters: filters = {}
-	columns= [_("Date") + "::240", _("Patient Statement") + "::240", _("Item Code") + "::240", _("Item Name") + "::240", _("Type Transaction") + "::240", _("No Ttransaction") + "::240", _("Qty") + "::240"]
+	columns = [
+		{
+			"label": _("Posting Date"),
+			"fieldname": "posting_date",
+			"fieldtype": "Date",
+			"width": 240
+		},
+		{
+			"label": _("Patient Statement"),
+			"fieldname": "patient_statement",
+			"width": 240
+		},
+		{
+			"label": _("Item Code"),
+			"fieldname": "item_code",
+			"fieldtype": "Link",
+			"options": "Item",
+			"width": 240
+		},
+		{
+			"label": _("Item Name"),
+			"fieldname": "item_name",
+			"width": 240
+		},
+		{
+			"label": _("Type Transaction"),
+			"fieldname": "voucher_type",
+			"width": 240
+		},
+		{
+			"label": _("No Transaction"),
+			"fieldname": "voucher_no",
+			"fieldtype": "Dynamic Link",
+			"options": "voucher_type",
+			"width": 240
+		},
+		{
+			"label": _("Qty"),
+			"fieldname": "qty",
+			"width": 120
+		}
+	]
 	data = return_data(filters)
 	return columns, data
 
@@ -25,7 +66,7 @@ def return_data(filters):
 		items = frappe.get_all("Inventory Item", ["*"], filters = {"parent": requisition.name})
 
 		for item in items:
-			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Requisición de inventario", requisition.name, item.quantity]
+			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Inventory Requisition", requisition.name, item.quantity]
 			data.append(row)
 		
 		condition_entry = return_filters_stock_entry(filters, from_date, to_date, requisition.name)
@@ -36,7 +77,7 @@ def return_data(filters):
 			items_entry = frappe.get_all("Stock Entry Detail", ["*"], filters = {"parent": entry.name})
 
 			for item_entry in items_entry:
-				row = [entry.posting_date, requisition.patient_statement, item_entry.item_code, item_entry.item_name, "Entrada de inventario", entry.name, item_entry.qty]
+				row = [entry.posting_date, requisition.patient_statement, item_entry.item_code, item_entry.item_name, "Stock Entry", entry.name, item_entry.qty]
 				data.append(row)
 	
 	conditions = return_filters_inventory_requisiton(filters, from_date, to_date)
@@ -47,7 +88,7 @@ def return_data(filters):
 		items = frappe.get_all("Inventory Item Return", ["*"], filters = {"parent": requisition.name})
 
 		for item in items:
-			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Retorno de requisición de inventario", requisition.name, item.quantity]
+			row = [requisition.date_create, requisition.patient_statement, item.item, item.product_name, "Return of inventory requisition", requisition.name, item.quantity]
 			data.append(row)
 	
 
