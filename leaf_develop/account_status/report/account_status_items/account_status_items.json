@@ -7,7 +7,7 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2022-01-26 13:22:26.372527",
+ "modified": "2022-05-25 10:54:04.971793",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Account Status Items",
@@ -19,6 +19,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Reportes Cuentas Hospitalarias"
   }
  ]
 }

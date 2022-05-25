@@ -55,7 +55,7 @@ class CAI(Document):
 			new_current = int(self.initial_number) - 1
 			name = self.parse_naming_series(self.prefix)
 
-			frappe.db.set_value("Series", name, "current", new_current, update_modified=False)
+			# frappe.db.set_value("Series", name, "current", new_current, update_modified=False)
 	
 	def parse_naming_series(self, prefix):
 		parts = prefix.split('.')
