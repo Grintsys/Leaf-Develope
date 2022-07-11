@@ -58,11 +58,12 @@ class HospitalExpenses(Document):
 			doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 			doc_product.quantity = quantity
 			doc_product.net_pay = price
-			doc_product.sale_amount = price					
+			doc_product.sale_amount = price
+			doc_product.no_order = 1			
 			doc_product.save()
 		else:
 			price = self.total_amount
-			doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)					
+			doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
 			row = doc.append("products_table", {})
 			row.item = self.service
 			row.item_name = self.product_name
@@ -71,6 +72,7 @@ class HospitalExpenses(Document):
 			row.net_pay = price
 			row.sale_amount = price
 			row.reference = self.name
+			row.no_order = 1
 			doc.save()
 				
 		self.apply_changes()
