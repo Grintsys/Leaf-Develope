@@ -58,7 +58,8 @@ class LaboratoryExpenses(Document):
 			doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 			doc_product.quantity = quantity
 			doc_product.net_pay = price
-			doc_product.sale_amount = price					
+			doc_product.sale_amount = price		
+			doc_product.no_order = 3			
 			doc_product.save()
 		else:
 			price = self.total_amount
@@ -71,6 +72,7 @@ class LaboratoryExpenses(Document):
 			row.net_pay = price
 			row.sale_amount = price
 			row.reference = self.name
+			row.no_order = 3
 			doc.save()
 				
 		self.apply_changes()
