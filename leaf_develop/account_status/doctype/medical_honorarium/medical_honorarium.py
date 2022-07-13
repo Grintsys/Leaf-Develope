@@ -119,6 +119,7 @@ class MedicalHonorarium(Document):
 				doc.price = price
 				doc.net_pay = price
 				doc.sale_amount = self.bank_check
+				doc.no_order = 4
 				doc.save()
 
 				total_price = price - price_ver
@@ -145,6 +146,7 @@ class MedicalHonorarium(Document):
 					row.net_pay = price
 					row.sale_amount = self.bank_check
 					row.reference = self.name
+					row.no_order = 4
 					doc.total += price
 					doc.save()
 

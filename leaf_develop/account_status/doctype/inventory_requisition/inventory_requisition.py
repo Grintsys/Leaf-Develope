@@ -126,7 +126,8 @@ class InventoryRequisition(Document):
 					doc_product = frappe.get_doc("Account Statement Payment Item", product_verified[0].name)
 					doc_product.quantity += item.quantity
 					doc_product.net_pay += price
-					doc_product.sale_amount += price					
+					doc_product.sale_amount += price	
+					doc_product.no_order = 2				
 					doc_product.save()
 
 					doc = frappe.get_doc("Account Statement Payment", account_payment[0].name)
@@ -143,6 +144,7 @@ class InventoryRequisition(Document):
 					row.net_pay = price
 					row.sale_amount = price
 					row.reference = self.name
+					row.no_order = 2
 					doc.total += price
 					doc.save()
 			
