@@ -1,0 +1,159 @@
+{
+ "autoname": "LAB-IMA-.YYYY.-.#####",
+ "creation": "2022-07-14 18:49:08.961744",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "patient_statement",
+  "patient",
+  "patient_name",
+  "column1",
+  "date_create",
+  "hour_create",
+  "made_by",
+  "medical",
+  "section",
+  "products",
+  "reference",
+  "state",
+  "description",
+  "company",
+  "amended_from",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "patient_statement",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Patient Statement",
+   "options": "Patient statement",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "patient_statement.patient",
+   "fieldname": "patient",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Patient",
+   "options": "Patient",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient.patient_name",
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_create",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date Create",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hour_create",
+   "fieldtype": "Time",
+   "label": "Hour Create"
+  },
+  {
+   "fieldname": "made_by",
+   "fieldtype": "Data",
+   "label": "Made by",
+   "read_only": 1
+  },
+  {
+   "fieldname": "medical",
+   "fieldtype": "Data",
+   "label": "Medical",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "products",
+   "fieldtype": "Table",
+   "label": "Products",
+   "options": "Inventory Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Reference",
+   "options": "Requisition Reference",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Select",
+   "label": "State",
+   "options": "Open\nClosed\nCanceled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Long Text",
+   "label": "Description"
+  },
+  {
+   "fetch_from": "patient_statement.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Hospital Outgoings",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Laboratory And Image",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 1,
+ "modified": "2022-07-14 18:49:08.961744",
+ "modified_by": "Administrator",
+ "module": "Account status",
+ "name": "Laboratory And Image",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

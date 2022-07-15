@@ -31,21 +31,21 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Hospital Outgoings",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
+					"name": "Laboratory And Image",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
 					"name": "Return of inventory requisition",
 					"onboard": 1,
 					"dependencies": ["Inventory Requisition"]
-				},
-				{
-					"type": "doctype",
-					"name": "Hospital Expenses",
-					"onboard": 1,
-					"dependencies": ["Patient statement"]
-				},
-				{
-					"type": "doctype",
-					"name": "Laboratory Expenses",
-					"onboard": 1,
-					"dependencies": ["Patient statement"]
 				},
                 {
                     "type": "doctype",
@@ -129,5 +129,22 @@ def get_data():
 					"doctype": "Advance Statement",
 				}
             ]
-        }
+        },
+        {
+            "label": _("Old Doctypes"),
+            "items": [
+				{
+					"type": "doctype",
+					"name": "Hospital Expenses",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				},
+				{
+					"type": "doctype",
+					"name": "Laboratory Expenses",
+					"onboard": 1,
+					"dependencies": ["Patient statement"]
+				}
+            ]
+        },
     ]
