@@ -16,7 +16,7 @@ frappe.ui.form.on('Laboratory And Image', {
 	setup: function(frm) {
 		frm.set_query("item", "products", function(doc, cdt, cdn) {
 			return {
-				filters:{"default_company": doc.company, "category_for_sale": "Estudio laboratorio e imagen"}
+				filters:{"default_company": doc.company, "category_for_sale": "Estudios de laboratorio e imagen"}
 			};
 		});
     },
