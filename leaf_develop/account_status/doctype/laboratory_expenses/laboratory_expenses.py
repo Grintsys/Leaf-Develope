@@ -9,6 +9,10 @@ from frappe.model.document import Document
 from datetime import datetime
 
 class LaboratoryExpenses(Document):
+	def validate(self):
+		if self.docstatus == 0:
+			frappe.throw(_("This doctype can't save, only can validate."))
+			
 	def on_update(self):
 		self.calculate_total()
 		self.add_products_account_status_payment()
