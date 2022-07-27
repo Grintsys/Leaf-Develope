@@ -132,6 +132,11 @@ def get_data():
 					"is_query_report": True,
 					"name": "Advance Statement For Hours",
 					"doctype": "Advance Statement",
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Daily Account Statement"
 				}
             ]
         },
