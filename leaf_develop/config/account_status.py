@@ -43,9 +43,14 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Return of inventory requisition",
+					"name": "",
 					"onboard": 1,
 					"dependencies": ["Inventory Requisition"]
+				},
+				{
+					"type": "doctype",
+					"name": "Return Laboratory And Hospital Expenses",
+					"onboard": 1
 				},
                 {
                     "type": "doctype",

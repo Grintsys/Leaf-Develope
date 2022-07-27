@@ -10,7 +10,6 @@
   "patient_name",
   "column1",
   "date_create",
-  "hour_create",
   "made_by",
   "section",
   "products",
@@ -50,15 +49,10 @@
   },
   {
    "fieldname": "date_create",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Date Create",
    "reqd": 1
-  },
-  {
-   "fieldname": "hour_create",
-   "fieldtype": "Time",
-   "label": "Hour Create"
   },
   {
    "fieldname": "made_by",
@@ -117,7 +111,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2022-07-22 14:27:49.876940",
+ "modified": "2022-07-27 14:17:29.721035",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Outgoings",
