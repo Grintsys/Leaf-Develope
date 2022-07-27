@@ -43,9 +43,14 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Return of inventory requisition",
+					"name": "",
 					"onboard": 1,
 					"dependencies": ["Inventory Requisition"]
+				},
+				{
+					"type": "doctype",
+					"name": "Return Laboratory And Hospital Expenses",
+					"onboard": 1
 				},
                 {
                     "type": "doctype",
@@ -127,6 +132,11 @@ def get_data():
 					"is_query_report": True,
 					"name": "Advance Statement For Hours",
 					"doctype": "Advance Statement",
+				},
+				{
+					"type": "report",
+					"is_query_report": True,
+					"name": "Daily Account Statement"
 				}
             ]
         },

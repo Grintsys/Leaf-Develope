@@ -1,6 +1,6 @@
 {
- "autoname": "LAB-IMA-.YYYY.-.#####",
- "creation": "2022-07-14 18:49:08.961744",
+ "autoname": "RET-EXP-.YYYY.-.#####",
+ "creation": "2022-07-27 13:31:30.832117",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -8,14 +8,13 @@
   "patient_statement",
   "patient",
   "patient_name",
-  "column1",
+  "column",
   "date_create",
-  "made_by",
+  "return_type",
   "section",
   "products",
   "state",
   "description",
-  "company",
   "amended_from"
  ],
  "fields": [
@@ -33,32 +32,24 @@
    "fieldtype": "Link",
    "hidden": 1,
    "label": "Patient",
-   "options": "Patient",
-   "read_only": 1
+   "options": "Patient"
   },
   {
    "fetch_from": "patient.patient_name",
    "fieldname": "patient_name",
    "fieldtype": "Data",
-   "label": "Patient Name",
-   "read_only": 1
+   "label": "Patient Name"
   },
   {
-   "fieldname": "column1",
+   "fieldname": "column",
    "fieldtype": "Column Break"
   },
   {
    "fieldname": "date_create",
-   "fieldtype": "Datetime",
+   "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Date Create",
    "reqd": 1
-  },
-  {
-   "fieldname": "made_by",
-   "fieldtype": "Data",
-   "label": "Made by",
-   "read_only": 1
   },
   {
    "fieldname": "section",
@@ -68,7 +59,7 @@
    "fieldname": "products",
    "fieldtype": "Table",
    "label": "Products",
-   "options": "Inventory Item",
+   "options": "Inventory Item Return",
    "reqd": 1
   },
   {
@@ -84,19 +75,11 @@
    "label": "Description"
   },
   {
-   "fetch_from": "patient_statement.company",
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Company",
-   "options": "Company"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Laboratory And Image",
+   "options": "Return Laboratory And Hospital Expenses",
    "print_hide": 1,
    "read_only": 1
   },
@@ -105,16 +88,23 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Laboratory And Image",
+   "options": "Return Laboratory And Hospital Expenses",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "return_type",
+   "fieldtype": "Select",
+   "label": "Return Type",
+   "options": "Hospital Outgoing\nLaboratory And Image",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2022-07-27 14:20:20.725163",
+ "modified": "2022-07-27 13:55:41.653319",
  "modified_by": "Administrator",
  "module": "Account status",
- "name": "Laboratory And Image",
+ "name": "Return Laboratory And Hospital Expenses",
  "owner": "Administrator",
  "permissions": [
   {
