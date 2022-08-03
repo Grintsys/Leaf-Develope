@@ -8,7 +8,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letter_head": "H&C Ferrari",
- "modified": "2021-11-03 15:08:40.716243",
+ "modified": "2022-08-03 13:33:52.719812",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Payment Of Honorarium",
@@ -23,6 +23,9 @@
   },
   {
    "role": "Crear cuenta de Paciente Hospitalizado"
+  },
+  {
+   "role": "Reportes Cuentas Hospitalarias"
   }
  ]
 }
