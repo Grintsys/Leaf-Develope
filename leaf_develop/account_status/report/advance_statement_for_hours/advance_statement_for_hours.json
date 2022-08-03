@@ -7,7 +7,7 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2021-11-16 13:52:42.875631",
+ "modified": "2022-08-03 13:36:49.978975",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Advance Statement For Hours",
@@ -19,6 +19,9 @@
  "roles": [
   {
    "role": "System Manager"
+  },
+  {
+   "role": "Reportes Cuentas Hospitalarias"
   }
  ]
 }

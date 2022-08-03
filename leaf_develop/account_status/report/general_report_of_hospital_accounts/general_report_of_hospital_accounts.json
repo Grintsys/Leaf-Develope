@@ -7,7 +7,7 @@
  "doctype": "Report",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2021-11-05 11:53:55.024130",
+ "modified": "2022-08-03 13:35:53.876890",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "General report of hospital accounts",
@@ -22,6 +22,9 @@
   },
   {
    "role": "Crear cuenta de Paciente Hospitalizado"
+  },
+  {
+   "role": "Reportes Cuentas Hospitalarias"
   }
  ]
 }
