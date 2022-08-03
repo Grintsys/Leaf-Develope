@@ -134,8 +134,7 @@ def get_data():
 					"doctype": "Advance Statement",
 				},
 				{
-					"type": "report",
-					"is_query_report": True,
+					"type": "doctype",
 					"name": "Daily Account Statement"
 				}
             ]
