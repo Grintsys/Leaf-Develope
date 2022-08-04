@@ -15,6 +15,12 @@ frappe.ui.form.on('Return Laboratory And Hospital Expenses', {
 
 	setup: function(frm) {
 		frm.set_query("item", "products", function(doc, cdt, cdn) {
+			if (doc.return_type === "Procedures"){
+				return {
+					filters:{"default_company": doc.company, "category_for_sale": "Procedimientos"}
+				};
+			}	
+
 			if (doc.return_type === "Hospital Outgoing"){
 				return {
 					filters:{"default_company": doc.company, "category_for_sale": "Gastos Hospitalarios"}
