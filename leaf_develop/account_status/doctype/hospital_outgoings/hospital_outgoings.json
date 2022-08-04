@@ -10,6 +10,7 @@
   "patient_name",
   "column1",
   "date_create",
+  "type",
   "made_by",
   "section",
   "products",
@@ -108,10 +109,17 @@
    "options": "Hospital Outgoings",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "Hospital Outgoing\nProcedures",
+   "reqd": 1
   }
  ],
  "is_submittable": 1,
- "modified": "2022-07-27 14:17:29.721035",
+ "modified": "2022-08-04 15:59:10.233853",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Outgoings",
