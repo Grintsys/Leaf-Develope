@@ -15,9 +15,17 @@ frappe.ui.form.on('Hospital Outgoings', {
 
 	setup: function(frm) {
 		frm.set_query("item", "products", function(doc, cdt, cdn) {
-			return {
-				filters:{"default_company": doc.company, "category_for_sale": "Gastos Hospitalarios"}
-			};
+			if (doc.type === "Procedures"){
+				return {
+					filters:{"default_company": doc.company, "category_for_sale": "Procedimientos"}
+				};
+			}	
+
+			if (doc.type === "Hospital Outgoing"){
+				return {
+					filters:{"default_company": doc.company, "category_for_sale": "Gastos Hospitalarios"}
+				};
+			}
 		});
     },
 });
