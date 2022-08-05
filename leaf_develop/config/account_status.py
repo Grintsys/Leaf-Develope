@@ -31,6 +31,12 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Return of inventory requisition",
+					"onboard": 1,
+					"dependencies": ["Inventory Requisition"]
+				},
+				{
+					"type": "doctype",
 					"name": "Hospital Outgoings",
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
@@ -40,12 +46,6 @@ def get_data():
 					"name": "Laboratory And Image",
 					"onboard": 1,
 					"dependencies": ["Patient statement"]
-				},
-				{
-					"type": "doctype",
-					"name": "",
-					"onboard": 1,
-					"dependencies": ["Inventory Requisition"]
 				},
 				{
 					"type": "doctype",
