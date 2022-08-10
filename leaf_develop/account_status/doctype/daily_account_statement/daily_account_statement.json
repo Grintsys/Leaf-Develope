@@ -9,9 +9,14 @@
   "to_date",
   "colum1",
   "patient_statement",
+  "customer",
+  "patient_name",
+  "age",
+  "acc_sta",
   "created_by",
   "section1",
-  "detail_table"
+  "detail_table",
+  "total_amount"
  ],
  "fields": [
   {
@@ -62,9 +67,44 @@
    "in_standard_filter": 1,
    "label": "Created by",
    "read_only": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient_statement.client",
+   "fieldname": "customer",
+   "fieldtype": "Link",
+   "label": "Customer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient_statement.patient_name",
+   "fieldname": "patient_name",
+   "fieldtype": "Data",
+   "label": "Patient Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "patient_statement.age",
+   "fieldname": "age",
+   "fieldtype": "Data",
+   "label": "Age",
+   "read_only": 1
+  },
+  {
+   "fieldname": "acc_sta",
+   "fieldtype": "Link",
+   "label": "Account Statement",
+   "options": "Account Statement Payment",
+   "read_only": 1
   }
  ],
- "modified": "2022-07-28 14:42:50.933446",
+ "modified": "2022-08-10 11:15:50.860678",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Daily Account Statement",

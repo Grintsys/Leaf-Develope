@@ -17,7 +17,7 @@ class DailyAccountStatement(Document):
 	def return_data(self):
 		self.delete_rows()
 		conditions = self.return_filters(self.from_date, self.to_date)
-
+		total = 0
 		results = frappe.get_all("Inventory Requisition", ["*"], filters = conditions)
 
 		for result in results:
@@ -27,6 +27,7 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
 					self.set_new_row_item(result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					total += item.quantity * price[0].price
 
 		results = frappe.get_all("Hospital Outgoings", ["*"], filters = conditions)
 
@@ -37,6 +38,7 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
 					self.set_new_row_item(result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					total += item.quantity * price[0].price
 
 		results = frappe.get_all("Laboratory And Image", ["*"], filters = conditions)
 
@@ -47,6 +49,7 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
 					self.set_new_row_item(result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					total += item.quantity * price[0].price
 		
 		conditions = self.return_filters_medical_honorarium()
 		
@@ -60,6 +63,13 @@ class DailyAccountStatement(Document):
 					medical = frappe.get_doc("Medical", honorarium.medical)
 					itemValues = frappe.get_doc("Item", medical.service)
 					self.set_new_row_item(item.date, "Medical Honorarium", honorarium.name, medical.service, itemValues.item_name, 1, item.amount)
+					total += item.amount
+		
+		self.total_amount = total
+
+		acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+
+		self.acc_sta = acc_sta[0].name
 	
 	def delete_rows(self):
 		for row in self.get("detail_table"):
@@ -74,6 +84,7 @@ class DailyAccountStatement(Document):
 		row.item_name = item_name
 		row.qty = qty
 		row.amount = amount
+		row.total = qty * amount
 
 	def verificate_hours(self, date):
 		is_valid = False
