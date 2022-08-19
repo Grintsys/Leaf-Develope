@@ -95,16 +95,52 @@ def execute(filters=None):
 		for exp_hos in expenses_hospital_list:
 			total_expenses_hospital += exp_hos.total_amount
 
-		expenses_hospital += [{'indent': 1.0, "movement": "Gastos Hospitalarios", "quantity": len(expenses_hospital_list),"total": total_expenses_hospital}]
-		arr_values.append([len(expenses_hospital_list), total_expenses_hospital])
+		hospital_outgoings = frappe.get_all("Hospital Outgoings", ["name"], filters = {"patient_statement": patient.name, "docstatus": 1})
+
+		for req in hospital_outgoings:
+			inventory_items = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": req.name})
+
+			for item in inventory_items:
+				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": patient.name})
+
+				price_acc_products = frappe.get_all("Account Statement Payment Item", ["price"], filters = {"parent": acc_sta[0].name, "item": item.item})
+
+				if len(price_acc_products) > 0:
+					total_expenses_hospital += item.quantity * price_acc_products[0].price
+				else:
+					price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})
+					total_expenses_hospital += item.quantity * price[0].price_list_rate
+
+		len_total_he = len(expenses_hospital_list) + len(hospital_outgoings)
+
+		expenses_hospital += [{'indent': 1.0, "movement": "Gastos Hospitalarios", "quantity": len_total_he,"total": total_expenses_hospital}]
+		arr_values.append([len_total_he, total_expenses_hospital])
 
 		expenses_laboratory_list = frappe.get_all("Laboratory Expenses", ["name", "total_amount"], filters = {"patient_statement": patient.name, "docstatus": ["in", ["0", "1"]]})
 
 		for exp_lab in expenses_laboratory_list:
 			total_expenses_laboratory += exp_lab.total_amount
+		
+		lab_img = frappe.get_all("Hospital Outgoings", ["name"], filters = {"patient_statement": patient.name, "docstatus": 1})
 
-		expenses_laboratory += [{'indent': 1.0, "movement": "Gastos de laboratorio", "quantity": len(expenses_laboratory_list),"total": total_expenses_laboratory}]
-		arr_values.append([len(expenses_laboratory_list), total_expenses_laboratory])
+		for req in lab_img:
+			inventory_items = frappe.get_all("Inventory Item", ["item", "product_name", "quantity"], filters = {"parent": req.name})
+
+			for item in inventory_items:
+				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": patient.name})
+
+				price_acc_products = frappe.get_all("Account Statement Payment Item", ["price"], filters = {"parent": acc_sta[0].name, "item": item.item})
+
+				if len(price_acc_products) > 0:
+					total_expenses_laboratory += item.quantity * price_acc_products[0].price
+				else:
+					price = frappe.get_all("Item Price", ["price_list_rate"], filters = {"item_code": item.item})
+					total_expenses_laboratory += item.quantity * price[0].price_list_rate
+
+		len_total_lab = len(expenses_laboratory_list) + len(lab_img)
+
+		expenses_laboratory += [{'indent': 1.0, "movement": "Gastos de laboratorio", "quantity": len_total_lab,"total": total_expenses_laboratory}]
+		arr_values.append([len_total_lab, total_expenses_laboratory])
 
 		honorariums = frappe.get_all("Medical Honorarium", ["total"], filters = {"patient_statement": patient.name})
 
