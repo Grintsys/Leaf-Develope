@@ -84,6 +84,19 @@ def execute(filters=None):
 		req_data += [{'indent': 1.0, "movement_type": gasto.name, "date": gasto.creation_date, "item": gasto.product_name, "quantity": len(gastos_detail)}]
 		arr_gastos += [gasto.creation_date]
 	
+	hospital_outgoings = frappe.get_all("Hospital Outgoings", ["name", "date_create"], filters = conditions, order_by = "date_create asc")
+
+	for requisition in hospital_outgoings:
+		if str(requisition.date_create) >= str(filters.get("from_date")) and str(requisition.date_create) <= str(filters.get("to_date")):
+			# req_data += [{'indent': 1.0, "movement_type": requisition.name, "date": requisition.date_create}]
+			arr_requisition += [requisition.date_create]
+			
+			inventory_items = frappe.get_all("Inventory Item", ["product_name", "quantity"], filters = {"parent": requisition.name})
+
+			for inventory_item in inventory_items:
+				req_data += [{'indent': 1.0, "movement_type": requisition.name, "date": requisition.date_create, "item":inventory_item.product_name, "quantity": inventory_item.quantity}]
+				arr_gastos += [requisition.date_create]
+	
 	req_data += [{}]
 
 	req_data += [{'indent': 0.0, "movement_type": "Gastos de laboratorio"}]	
@@ -95,6 +108,19 @@ def execute(filters=None):
 	for laboratory in laboratories:
 		req_data += [{'indent': 1.0, "movement_type": laboratory.name, "date": laboratory.creation_date, "item": laboratory.product_name, "quantity": 1}]
 		arr_laboratory += [laboratory.creation_date]
+	
+	lab_img = frappe.get_all("Laboratory And Image", ["name", "date_create"], filters = conditions, order_by = "date_create asc")
+
+	for requisition in lab_img:
+		if str(requisition.date_create) >= str(filters.get("from_date")) and str(requisition.date_create) <= str(filters.get("to_date")):
+			# req_data += [{'indent': 1.0, "movement_type": requisition.name, "date": requisition.date_create}]
+			arr_requisition += [requisition.date_create]
+			
+			inventory_items = frappe.get_all("Inventory Item", ["product_name", "quantity"], filters = {"parent": requisition.name})
+
+			for inventory_item in inventory_items:
+				req_data += [{'indent': 1.0, "movement_type": requisition.name, "date": requisition.date_create, "item":inventory_item.product_name, "quantity": inventory_item.quantity}]
+				arr_laboratory += [requisition.date_create]
 
 	req_data += [{}]
 
