@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from frappe import _
 
 class DailyAccountStatement(Document):
 	def validate(self):
@@ -25,7 +26,9 @@ class DailyAccountStatement(Document):
 				items = frappe.get_all("Inventory Item", ["*"], filters = {"parent": result.name})
 				for item in items:
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
+					self.verificate_price(price, item.item)
 					self.set_new_row_item(result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
 					total += item.quantity * price[0].price
 
@@ -36,7 +39,9 @@ class DailyAccountStatement(Document):
 				items = frappe.get_all("Inventory Item", ["*"], filters = {"parent": result.name})
 				for item in items:
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
+					self.verificate_price(price, item.item)
 					self.set_new_row_item(result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, price[0].price)
 					total += item.quantity * price[0].price
 
@@ -47,7 +52,9 @@ class DailyAccountStatement(Document):
 				items = frappe.get_all("Inventory Item", ["*"], filters = {"parent": result.name})
 				for item in items:
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
+					self.verificate_price(price, item.item)
 					self.set_new_row_item(result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, price[0].price)
 					total += item.quantity * price[0].price
 		
@@ -69,11 +76,21 @@ class DailyAccountStatement(Document):
 
 		acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 
+		self.verificate_acc_sta(acc_sta)
+
 		self.acc_sta = acc_sta[0].name
 	
 	def delete_rows(self):
 		for row in self.get("detail_table"):
 			frappe.delete_doc("Daily Account Statement Detail", row.name)
+
+	def verificate_acc_sta(self, acc_sta):
+		if len(acc_sta) == 0:
+			frappe.throw(_("This patient no have a Account Statement Payment"))
+	
+	def verificate_price(self, price, item):
+		if len(price) == 0:
+			frappe.throw(_("The item {} no have an price.".format(item)))
 
 	def set_new_row_item(self, date, voucher_type, voucher_no, item, item_name, qty, amount):
 		row = self.append("detail_table", {})
