@@ -82,7 +82,7 @@ class Patientstatement(Document):
 
 		payment = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.name})
 		
-		items = frappe.get_all("Account Statement Payment Item", ["item", "item_name", "quantity", "price", "net_pay", "sale_amount"], filters = {"parent": payment[0].name})
+		items = frappe.get_all("Account Statement Payment Item Detail", ["item", "item_name", "quantity", "price", "net_pay", "sale_amount"], filters = {"parent": payment[0].name})
 
 		for item in items:
 			row = doc.append("items", {})
