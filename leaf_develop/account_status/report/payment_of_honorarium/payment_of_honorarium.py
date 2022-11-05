@@ -8,14 +8,50 @@ from frappe import _
 
 def execute(filters=None):
 	if not filters: filters = {}
+
 	columns = [
-		_("Patient Statement") + "::180", _("Medical") + "::200", _("Honorarium") + "::180", _("Status") + "::119",
-		_("Total") + ":Currency:140",  _("Total Payment") + ":Currency:140", _("Total Remaining") + ":Currency:140"
+		{
+   			"fieldname": "patient_statement",
+  			"fieldtype": "Data",
+  			"label": "Patient Statement",
+  		},
+		{
+			"fieldname": "medical",
+   			"fieldtype": "Data",
+   			"label": "Medical"
+		},
+		{
+   			"fieldname": "medical_honorarium",
+  			"fieldtype": "Link",
+  			"label": "Honorarium",
+			"options": "Medical Honorarium"
+  		},
+		{
+			"fieldname": "status",
+   			"fieldtype": "Data",
+   			"label": "Status"
+		},
+		{
+			"fieldname": "total",
+   			"fieldtype": "Currency",
+   			"label": "Price"
+		},
+		{
+			"fieldname": "total_payment",
+   			"fieldtype": "Currency",
+   			"label": "Total Payment"
+		},
+		{
+			"fieldname": "total_remaining",
+   			"fieldtype": "Currency",
+   			"label": "Total Remaining"
+		}
 	]
-
+	
 	data = []
-
-	conditions = return_filters(filters)
+	if filters.get("from_date"): from_date = filters.get("from_date")
+	if filters.get("to_date"): to_date = filters.get("to_date")
+	conditions = return_filters(filters, from_date, to_date)
 
 	honorarium = frappe.get_all("Medical Honorarium", ["name", "name_medical", "patient_statement", "total", "total_remaining", "status", "total_payment"], filters = conditions)
 
@@ -25,12 +61,12 @@ def execute(filters=None):
 	
 	return columns, data
 
-def return_filters(filters):
+def return_filters(filters, from_date, to_date):
 	conditions = ''
 
 	conditions += "{"
-	if filters.get("from_date") and filters.get("to_date"): conditions += '"date": [">=", "{}"], "modified": ["<=", "{}"], '.format(filters.get("from_date"), filters.get("to_date"))
-	if filters.get("medical"): conditions += '"medical": "{}"'.format(filters.get("medical"))
+	conditions += '"date": ["between", ["{}", "{}"]]'.format(from_date, to_date)
+	if filters.get("medical"): conditions += ', "medical": "{}"'.format(filters.get("medical"))
 	if filters.get("patient_statement"): conditions += ', "patient_statement": "{}"'.format(filters.get("patient_statement"))
 	if filters.get("status") != "All":
 		if filters.get("status"): conditions += ', "status": "{}"'.format(filters.get("status"))
