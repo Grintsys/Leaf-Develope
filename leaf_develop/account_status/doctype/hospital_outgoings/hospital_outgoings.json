@@ -16,8 +16,7 @@
   "products",
   "state",
   "description",
-  "company",
-  "amended_from"
+  "company"
  ],
  "fields": [
   {
@@ -80,15 +79,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Hospital Outgoings",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "description",
    "fieldtype": "Long Text",
    "label": "Description"
@@ -102,15 +92,6 @@
    "options": "Company"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Hospital Outgoings",
-   "print_hide": 1,
-   "read_only": 1
-  },
-  {
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Category",
@@ -119,7 +100,7 @@
   }
  ],
  "is_submittable": 1,
- "modified": "2022-08-04 15:59:10.233853",
+ "modified": "2023-01-17 15:51:29.635830",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Hospital Outgoings",
