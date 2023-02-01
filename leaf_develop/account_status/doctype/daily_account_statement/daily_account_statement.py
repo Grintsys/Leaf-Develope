@@ -72,6 +72,31 @@ class DailyAccountStatement(Document):
 					self.set_new_row_item(item.date, "Medical Honorarium", honorarium.name, medical.service, itemValues.item_name, 1, item.amount)
 					total += item.amount
 		
+		conditions = self.return_filters(self.from_date, self.to_date)
+		retrun_inventory = frappe.get_all("Return of inventory requisition", ["*"], filters = conditions)
+
+		for result in retrun_inventory:
+			items = frappe.get_all("Inventory Item Return", ["*"], filters = {"parent": result.name})
+			for item in items:
+				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+				self.verificate_acc_sta(acc_sta)
+				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
+				self.verificate_price(price, item.item)
+				self.set_new_row_item(result.date_create, "Return Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				total += item.quantity * price[0].price
+		
+		return_laboratiry = frappe.get_all("Return Laboratory And Hospital Expenses", ["*"], filters = conditions)
+
+		for result in return_laboratiry:
+			items = frappe.get_all("Inventory Item Return", ["*"], filters = {"parent": result.name})
+			for item in items:
+				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
+				self.verificate_acc_sta(acc_sta)
+				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
+				self.verificate_price(price, item.item)
+				self.set_new_row_item(result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				total += item.quantity * price[0].price
+		
 		self.total_amount = total
 
 		acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
