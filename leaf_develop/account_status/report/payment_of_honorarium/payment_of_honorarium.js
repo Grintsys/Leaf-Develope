@@ -9,7 +9,6 @@ frappe.query_reports["Payment Of Honorarium"] = {
 			label: __("Medical"),
 			fieldtype: "Link",
 			options: "Medical",
-			reqd: 1,
 			get_query: () => {
 				return {
 					filters: {
