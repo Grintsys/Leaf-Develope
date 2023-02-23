@@ -75,8 +75,8 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice :price[0].price
-					
+					totalPrice = price[0].price
+
 				row = [result.date_create, _("Inventory Requisition"), result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
 
@@ -92,7 +92,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice :price[0].price
+					totalPrice = price[0].price
 
 				row = [result.date_create, _("Hospital Outgoings"), result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -109,7 +109,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice :price[0].price
+					totalPrice = price[0].price
 									
 				row = [result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -142,7 +142,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice :price[0].price * -1
+					totalPrice = price[0].price * -1
 
 				row = [result.date_create, _("Return of inventory requisition"), result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -159,7 +159,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice :price[0].price * -1
+					totalPrice = price[0].price * -1
 
 				row = [result.date_create, _("Return Laboratory And Hospital Expenses"), result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
