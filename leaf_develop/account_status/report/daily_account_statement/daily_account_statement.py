@@ -71,7 +71,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Inventory Requisition"), result.name, item.item, item.product_name, item.quantity, price[0].price]
+				row = [result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price]
 				data.append(row)
 
 	results = frappe.get_all("Hospital Outgoings", ["*"], filters = conditions)
@@ -82,7 +82,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Hospital Outgoings"), result.name, item.item, item.product_name, item.quantity, price[0].price]
+				row = [result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, price[0].price]
 				data.append(row)
 
 	results = frappe.get_all("Laboratory And Image", ["*"], filters = conditions)
@@ -93,7 +93,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Laboratory And Image"), result.name, item.item, item.product_name, item.quantity, price[0].price]
+				row = [result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, price[0].price]
 				data.append(row)
 	
 	conditions = return_filters_medical_honorarium(filters)
@@ -107,7 +107,7 @@ def return_data(filters):
 			if verificate_hours(filters, item.date):
 				medical = frappe.get_doc("Medical", honorarium.medical)
 				itemValues = frappe.get_doc("Item", medical.service)
-				row = [item.date, _("Medical Honorarium"), honorarium.name, medical.service, itemValues.item_name, 1, item.amount]
+				row = [item.date, "Medical Honorarium", honorarium.name, medical.service, itemValues.item_name, 1, item.amount]
 				data.append(row)
 	
 	conditions = return_filters(filters, from_date, to_date)
@@ -120,7 +120,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Return of inventory requisition"), result.name, item.item, item.product_name, item.quantity, price[0].price * -1]
+				row = [result.date_create, "Return of inventory requisition", result.name, item.item, item.product_name, item.quantity, price[0].price * -1]
 				data.append(row)
 	
 	results = frappe.get_all("Return Laboratory And Hospital Expenses", ["*"], filters = conditions)
@@ -131,7 +131,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Return Laboratory And Hospital Expenses"), result.name, item.item, item.product_name, item.quantity, price[0].price * -1]
+				row = [result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, price[0].price * -1]
 				data.append(row)
 
 	return data
