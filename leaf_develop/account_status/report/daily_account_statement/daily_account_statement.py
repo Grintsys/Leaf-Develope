@@ -75,7 +75,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice = price[0].price
+					totalPrice = item.quantity * price[0].price
 
 				row = [result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -92,7 +92,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice = price[0].price
+					totalPrice = item.quantity * price[0].price
 
 				row = [result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -109,7 +109,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice = price[0].price
+					totalPrice = item.quantity * price[0].price
 									
 				row = [result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
@@ -142,10 +142,12 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice = price[0].price * -1
+					totalPrice = item.quantity * price[0].price * -1
 
 				row = [result.date_create, "Return of inventory requisition", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
+	
+	conditions = return_filters(filters, from_date, to_date)
 	
 	results = frappe.get_all("Return Laboratory And Hospital Expenses", ["*"], filters = conditions)
 
@@ -159,7 +161,7 @@ def return_data(filters):
 				totalPrice = 0
 
 				if len(price) > 0:
-					totalPrice = price[0].price * -1
+					totalPrice = item.quantity * price[0].price * -1
 
 				row = [result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, totalPrice]
 				data.append(row)
