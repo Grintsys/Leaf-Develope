@@ -131,7 +131,7 @@ def return_data(filters):
 			for item in items:
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": filters.get("patient_statement")})
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				row = [result.date_create, _("Return Laboratory And Hospital Expenses"), result.name, item.item, item.product_name, item.quantity, price[0].price]
+				row = [result.date_create, _("Return Laboratory And Hospital Expenses"), result.name, item.item, item.product_name, item.quantity, price[0].price * -1]
 				data.append(row)
 
 	return data
