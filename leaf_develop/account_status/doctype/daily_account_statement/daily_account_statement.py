@@ -28,8 +28,12 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-					self.verificate_price(price, item.item)
-					self.set_new_row_item(result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					
+					if len(price) == 0:
+						self.set_new_row_item(result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, 0)
+					else:
+						self.set_new_row_item(result.date_create, "Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					
 					total += item.quantity * price[0].price
 
 		results = frappe.get_all("Hospital Outgoings", ["*"], filters = conditions)
@@ -41,8 +45,10 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-					self.verificate_price(price, item.item)
-					self.set_new_row_item(result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					if len(price) == 0:
+						self.set_new_row_item(result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, 0)
+					else:
+						self.set_new_row_item(result.date_create, "Hospital Outgoings", result.name, item.item, item.product_name, item.quantity, price[0].price)
 					total += item.quantity * price[0].price
 
 		results = frappe.get_all("Laboratory And Image", ["*"], filters = conditions)
@@ -54,11 +60,27 @@ class DailyAccountStatement(Document):
 					acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 					self.verificate_acc_sta(acc_sta)
 					price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-					self.verificate_price(price, item.item)
-					self.set_new_row_item(result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, price[0].price)
+					if len(price) == 0:
+						self.set_new_row_item(result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, 0)
+					else:
+						self.set_new_row_item(result.date_create, "Laboratory And Image", result.name, item.item, item.product_name, item.quantity, price[0].price)
 					total += item.quantity * price[0].price
 		
 		conditions = self.return_filters_medical_honorarium()
+		
+		honorariums = frappe.get_all("Medical Honorarium", ["*"], filters = conditions)
+
+		for honorarium in honorariums:
+			items = frappe.get_all("Medical Honorarium Detail", ["*"], filters = {"parent": honorarium.name, "date": ["between", [self.from_date, self.to_date]]})
+
+			for item in items:
+				if self.verificate_hours(item.date):
+					medical = frappe.get_doc("Medical", honorarium.medical)
+					itemValues = frappe.get_doc("Item", medical.service)
+					self.set_new_row_item(item.date, "Medical Honorarium", honorarium.name, medical.service, itemValues.item_name, 1, item.amount)
+					total += item.amount
+		
+		conditions = self.return_filters_medical_honorarium_eraser()
 		
 		honorariums = frappe.get_all("Medical Honorarium", ["*"], filters = conditions)
 
@@ -81,8 +103,12 @@ class DailyAccountStatement(Document):
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 				self.verificate_acc_sta(acc_sta)
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				self.verificate_price(price, item.item)
-				self.set_new_row_item(result.date_create, "Return Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				
+				if len(price) == 0:
+					self.set_new_row_item(result.date_create, "Return Inventory Requisition", result.name, item.item, item.product_name, item.quantity, 0)
+				else:
+					self.set_new_row_item(result.date_create, "Return Inventory Requisition", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				
 				total += item.quantity * price[0].price
 		
 		return_laboratiry = frappe.get_all("Return Laboratory And Hospital Expenses", ["*"], filters = conditions)
@@ -93,8 +119,12 @@ class DailyAccountStatement(Document):
 				acc_sta = frappe.get_all("Account Statement Payment", ["name"], filters = {"patient_statement": self.patient_statement})
 				self.verificate_acc_sta(acc_sta)
 				price = frappe.get_all("Account Statement Payment Item Detail", ["*"], filters = {"parent": acc_sta[0].name, "item": item.item})
-				self.verificate_price(price, item.item)
-				self.set_new_row_item(result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				
+				if len(price) == 0:
+					self.set_new_row_item(result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, 0)
+				else:
+					self.set_new_row_item(result.date_create, "Return Laboratory And Hospital Expenses", result.name, item.item, item.product_name, item.quantity, price[0].price)
+				
 				total += item.quantity * price[0].price
 		
 		self.total_amount = total
@@ -145,6 +175,16 @@ class DailyAccountStatement(Document):
 		conditions += "{"
 		conditions += '"patient_statement": "{}"'.format(self.patient_statement)
 		conditions += ', "docstatus": 1'
+		conditions += '}'
+
+		return conditions
+
+	def return_filters_medical_honorarium_eraser(self):
+		conditions = ''	
+
+		conditions += "{"
+		conditions += '"patient_statement": "{}"'.format(self.patient_statement)
+		conditions += ', "docstatus": 0'
 		conditions += '}'
 
 		return conditions
