@@ -8,6 +8,13 @@ from frappe import _
 from frappe.model.document import Document
 
 class PatientWarehouse(Document):
+	def validate(self):
+		registers = frappe.get_all("Patient Warehouse", {"name"})
+
+		if len(registers) > 0:
+			if registers[0].name != self.name:
+				frappe.throw(_("Exist a register for configurate Patient Warehouse."))
+
 	def get_prefix(self, arg=None):
 		prefixes = ""
 		options = ""

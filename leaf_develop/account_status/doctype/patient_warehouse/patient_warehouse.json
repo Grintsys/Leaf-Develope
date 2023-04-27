@@ -8,7 +8,12 @@
   "name_warehouse",
   "from_warehouse",
   "to_warehouse",
-  "naming_series"
+  "naming_series",
+  "section1",
+  "category_for_sale_laboratory_and_image",
+  "section2",
+  "category_for_sale_hospital_outgoings",
+  "category_for_sale_procedure"
  ],
  "fields": [
   {
@@ -39,9 +44,37 @@
    "fieldtype": "Select",
    "label": "Default Serie For Sales Invoice",
    "reqd": 1
+  },
+  {
+   "fieldname": "section1",
+   "fieldtype": "Section Break",
+   "label": "Filters By Prodcuts to Laboratory And Image"
+  },
+  {
+   "fieldname": "category_for_sale_laboratory_and_image",
+   "fieldtype": "Link",
+   "label": "Category for sale",
+   "options": "Category for sale"
+  },
+  {
+   "fieldname": "section2",
+   "fieldtype": "Section Break",
+   "label": "Filters By Producto to Hospital Outgoings"
+  },
+  {
+   "fieldname": "category_for_sale_hospital_outgoings",
+   "fieldtype": "Link",
+   "label": "Category for sale",
+   "options": "Category for sale"
+  },
+  {
+   "fieldname": "category_for_sale_procedure",
+   "fieldtype": "Link",
+   "label": "Category for sale Procedures",
+   "options": "Category for sale"
   }
  ],
- "modified": "2021-12-06 12:56:08.069789",
+ "modified": "2023-04-24 19:19:09.795112",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient Warehouse",
