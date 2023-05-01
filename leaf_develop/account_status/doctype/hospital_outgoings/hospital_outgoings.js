@@ -14,28 +14,16 @@ frappe.ui.form.on('Hospital Outgoings', {
 	},
 
 	setup: function(frm) {
-		var category_for_sale_hospital_outgoings = "Vacio";
-		var category_for_sale_procedure = "Vacio";
-
-		frappe.db.get_list('Patient Warehouse', {
-			fields: ['category_for_sale_hospital_outgoings', 'category_for_sale_procedure'],
-			order_by: 'creation asc'
-		}).then(result => {
-			console.log(result)
-			category_for_sale_hospital_outgoings = result[0].category_for_sale_hospital_outgoings
-			category_for_sale_procedure = result[0].category_for_sale_procedure
-		})
-
 		frm.set_query("item", "products", function(doc, cdt, cdn) {
 			if (doc.type === "Procedures"){
 				return {
-					filters:{"default_company": doc.company, "category_for_sale": category_for_sale_procedure}
+					filters:{"default_company": doc.company, "category_for_sale": "Procedimientos"}
 				};
 			}	
 
 			if (doc.type === "Hospital Outgoing"){
 				return {
-					filters:{"default_company": doc.company, "category_for_sale": category_for_sale_hospital_outgoings}
+					filters:{"default_company": doc.company, "category_for_sale": "Gastos Hospitalarios"}
 				};
 			}
 		});
