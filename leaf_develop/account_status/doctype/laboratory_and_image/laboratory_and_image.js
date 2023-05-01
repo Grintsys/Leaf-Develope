@@ -14,19 +14,9 @@ frappe.ui.form.on('Laboratory And Image', {
 	},
 
 	setup: function (frm) {
-		var category_for_sale_laboratory_and_image = "Vacio";
-
-		frappe.db.get_list('Patient Warehouse', {
-			fields: ['category_for_sale_laboratory_and_image'],
-			order_by: 'creation asc'
-		}).then(result => {
-			console.log(result)
-			category_for_sale_laboratory_and_image = result[0].category_for_sale_laboratory_and_image
-		})
-
 		frm.set_query("item", "products", function (doc, cdt, cdn) {
 			return {
-				filters: { "default_company": doc.company, "category_for_sale": category_for_sale_laboratory_and_image }
+				filters: { "default_company": doc.company, "category_for_sale": "Estudios de laboratorio e imagen" }
 			};
 		});
 	},

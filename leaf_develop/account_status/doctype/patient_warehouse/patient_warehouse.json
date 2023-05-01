@@ -48,33 +48,38 @@
   {
    "fieldname": "section1",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Filters By Prodcuts to Laboratory And Image"
   },
   {
    "fieldname": "category_for_sale_laboratory_and_image",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Category for sale",
    "options": "Category for sale"
   },
   {
    "fieldname": "section2",
    "fieldtype": "Section Break",
+   "hidden": 1,
    "label": "Filters By Producto to Hospital Outgoings"
   },
   {
    "fieldname": "category_for_sale_hospital_outgoings",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Category for sale",
    "options": "Category for sale"
   },
   {
    "fieldname": "category_for_sale_procedure",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Category for sale Procedures",
    "options": "Category for sale"
   }
  ],
- "modified": "2023-04-24 19:19:09.795112",
+ "modified": "2023-04-30 23:07:47.861622",
  "modified_by": "Administrator",
  "module": "Account status",
  "name": "Patient Warehouse",
