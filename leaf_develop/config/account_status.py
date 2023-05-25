@@ -139,21 +139,21 @@ def get_data():
 				}
             ]
         },
-        {
-            "label": _("Old Doctypes"),
-            "items": [
-				{
-					"type": "doctype",
-					"name": "Hospital Expenses",
-					"onboard": 1,
-					"dependencies": ["Patient statement"]
-				},
-				{
-					"type": "doctype",
-					"name": "Laboratory Expenses",
-					"onboard": 1,
-					"dependencies": ["Patient statement"]
-				}
-            ]
-        },
+        # {
+        #     "label": _("Old Doctypes"),
+        #     "items": [
+		# 		{
+		# 			"type": "doctype",
+		# 			"name": "Hospital Expenses",
+		# 			"onboard": 1,
+		# 			"dependencies": ["Patient statement"]
+		# 		},
+		# 		{
+		# 			"type": "doctype",
+		# 			"name": "Laboratory Expenses",
+		# 			"onboard": 1,
+		# 			"dependencies": ["Patient statement"]
+		# 		}
+        #     ]
+        # },
     ]
